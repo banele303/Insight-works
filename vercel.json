@@ -1,5 +1,5 @@
 {
-  "buildCommand": "node ../scripts/vercel-build.mjs",
+  "buildCommand": "npm run build",
   "installCommand": "npm install --include=dev",
   "env": {
     "NPM_CONFIG_PRODUCTION": "false"
