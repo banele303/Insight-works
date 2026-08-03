@@ -669,7 +669,11 @@ export const generateHomeworkQuestions = action({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new Error("Unauthorized");
-    if (!(await isTeacherOrAdmin(ctx, userId))) throw new Error("Only teachers can generate homework");
+    // Actions have no direct ctx.db — check role via a query
+    const me: any = await ctx.runQuery(api.users.getCurrentUser);
+    if (!me || (me.role !== "teacher" && me.role !== "admin")) {
+      throw new Error("Only teachers can generate homework");
+    }
 
     if (args.topics.length === 0) throw new Error("Add at least one topic");
 
