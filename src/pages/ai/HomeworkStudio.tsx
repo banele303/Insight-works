@@ -227,7 +227,9 @@ function CreateTaskCard({ onCreated, compact }: { onCreated: () => void; compact
   const classes = useQuery(api.classes.getClasses, { academicYear: undefined });
   const subjects = useQuery(api.subjects.getSubjects);
   const createTask = useMutation(api.homeworkTasks.createTask);
+  const generateQuestions = useAction(api.homeworkTasks.generateHomeworkQuestions);
 
+  const [mode, setMode] = useState<"manual" | "ai">("manual");
   const [title, setTitle] = useState("");
   const [instructions, setInstructions] = useState("");
   const [classId, setClassId] = useState("");
@@ -236,6 +238,17 @@ function CreateTaskCard({ onCreated, compact }: { onCreated: () => void; compact
   const [allowResubmission, setAllowResubmission] = useState(false);
   const [questions, setQuestions] = useState<QuestionDraft[]>([{ ...EMPTY_Q }]);
   const [saving, setSaving] = useState(false);
+
+  // AI generation state
+  const [topics, setTopics] = useState("");
+  const [difficulty, setDifficulty] = useState("Medium");
+  const [aiMix, setAiMix] = useState<{ type: QuestionType; count: number; points: number }[]>([
+    { type: "MCQ", count: 3, points: 2 },
+    { type: "SHORT_ANSWER", count: 2, points: 4 },
+  ]);
+  const [generating, setGenerating] = useState(false);
+
+  const noClasses = classes !== undefined && classes.length === 0;
 
   const updateQ = (idx: number, patch: Partial<QuestionDraft>) => {
     setQuestions((qs) => qs.map((q, i) => (i === idx ? { ...q, ...patch } : q)));
@@ -304,13 +317,74 @@ function CreateTaskCard({ onCreated, compact }: { onCreated: () => void; compact
     }
   };
 
+  const handleGenerate = async () => {
+    if (!title.trim()) { toast.error("Give the homework a title first"); return; }
+    if (!classId) { toast.error("Select a class"); return; }
+    if (!subjectId) { toast.error("Select a subject"); return; }
+    if (!topics.trim()) { toast.error("Add at least one topic (comma-separated)"); return; }
+    const mix = aiMix.filter((m) => m.count > 0);
+    if (mix.length === 0) { toast.error("Add at least one question type to generate"); return; }
+
+    setGenerating(true);
+    try {
+      const res: any = await generateQuestions({
+        classId: classId as any,
+        subjectId: subjectId as any,
+        topics: topics.split(",").map((t) => t.trim()).filter(Boolean),
+        difficulty,
+        questionMix: mix,
+        title: title.trim(),
+      });
+      if (!res.success) {
+        toast.error(res.error || "AI generation failed");
+        return;
+      }
+      // Convert generated questions into editable drafts
+      const drafts: QuestionDraft[] = (res.questions || []).map((q: any) => ({
+        questionText: q.questionText || "",
+        type: (q.type || "SHORT_ANSWER") as QuestionType,
+        options: Array.isArray(q.options) ? q.options : ["", "", "", ""],
+        correctAnswer: q.correctAnswer || "",
+        points: q.points || 2,
+        memo: q.memo || "",
+        matchPairs: Array.isArray(q.matchPairs) && q.matchPairs.length > 0
+          ? q.matchPairs.map((p: any) => ({ left: p.left || "", right: p.right || "" }))
+          : [{ left: "", right: "" }],
+      }));
+      if (drafts.length === 0) { toast.error("AI returned no questions"); return; }
+      setQuestions(drafts);
+      setMode("manual");
+      toast.success(`AI generated ${drafts.length} questions — review and edit, then publish!`);
+    } catch (e: any) {
+      toast.error(e.message || "AI generation failed");
+    } finally {
+      setGenerating(false);
+    }
+  };
+
   return (
     <Card className="bg-white/[0.03] border-orange-500/20 shadow-xl shadow-orange-500/5">
       <CardHeader>
         <CardTitle className="text-lg text-white flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-orange-400" /> Create Homework
         </CardTitle>
-        <CardDescription className="text-zinc-400">Set it up like a teacher would — questions, due date, then publish to your class</CardDescription>
+        <CardDescription className="text-zinc-400">Build it yourself, or let AI draft it for you — then publish to your class</CardDescription>
+
+        {/* Mode toggle */}
+        <div className="grid grid-cols-2 gap-2 mt-3 max-w-md">
+          <button
+            onClick={() => setMode("manual")}
+            className={cn("flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-colors",
+              mode === "manual" ? "bg-orange-500/15 border-orange-500/40 text-orange-400" : "bg-white/[0.02] border-white/[0.08] text-zinc-400 hover:border-white/20")}>
+            <PenLine className="h-4 w-4" /> Build manually
+          </button>
+          <button
+            onClick={() => setMode("ai")}
+            className={cn("flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-colors",
+              mode === "ai" ? "bg-orange-500/15 border-orange-500/40 text-orange-400" : "bg-white/[0.02] border-white/[0.08] text-zinc-400 hover:border-white/20")}>
+            <Sparkles className="h-4 w-4" /> Generate with AI
+          </button>
+        </div>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Basics */}
@@ -321,12 +395,22 @@ function CreateTaskCard({ onCreated, compact }: { onCreated: () => void; compact
           </div>
           <div>
             <Label className="text-zinc-300">Class *</Label>
-            <Select value={classId} onValueChange={setClassId}>
-              <SelectTrigger className="bg-white/[0.03] border-white/[0.08] text-white"><SelectValue placeholder="Select class..." /></SelectTrigger>
-              <SelectContent className="bg-zinc-950 border-white/10 text-white">
-                {classes?.map((c: any) => <SelectItem key={c._id} value={c._id}>{c.name}</SelectItem>)}
-              </SelectContent>
-            </Select>
+            {noClasses ? (
+              <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-300 space-y-1.5">
+                <p className="font-medium">No classes created yet</p>
+                <p className="text-amber-200/70">You need at least one class before you can deliver homework. Create a class first.</p>
+                <a href="/classes" className="inline-flex items-center gap-1 text-amber-300 underline underline-offset-2 hover:text-amber-200">
+                  <Users className="h-3.5 w-3.5" /> Go to Classes
+                </a>
+              </div>
+            ) : (
+              <Select value={classId} onValueChange={setClassId}>
+                <SelectTrigger className="bg-white/[0.03] border-white/[0.08] text-white"><SelectValue placeholder="Select class..." /></SelectTrigger>
+                <SelectContent className="bg-zinc-950 border-white/10 text-white">
+                  {classes?.map((c: any) => <SelectItem key={c._id} value={c._id}>{c.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            )}
           </div>
           <div>
             <Label className="text-zinc-300">Subject *</Label>
@@ -354,19 +438,86 @@ function CreateTaskCard({ onCreated, compact }: { onCreated: () => void; compact
           <Textarea value={instructions} onChange={(e) => setInstructions(e.target.value)} rows={2} placeholder="e.g. Show all your working. Essays: write in your book and upload a photo." className="bg-white/[0.03] border-white/[0.08] text-white placeholder:text-zinc-600" />
         </div>
 
-        {/* Questions */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-zinc-300">Questions <span className="text-zinc-500 font-normal">({questions.length} · {totalPoints} pts)</span></h3>
-            <Button variant="outline" size="sm" className="border-orange-500/30 text-orange-400 hover:bg-orange-500/10" onClick={addQuestion}>
-              <Plus className="h-4 w-4 mr-1" /> Add Question
-            </Button>
-          </div>
+        {/* ─── AI GENERATION PANEL ─── */}
+        {mode === "ai" && (
+          <div className="border border-orange-500/20 rounded-xl p-4 space-y-4 bg-orange-500/[0.03]">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-orange-400" />
+              <h3 className="text-sm font-semibold text-white">AI Homework Generator</h3>
+              <span className="text-[11px] text-zinc-500 ml-auto">Grade-aware · CAPS aligned · SA context</span>
+            </div>
 
-          {questions.map((q, idx) => (
-            <QuestionBuilder key={idx} q={q} idx={idx} onChange={(patch) => updateQ(idx, patch)} onRemove={() => removeQuestion(idx)} />
-          ))}
-        </div>
+            <div className="grid gap-3 md:grid-cols-2">
+              <div className="md:col-span-2">
+                <Label className="text-xs text-zinc-400">Topics to cover * (comma-separated)</Label>
+                <Input value={topics} onChange={(e) => setTopics(e.target.value)} placeholder="e.g. Fractions, Percentages, Word problems" className="bg-white/[0.03] border-white/[0.08] text-white placeholder:text-zinc-600" />
+              </div>
+              <div>
+                <Label className="text-xs text-zinc-400">Difficulty</Label>
+                <Select value={difficulty} onValueChange={setDifficulty}>
+                  <SelectTrigger className="bg-white/[0.03] border-white/[0.08] text-white"><SelectValue /></SelectTrigger>
+                  <SelectContent className="bg-zinc-950 border-white/10 text-white">
+                    <SelectItem value="Easy">Easy</SelectItem>
+                    <SelectItem value="Medium">Medium</SelectItem>
+                    <SelectItem value="Hard">Hard</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-end">
+                <p className="text-[11px] text-zinc-500 pb-2">Grade is auto-detected from the class name</p>
+              </div>
+            </div>
+
+            {/* Question mix editor */}
+            <div className="space-y-2">
+              <Label className="text-xs text-zinc-400">Question mix</Label>
+              {aiMix.map((m, mi) => (
+                <div key={mi} className="flex items-center gap-2">
+                  <Select value={m.type} onValueChange={(v) => setAiMix((ms) => ms.map((x, i) => (i === mi ? { ...x, type: v as QuestionType } : x)))}>
+                    <SelectTrigger className="h-8 w-44 bg-white/[0.03] border-white/[0.08] text-white text-xs"><SelectValue /></SelectTrigger>
+                    <SelectContent className="bg-zinc-950 border-white/10 text-white">
+                      {QUESTION_TYPES.map((t) => <SelectItem key={t.value} value={t.value} className="text-sm">{t.label}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                  <Input type="number" min={0} max={15} value={m.count}
+                    onChange={(e) => setAiMix((ms) => ms.map((x, i) => (i === mi ? { ...x, count: Math.max(0, parseInt(e.target.value) || 0) } : x)))}
+                    className="h-8 w-16 bg-white/[0.03] border-white/[0.08] text-white text-xs" title="Count" />
+                  <Input type="number" min={1} max={20} value={m.points}
+                    onChange={(e) => setAiMix((ms) => ms.map((x, i) => (i === mi ? { ...x, points: Math.max(1, parseInt(e.target.value) || 1) } : x)))}
+                    className="h-8 w-16 bg-white/[0.03] border-white/[0.08] text-white text-xs" title="Points each" />
+                  <span className="text-[10px] text-zinc-500 w-8">pts</span>
+                  <button onClick={() => setAiMix((ms) => ms.filter((_, i) => i !== mi))} className="text-zinc-600 hover:text-red-400"><X className="h-4 w-4" /></button>
+                </div>
+              ))}
+              <Button variant="outline" size="sm" className="border-white/15 text-zinc-300" onClick={() => setAiMix((ms) => [...ms, { type: "SHORT_ANSWER", count: 1, points: 3 }])}>
+                <Plus className="h-3 w-3 mr-1" /> Add type
+              </Button>
+            </div>
+
+            <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white" onClick={handleGenerate} disabled={generating}>
+              <Sparkles className="h-4 w-4 mr-2" /> {generating ? "AI is writing questions…" : "Generate Questions"}
+            </Button>
+            {generating && (
+              <p className="text-[11px] text-zinc-500 text-center">This takes ~20-40s. Questions will load below for you to review and edit.</p>
+            )}
+          </div>
+        )}
+
+        {/* Questions (visible in manual mode or after AI generation) */}
+        {mode === "manual" && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold text-zinc-300">Questions <span className="text-zinc-500 font-normal">({questions.length} · {totalPoints} pts)</span></h3>
+              <Button variant="outline" size="sm" className="border-orange-500/30 text-orange-400 hover:bg-orange-500/10" onClick={addQuestion}>
+                <Plus className="h-4 w-4 mr-1" /> Add Question
+              </Button>
+            </div>
+
+            {questions.map((q, idx) => (
+              <QuestionBuilder key={idx} q={q} idx={idx} onChange={(patch) => updateQ(idx, patch)} onRemove={() => removeQuestion(idx)} />
+            ))}
+          </div>
+        )}
 
         {/* Actions */}
         <div className="flex flex-wrap gap-3 pt-2">

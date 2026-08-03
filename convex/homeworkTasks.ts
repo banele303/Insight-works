@@ -46,7 +46,21 @@ function autoGrade(q: any, studentAnswer?: string, matchAnswers?: Record<string,
   const pts = q.points || 0;
   if (q.type === "MCQ" || q.type === "TRUE_FALSE") {
     if (!q.correctAnswer || !studentAnswer) return 0;
-    return normalize(q.correctAnswer) === normalize(studentAnswer) ? pts : 0;
+    const norm = normalize(studentAnswer);
+    const correct = normalize(q.correctAnswer);
+    if (correct === norm) return pts;
+    // AI often sets correctAnswer to just the letter ("B") while options are "B) text"
+    if (q.type === "MCQ" && Array.isArray(q.options)) {
+      const letter = correct.replace(/[^a-z]/gi, "").toLowerCase();
+      if (letter.length === 1) {
+        const idx = letter.charCodeAt(0) - 97;
+        const target = q.options[idx];
+        if (target && normalize(target) === norm) return pts;
+        // also match "B) text" style answers
+        if (norm.startsWith(letter + ")") || norm === letter) return pts;
+      }
+    }
+    return 0;
   }
   if (q.type === "FILL_BLANK") {
     if (!q.correctAnswer || !studentAnswer) return 0;
@@ -629,6 +643,200 @@ export const saveAIGrade = mutation({
       status: "graded",
       gradedAt: Date.now(),
     });
+  },
+});
+
+// ─── AI HOMEWORK QUESTION GENERATION ─────────────────────────────
+
+// Generate a set of homework questions with AI (teacher picks topic +
+// question mix; AI writes the questions and memos). Grade-aware: the
+// real grade is derived from the class name, never from "difficulty".
+export const generateHomeworkQuestions = action({
+  args: {
+    classId: v.id("classes"),
+    subjectId: v.id("subjects"),
+    topics: v.array(v.string()),
+    difficulty: v.optional(v.string()),
+    questionMix: v.array(
+      v.object({
+        type: v.string(),
+        count: v.number(),
+        points: v.number(),
+      })
+    ),
+    title: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new Error("Unauthorized");
+    if (!(await isTeacherOrAdmin(ctx, userId))) throw new Error("Only teachers can generate homework");
+
+    if (args.topics.length === 0) throw new Error("Add at least one topic");
+
+    const classes: any = await ctx.runQuery(api.classes.getClasses, { academicYear: undefined });
+    const classObj = classes?.find((c: any) => c._id === args.classId);
+    const parsedGrade = classObj?.name ? parseInt(String(classObj.name).replace(/\D/g, ""), 10) : NaN;
+    const grade = Number.isNaN(parsedGrade) ? undefined : parsedGrade;
+
+    const subjects: any = await ctx.runQuery(api.subjects.getSubjects);
+    const subject = subjects?.find((s: any) => s._id === args.subjectId);
+    const subjectName = subject?.name || "General";
+    const subjectCategory = (subject?.category || "other").toLowerCase();
+
+    const PHASE_FOR_GRADE = (g: number): string => {
+      if (g <= 0) return "Pre-school (Grade R)";
+      if (g <= 3) return "Foundation Phase (Grades 1-3)";
+      if (g <= 6) return "Intermediate Phase (Grades 4-6)";
+      if (g <= 9) return "Senior Phase (Grades 7-9)";
+      return "FET Phase (Grades 10-12)";
+    };
+    const COGNITIVE_BY_PHASE: Record<string, string> = {
+      "Pre-school (Grade R)": "concrete, play-based, visual; simple recall and recognition",
+      "Foundation Phase (Grades 1-3)": "recall, simple comprehension; short answers; concrete contexts",
+      "Intermediate Phase (Grades 4-6)": "recall, comprehension, basic application; structured questions",
+      "Senior Phase (Grades 7-9)": "application, analysis and evaluation with clear instruction verbs",
+      "FET Phase (Grades 10-12)": "full range of cognitive levels matching NSC examination verb conventions (state, define, describe, explain, discuss, evaluate, compare, analyse)",
+    };
+    const LANGUAGE_BY_PHASE: Record<string, string> = {
+      "Pre-school (Grade R)": "simple, short sentences; everyday vocabulary; pictures/visual prompts",
+      "Foundation Phase (Grades 1-3)": "simple English with short sentences; familiar everyday vocabulary; step-by-step wording",
+      "Intermediate Phase (Grades 4-6)": "clear, accessible English; define any technical terms; moderately complex sentences",
+      "Senior Phase (Grades 7-9)": "standard academic register with defined terminology",
+      "FET Phase (Grades 10-12)": "full NSC academic register; subject-specific terminology expected without definitions",
+    };
+    const phase = grade !== undefined ? PHASE_FOR_GRADE(grade) : "Intermediate Phase (Grades 4-6)";
+    const cognitive = COGNITIVE_BY_PHASE[phase];
+    const language = LANGUAGE_BY_PHASE[phase];
+    const difficulty = args.difficulty || "Medium";
+    const gradeLabel = grade !== undefined ? `Grade ${grade} (${phase})` : `Class ${classObj?.name || ""} — grade inferred`;
+
+    const typeInstructions = (mix: { type: string; count: number; points: number }[]) =>
+      mix
+        .map((m) => {
+          const guide: Record<string, string> = {
+            MCQ: "multiple choice with exactly 4 options (A, B, C, D) and the correct option letter + text as correctAnswer",
+            TRUE_FALSE: "true/false statement; correctAnswer is 'True' or 'False'",
+            FILL_BLANK: "fill-in-the-blank with a single missing word/phrase; correctAnswer lists accepted answers separated by commas",
+            MATCH_COLUMN: "match-column with 3-5 pairs; matchPairs is [{left, right}]",
+            SHORT_ANSWER: "short answer (2-5 sentences expected); memo holds key points the answer must contain",
+            ESSAY: "essay question; memo holds the marking rubric / key points (arguments, evidence, structure)",
+            CALCULATION: "calculation problem; memo holds the method and final answer",
+            DIAGRAM_LABEL: "diagram-label question; memo holds the expected labels (e.g. '1=nucleus, 2=membrane')",
+          };
+          return `- ${m.count} × ${m.type} (${m.points} marks each): ${guide[m.type] || "standard question"}`;
+        })
+        .join("\n");
+
+    const prompt = `You are an expert South African CAPS teacher. Create a homework assignment titled "${args.title}" for ${gradeLabel}.
+
+SUBJECT: ${subjectName} (category: ${subjectCategory})
+TOPICS TO COVER: ${args.topics.join(", ")}
+DIFFICULTY: ${difficulty}
+
+CURRICULUM CONTEXT:
+- Phase: ${phase}
+- Cognitive demand: ${cognitive}
+- Language register: ${language}
+
+QUESTION MIX:
+${typeInstructions(args.questionMix)}
+
+RULES:
+1. Output ONLY raw JSON — no markdown fences, no extra text.
+2. Every question must be at the correct grade level — never above or below.
+3. Use South African context where relevant (rand, SA place names, CAPS terminology).
+4. MCQ must have exactly 4 options and correctAnswer = "A) <text>" style or just the letter.
+5. TRUE_FALSE correctAnswer is exactly "True" or "False".
+6. FILL_BLANK correctAnswer can have comma-separated accepted variants.
+7. For open-ended types (SHORT_ANSWER, ESSAY, CALCULATION, DIAGRAM_LABEL) provide a thorough memo with the key marking points.
+8. Total questions must match the requested mix exactly.
+
+JSON FORMAT:
+{
+  "questions": [
+    {
+      "questionText": "...",
+      "type": "MCQ",
+      "options": ["A) ...", "B) ...", "C) ...", "D) ..."],
+      "correctAnswer": "B",
+      "points": 5,
+      "topic": "Topic name",
+      "memo": "Model answer / marking key (required for open-ended types)"
+    }
+  ]
+}`;
+
+    const cfWorkerUrl = process.env.CLOUDFLARE_WORKER_URL || "https://edunexus-ai.edusqwizooor.workers.dev";
+    const apiKey = process.env.DEEPSEEK_API_KEY || process.env.OPENAI_API_KEY;
+    let text = "";
+
+    if (apiKey) {
+      try {
+        const openai = createOpenAI({
+          apiKey,
+          baseURL: process.env.DEEPSEEK_API_KEY ? "https://api.deepseek.com/v1" : undefined,
+        });
+        const res = await generateText({ model: openai.chat("deepseek-chat"), prompt });
+        text = res.text;
+      } catch (e) {
+        console.warn("Primary AI homework generation failed, trying worker:", e);
+      }
+    }
+    if (!text) {
+      try {
+        const cfRes = await fetch(`${cfWorkerUrl}/api/chat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: [{ role: "user", content: prompt }] }),
+        });
+        if (cfRes.ok) {
+          const cfData: any = await cfRes.json();
+          text = cfData.response || "";
+        }
+      } catch (e) {
+        console.error("Worker homework generation failed:", e);
+      }
+    }
+    if (!text) {
+      return { success: false, questions: [], error: "AI service is unavailable. Check API keys / Cloudflare Workers AI." };
+    }
+
+    const clean = text.replace(/```json/g, "").replace(/```/g, "").trim();
+    const start = clean.indexOf("{");
+    const end = clean.lastIndexOf("}");
+    if (start === -1 || end === -1) {
+      return { success: false, questions: [], error: "AI returned invalid JSON" };
+    }
+    let parsed: any;
+    try {
+      parsed = JSON.parse(clean.substring(start, end + 1));
+    } catch {
+      return { success: false, questions: [], error: "AI returned invalid JSON" };
+    }
+    const normalizeOptions = (opts: any): string[] | undefined => {
+      if (Array.isArray(opts)) return opts.map(String).filter((o) => o.trim());
+      if (opts && typeof opts === "object") {
+        // Models often return {A: "...", B: "...", C: "...", D: "..."}
+        const keys = Object.keys(opts).sort();
+        const arr = keys.map((k) => `${k}) ${String(opts[k]).trim()}`);
+        return arr.length >= 2 ? arr : undefined;
+      }
+      return undefined;
+    };
+    const questions: any[] = (parsed.questions || []).map((q: any) => ({
+      questionText: String(q.questionText || "").trim(),
+      type: String(q.type || "SHORT_ANSWER").toUpperCase().replace(" ", "_"),
+      options: normalizeOptions(q.options),
+      correctAnswer: q.correctAnswer !== undefined && q.correctAnswer !== null ? String(q.correctAnswer) : undefined,
+      points: Math.max(1, Number(q.points) || 5),
+      topic: q.topic ? String(q.topic) : undefined,
+      memo: q.memo ? String(q.memo) : undefined,
+    })).filter((q: any) => q.questionText);
+
+    if (questions.length === 0) {
+      return { success: false, questions: [], error: "AI returned no questions" };
+    }
+    return { success: true, questions, generatedGrade: grade, phase };
   },
 });
 
