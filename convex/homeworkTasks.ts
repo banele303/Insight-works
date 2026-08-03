@@ -772,7 +772,7 @@ JSON FORMAT:
 
     const cfWorkerUrl = process.env.CLOUDFLARE_WORKER_URL || "https://edunexus-ai.edusqwizooor.workers.dev";
     const apiKey = process.env.DEEPSEEK_API_KEY || process.env.OPENAI_API_KEY;
-    let text = "";
+    let raw: any = "";
 
     if (apiKey) {
       try {
@@ -781,12 +781,12 @@ JSON FORMAT:
           baseURL: process.env.DEEPSEEK_API_KEY ? "https://api.deepseek.com/v1" : undefined,
         });
         const res = await generateText({ model: openai.chat("deepseek-chat"), prompt });
-        text = res.text;
+        raw = res.text;
       } catch (e) {
         console.warn("Primary AI homework generation failed, trying worker:", e);
       }
     }
-    if (!text) {
+    if (!raw) {
       try {
         const cfRes = await fetch(`${cfWorkerUrl}/api/chat`, {
           method: "POST",
@@ -795,12 +795,15 @@ JSON FORMAT:
         });
         if (cfRes.ok) {
           const cfData: any = await cfRes.json();
-          text = cfData.response || "";
+          raw = cfData.response || "";
         }
       } catch (e) {
         console.error("Worker homework generation failed:", e);
       }
     }
+    // The CF worker can return the JSON already-parsed as an object
+    // (response: {questions: [...]}) OR as a raw string. Normalize both.
+    const text = typeof raw === "string" ? raw : raw ? JSON.stringify(raw) : "";
     if (!text) {
       return { success: false, questions: [], error: "AI service is unavailable. Check API keys / Cloudflare Workers AI." };
     }
