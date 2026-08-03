@@ -804,6 +804,79 @@ export default defineSchema({
     teacherReview: v.optional(v.string()),
   }).index("by_student", ["student"])
     .index("by_subject", ["subject"]),
+
+  // ─── HOMEWORK STUDIO (teacher-created, class-delivered) ─────────
+
+  homeworkTasks: defineTable({
+    title: v.string(),
+    instructions: v.optional(v.string()),
+    subject: v.id("subjects"),
+    class: v.id("classes"),
+    teacher: v.id("users"),
+    dueDate: v.string(),
+    totalPoints: v.number(),
+    status: v.union(v.literal("draft"), v.literal("published"), v.literal("closed")),
+    allowResubmission: v.optional(v.boolean()),
+    showAnswersAfter: v.optional(
+      v.union(v.literal("never"), v.literal("afterDue"), v.literal("afterGrade"))
+    ),
+    createdAt: v.number(),
+    questions: v.array(
+      v.object({
+        questionText: v.string(),
+        type: v.union(
+          v.literal("MCQ"),
+          v.literal("SHORT_ANSWER"),
+          v.literal("ESSAY"),
+          v.literal("TRUE_FALSE"),
+          v.literal("FILL_BLANK"),
+          v.literal("MATCH_COLUMN"),
+          v.literal("CALCULATION"),
+          v.literal("DIAGRAM_LABEL")
+        ),
+        options: v.optional(v.array(v.string())),
+        correctAnswer: v.optional(v.string()),
+        points: v.number(),
+        topic: v.optional(v.string()),
+        matchPairs: v.optional(v.array(v.object({ left: v.string(), right: v.string() }))),
+        diagramUrl: v.optional(v.string()),
+        // Teacher's model answer / memo used for AI grading
+        memo: v.optional(v.string()),
+      })
+    ),
+  }).index("by_class", ["class"])
+    .index("by_teacher", ["teacher"])
+    .index("by_status", ["status"]),
+
+  homeworkTaskSubmissions: defineTable({
+    task: v.id("homeworkTasks"),
+    student: v.id("users"),
+    answers: v.array(
+      v.object({
+        questionIndex: v.number(),
+        answer: v.optional(v.string()),
+        imageUrl: v.optional(v.string()),
+      })
+    ),
+    submittedAt: v.number(),
+    status: v.union(v.literal("submitted"), v.literal("graded"), v.literal("returned")),
+    score: v.optional(v.number()),
+    grades: v.optional(
+      v.array(
+        v.object({
+          questionIndex: v.number(),
+          earned: v.optional(v.number()),
+          feedback: v.optional(v.string()),
+          gradedBy: v.optional(v.union(v.literal("auto"), v.literal("ai"), v.literal("teacher"))),
+        })
+      )
+    ),
+    aiFeedback: v.optional(v.string()),
+    teacherFeedback: v.optional(v.string()),
+    gradedAt: v.optional(v.number()),
+  }).index("by_task", ["task"])
+    .index("by_student", ["student"])
+    .index("by_task_student", ["task", "student"]),
   whiteboards: defineTable({
     ownerId: v.id("users"),
     title: v.string(),

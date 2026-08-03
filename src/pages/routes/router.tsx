@@ -46,6 +46,7 @@ import LiveRoomPage from "@/pages/lives/LiveRoom";
 import VideoLibraryPage from "@/pages/videos/VideoLibrary";
 import HomeworkCheckerPage from "@/pages/ai/HomeworkChecker";
 import AIMarkingPage from "@/pages/ai/AIMarking";
+import HomeworkStudioPage from "@/pages/ai/HomeworkStudio";
 import StudyGroupsPage from "@/pages/groups/StudyGroups";
 import PeerTutoringPage from "@/pages/tutoring/PeerTutoring";
 import SchoolOnboarding from "@/pages/admin/SchoolOnboarding";
@@ -130,6 +131,10 @@ export const router = createBrowserRouter([
       { path: "offline-mode", element: <PremiumSuite /> },
       { path: "white-label", element: <PremiumSuite /> },
       { path: "ai-tutor-memory", element: <PremiumSuite /> },
+      // AI Homework Studio — create/deliver/mark homework (all roles)
+      { path: "ai/homework", element: <HomeworkStudioPage /> },
+      { path: "ai/homework-checker", element: <HomeworkCheckerPage /> },
+      { path: "ai/marking", element: <AIMarkingPage /> },
     ],
   },
 ]);

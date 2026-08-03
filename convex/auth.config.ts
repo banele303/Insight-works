@@ -1,8 +1,7 @@
 export default {
   providers: [
     {
-      // @ts-ignore
-      domain: process.env.CONVEX_SITE_URL,
+      domain: "https://hearty-jay-778.convex.site",
       applicationID: "convex",
     },
   ],

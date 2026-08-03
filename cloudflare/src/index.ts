@@ -395,6 +395,55 @@ Return ONLY JSON:
   }
 });
 
+// Grade a photo of a student's handwritten work using a vision model.
+// The image URL can be an R2 file URL (/api/files/...) or any public URL.
+app.post("/api/grade-photo", async (c) => {
+  try {
+    const { imageUrl, questionText, memoText, maxPoints, subjectName } = await c.req.json();
+    if (!imageUrl) {
+      return c.json({ error: "imageUrl is required" }, 400);
+    }
+
+    const prompt = `You are an expert South African CAPS teacher. A student has answered a homework question in their exercise book and submitted a PHOTO of their handwritten work.
+
+Question:
+${questionText || "Not provided"}
+
+Teacher memo / expected answer:
+${memoText || "Not provided — infer a fair rubric from the question."}
+
+Maximum marks available: ${maxPoints || "see question"}
+Subject: ${subjectName || "General"}
+
+Read the student's handwriting in the photo carefully. Grade it fairly against the memo. Award partial marks where the working or reasoning is partially correct.
+
+Return ONLY valid JSON (no markdown fences):
+{
+  "transcribedAnswer": "<what you could read of the student's handwriting>",
+  "earnedPoints": <number between 0 and ${maxPoints || 10}, partial marks allowed>,
+  "feedback": "<1-3 sentences: what was correct, what was missing, one improvement tip>"
+}`;
+
+    const response = await c.env.AI.run("@cf/meta/llama-3.2-11b-vision-instruct", {
+      image: imageUrl,
+      prompt,
+      max_tokens: 1024,
+    });
+
+    const content = String(response.response || "").trim();
+    const startIdx = content.indexOf("{");
+    const endIdx = content.lastIndexOf("}");
+    if (startIdx === -1 || endIdx === -1) {
+      return c.json({ error: "Vision model did not return valid JSON.", rawResponse: content }, 500);
+    }
+
+    return c.json(JSON.parse(content.substring(startIdx, endIdx + 1)));
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to grade photo";
+    return c.json({ error: message }, 500);
+  }
+});
+
 // Step 2: Upload bytes to R2; Step 3–5: process + embed + Vectorize (async)
 app.put("/api/upload-proxy/:key", async (c) => {
   const key = decodeURIComponent(c.req.param("key"));

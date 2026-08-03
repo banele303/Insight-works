@@ -32,6 +32,7 @@ import type * as gradeInsights from "../gradeInsights.js";
 import type * as gradeInsightsMutations from "../gradeInsightsMutations.js";
 import type * as grading from "../grading.js";
 import type * as homework from "../homework.js";
+import type * as homeworkTasks from "../homeworkTasks.js";
 import type * as http from "../http.js";
 import type * as learningPaths from "../learningPaths.js";
 import type * as liveClasses from "../liveClasses.js";
@@ -87,6 +88,7 @@ declare const fullApi: ApiFromModules<{
   gradeInsightsMutations: typeof gradeInsightsMutations;
   grading: typeof grading;
   homework: typeof homework;
+  homeworkTasks: typeof homeworkTasks;
   http: typeof http;
   learningPaths: typeof learningPaths;
   liveClasses: typeof liveClasses;

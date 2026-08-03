@@ -117,6 +117,7 @@ export const sidebardata = {
       icon: BookOpen,
       roles: ["teacher", "student", "admin"],
       items: [
+        { title: "Homework Studio", url: "/ai/homework", icon: Sparkles },
         { title: "Assignments", url: "/lms/assignments" },
         { title: "Assessments", url: "/lms/exams" },
         { title: "Question Bank", url: "/lms/question-bank", roles: ["teacher", "admin"] },
