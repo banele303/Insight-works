@@ -22,11 +22,11 @@ const steps = [
     title: "Easy Enrolment",
     subtitle: "Quick Online Application",
     desc: "Submit your learner's details and select their CAPS grade (Grade R to 12). Our admissions team reviews and approves applications within 24 hours.",
-    color: "from-orange-500 to-amber-500",
-    textColor: "text-orange-400",
-    bgColor: "bg-orange-500/10",
-    borderColor: "border-orange-500/30",
-    glowColor: "rgba(249, 115, 22, 0.15)",
+    color: "from-rose-500 to-rose-700",
+    textColor: "text-rose-400",
+    bgColor: "bg-rose-500/10",
+    borderColor: "border-rose-500/30",
+    glowColor: "rgba(244, 63, 94, 0.15)",
     preview: {
       tag: "Admissions Portal",
       title: "Online Application Status",
@@ -45,11 +45,11 @@ const steps = [
     title: "Personalised Onboarding",
     subtitle: "Custom Learning Portal",
     desc: "Get instant access to the parent & student portals. View your learner's timetable, textbook materials, and personalized study schedules.",
-    color: "from-amber-400 to-yellow-500",
-    textColor: "text-amber-400",
-    bgColor: "bg-amber-500/10",
-    borderColor: "border-amber-500/30",
-    glowColor: "rgba(245, 158, 11, 0.15)",
+    color: "from-sky-400 to-blue-500",
+    textColor: "text-sky-400",
+    bgColor: "bg-sky-500/10",
+    borderColor: "border-sky-500/30",
+    glowColor: "rgba(56, 189, 248, 0.15)",
     preview: {
       tag: "Learner Portal",
       title: "Active Learning Hub",
@@ -135,12 +135,12 @@ const HowItWorks = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-bold uppercase tracking-widest">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#5c061c]/10 border border-[#5c061c]/20 text-rose-300 text-xs font-bold uppercase tracking-widest">
+            <Sparkles className="w-3.5 h-3.5 text-sky-400" />
             Simple 4-Step Process
           </div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight">
-            How <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-400 via-amber-400 to-orange-500">Glenanda Learning</span> Works
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
+            How <span className="bg-clip-text text-transparent bg-gradient-to-r from-rose-400 via-sky-400 to-rose-500">Glenanda Learning</span> Works
           </h2>
           <p className="text-gray-400 text-lg leading-relaxed">
             From seamless enrolment to official CAPS-aligned report cards — we empower learners to excel with live interactive classes and AI-guided study support.
@@ -161,7 +161,7 @@ const HowItWorks = () => {
                   onClick={() => setActiveStep(idx)}
                   className={`group relative cursor-pointer rounded-2xl p-6 transition-all duration-300 border ${
                     isActive
-                      ? "bg-white/[0.06] border-orange-500/40 shadow-xl shadow-black/40 scale-[1.01]"
+                      ? "bg-white/[0.06] border-sky-500/40 shadow-xl shadow-black/40 scale-[1.01]"
                       : "bg-white/[0.02] border-white/[0.07] hover:bg-white/[0.04] hover:border-white/15"
                   }`}
                 >
@@ -192,12 +192,12 @@ const HowItWorks = () => {
                           {step.badge}
                         </span>
                         {isActive && (
-                          <span className="flex items-center gap-1 text-xs font-bold text-orange-400 bg-orange-500/10 px-2.5 py-0.5 rounded-full border border-orange-500/20">
+                          <span className="flex items-center gap-1 text-xs font-bold text-sky-400 bg-sky-500/10 px-2.5 py-0.5 rounded-full border border-sky-500/20">
                             Active Step <ArrowRight className="w-3 h-3" />
                           </span>
                         )}
                       </div>
-                      <h3 className="text-xl font-bold text-white mb-1.5">
+                      <h3 className="text-xl font-bold text-white mb-1.5 font-serif">
                         {step.title}
                       </h3>
                       <p className="text-sm text-gray-400 leading-relaxed">
@@ -208,7 +208,7 @@ const HowItWorks = () => {
 
                   {/* Active Indicator Bar */}
                   {isActive && (
-                    <div className="absolute left-0 top-3 bottom-3 w-1 bg-gradient-to-b from-orange-500 to-amber-500 rounded-r-full" />
+                    <div className="absolute left-0 top-3 bottom-3 w-1 bg-gradient-to-b from-sky-400 to-blue-500 rounded-r-full" />
                   )}
                 </div>
               );
@@ -236,11 +236,11 @@ const HowItWorks = () => {
 
               {/* Preview Title */}
               <div className="mb-6">
-                <h4 className="text-2xl font-black text-white mb-1">
+                <h4 className="text-2xl font-black text-white mb-1 font-serif">
                   {currentPreview.title}
                 </h4>
-                <p className="text-xs text-gray-400">
-                  Glenanda Learning Center Platform • Grade R–12 CAPS Ecosystem
+                <p className="text-xs text-gray-400 font-sans">
+                  Glenanda Learning Centre Platform • Grade R–12 CAPS Ecosystem
                 </p>
               </div>
 
@@ -254,7 +254,7 @@ const HowItWorks = () => {
                     <span className="text-sm font-medium text-gray-300">
                       {item.label}
                     </span>
-                    <span className="text-sm font-bold text-orange-400">
+                    <span className="text-sm font-bold text-sky-400">
                       {item.value}
                     </span>
                   </div>
@@ -262,19 +262,19 @@ const HowItWorks = () => {
               </div>
 
               {/* Interactive Footer Banner inside card */}
-              <div className="rounded-xl bg-gradient-to-r from-orange-500/10 via-amber-500/10 to-orange-500/10 border border-orange-500/20 p-4 flex items-center justify-between">
+              <div className="rounded-xl bg-gradient-to-r from-rose-500/5 via-sky-500/5 to-rose-500/5 border border-rose-500/20 p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center">
-                    <ShieldCheck className="w-5 h-5 text-orange-400" />
+                  <div className="w-10 h-10 rounded-xl bg-rose-500/20 flex items-center justify-center">
+                    <ShieldCheck className="w-5 h-5 text-rose-400" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-white">Full CAPS Alignment</p>
-                    <p className="text-[11px] text-gray-400">SACE-registered educators & real assessments</p>
+                    <p className="text-xs font-bold text-white leading-tight">Full CAPS Alignment</p>
+                    <p className="text-[10px] text-gray-400 leading-tight">SACE-registered educators & real assessments</p>
                   </div>
                 </div>
                 <Link
                   to="/apply"
-                  className="px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-400 text-white font-bold text-xs transition-colors shrink-0 flex items-center gap-1"
+                  className="px-4 py-2 rounded-lg bg-[#5c061c] hover:bg-[#7e0b27] text-white font-bold text-xs transition-colors shrink-0 flex items-center gap-1 border border-white/10"
                 >
                   Apply <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
@@ -284,31 +284,31 @@ const HowItWorks = () => {
         </div>
 
         {/* Bottom CTA Banner */}
-        <div className="mt-20 relative rounded-3xl overflow-hidden border border-orange-500/25 bg-gradient-to-r from-orange-950/40 via-amber-950/30 to-orange-950/40 p-8 md:p-12">
+        <div className="mt-20 relative rounded-3xl overflow-hidden border border-rose-500/20 bg-gradient-to-r from-[#5c061c]/10 via-sky-950/20 to-[#5c061c]/10 p-8 md:p-12">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8 relative z-10">
             <div className="space-y-2 text-center lg:text-left">
-              <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-orange-400">
-                <Zap className="w-4 h-4" /> 2026 Academic Year Admission
+              <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-sky-400">
+                <Zap className="w-4 h-4 text-rose-400" /> 2026 Academic Year Admission
               </span>
-              <h3 className="text-3xl md:text-4xl font-extrabold text-white">
+              <h3 className="text-3xl md:text-4xl font-extrabold text-white font-serif">
                 Ready to Give Your Child a Brighter Future?
               </h3>
               <p className="text-gray-300 max-w-2xl text-base">
-                Join Glenanda Learning Center today. Full CAPS curriculum, live expert classes, and interactive AI study assistance for Grade R to Matric.
+                Join Glenanda Learning Centre today. Full CAPS curriculum, live expert classes, and interactive AI study assistance for Grade R to Matric.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row items-center gap-4 shrink-0 w-full lg:w-auto">
               <Link
                 to="/apply"
-                className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-white font-extrabold text-base hover:shadow-lg hover:shadow-orange-500/30 transition-all hover:scale-[1.02] text-center flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-[#5c061c] to-[#9f1239] text-white font-extrabold text-base hover:shadow-lg hover:shadow-[#5c061c]/30 transition-all hover:scale-[1.02] text-center flex items-center justify-center gap-2 border border-white/10"
               >
-                <GraduationCap className="w-5 h-5" /> Start Application
+                <GraduationCap className="w-5 h-5 text-sky-300" /> Start Application
               </Link>
               <Link
                 to="/contact"
                 className="w-full sm:w-auto px-8 py-4 rounded-xl border border-white/20 text-white font-bold text-base hover:bg-white/10 transition-all text-center flex items-center justify-center gap-2"
               >
-                <BookOpen className="w-5 h-5 text-orange-400" /> Talk to Us
+                <BookOpen className="w-5 h-5 text-sky-400" /> Talk to Us
               </Link>
             </div>
           </div>

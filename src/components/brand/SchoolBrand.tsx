@@ -7,13 +7,22 @@ type SchoolBrandProps = {
 
 export function SchoolBrand({ to = "/", compact = false }: SchoolBrandProps) {
   const content = (
-    <div className={`flex items-center gap-2 ${compact ? "" : ""}`}>
+    <div className="flex items-center gap-4">
       <img
         src="/logo-school.jpeg"
         alt="Glenanda Learning Center"
-        className={`${compact ? "h-8 w-auto" : "h-11 w-auto"} rounded-xl`}
+        className={`${compact ? "h-10 w-auto" : "h-18 w-auto"} rounded-xl shadow-lg border border-white/10`}
       />
-      {!compact && <span className="font-extrabold tracking-tight text-gray-900 dark:text-white text-xl">Glenanda Learning Center</span>}
+      {!compact && (
+        <div className="flex flex-col">
+          <span className="font-black tracking-tight text-gray-900 dark:text-white text-2xl leading-none font-serif">
+            Glenanda
+          </span>
+          <span className="text-[10px] font-bold text-sky-400 dark:text-sky-300 uppercase tracking-[0.25em] mt-1 leading-none">
+            Learning Centre
+          </span>
+        </div>
+      )}
     </div>
   );
 

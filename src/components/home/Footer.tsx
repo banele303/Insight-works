@@ -12,25 +12,24 @@ const Footer = () => {
               <img
                 src="/logo-school.jpeg"
                 alt="Glenanda Learning Center"
-                className="h-12 w-auto rounded-xl border border-white/10"
+                className="h-16 w-auto rounded-xl border border-white/10 shadow-lg"
               />
               <div>
-                <span className="text-xl font-extrabold tracking-tight text-white">
-                  Glenanda <span className="text-orange-400">Learning Center</span>
+                <span className="text-xl font-extrabold tracking-tight text-white font-serif">
+                  Glenanda <span className="text-sky-400">Learning Centre</span>
                 </span>
-                <p className="text-[10px] text-gray-500 -mt-0.5">Quality Education, Real Results</p>
+                <p className="text-[10px] text-gray-500 -mt-0.5 uppercase tracking-wider font-semibold">Quality Education, Real Results</p>
               </div>
             </div>
             <p className="text-gray-400 leading-relaxed text-sm">
-              A home schooling centre providing CAPS-aligned education from Grade R to Matric.
-              Live online classes, certified educators, and real assessments that track true progress.
+              A premium home schooling academy providing CAPS-aligned education from Grade R to Matric. Live online classes, SACE-certified educators, and diagnostic learning profiles.
             </p>
             <div className="flex space-x-3">
               {[Twitter, Facebook, Linkedin].map((Icon, i) => (
                 <a
                   key={i}
                   href="#"
-                  className="w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-all text-gray-400 shadow-sm"
+                  className="w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center hover:bg-[#5c061c] hover:text-white hover:border-[#5c061c] transition-all text-gray-400 shadow-sm"
                 >
                   <Icon className="w-4 h-4" />
                 </a>
@@ -40,11 +39,11 @@ const Footer = () => {
 
           {/* For Learners */}
           <div>
-            <h4 className="text-white font-bold mb-5 text-sm uppercase tracking-wider">For Learners</h4>
+            <h4 className="text-white font-bold mb-5 text-sm uppercase tracking-wider font-serif">For Learners</h4>
             <ul className="space-y-3">
               {["Live Online Classes", "Video Library", "AI Study Buddy", "Homework Checker", "Study Groups", "Past Papers"].map((item) => (
                 <li key={item}>
-                  <a href="#" className="text-gray-400 hover:text-orange-400 transition-colors text-sm">{item}</a>
+                  <a href="#" className="text-gray-400 hover:text-sky-400 transition-colors text-sm">{item}</a>
                 </li>
               ))}
             </ul>
@@ -52,7 +51,7 @@ const Footer = () => {
 
           {/* The School */}
           <div>
-            <h4 className="text-white font-bold mb-5 text-sm uppercase tracking-wider">The School</h4>
+            <h4 className="text-white font-bold mb-5 text-sm uppercase tracking-wider font-serif">The School</h4>
             <ul className="space-y-3">
               {[
                 { label: "About Us", to: "/about" },
@@ -62,7 +61,7 @@ const Footer = () => {
                 { label: "Contact", to: "/contact" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link to={item.to} className="text-gray-400 hover:text-orange-400 transition-colors text-sm">
+                  <Link to={item.to} className="text-gray-400 hover:text-sky-400 transition-colors text-sm">
                     {item.label}
                   </Link>
                 </li>
@@ -72,26 +71,26 @@ const Footer = () => {
 
           {/* Contact */}
           <div>
-            <h4 className="text-white font-bold mb-5 text-sm uppercase tracking-wider">Contact Us</h4>
+            <h4 className="text-white font-bold mb-5 text-sm uppercase tracking-wider font-serif">Contact Us</h4>
             <ul className="space-y-4 text-sm">
               <li className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 text-orange-400 mt-0.5 shrink-0" />
-                <span className="text-gray-400">Glenanda, Johannesburg, Gauteng</span>
+                <MapPin className="w-4 h-4 text-sky-400 mt-0.5 shrink-0" />
+                <span className="text-gray-400 leading-normal">Glenanda, Johannesburg, Gauteng</span>
               </li>
               <li className="flex items-center gap-3">
-                <Phone className="w-4 h-4 text-orange-400 shrink-0" />
-                <a href="tel:+27110000000" className="text-gray-400 hover:text-orange-400 transition-colors">+27 11 000 0000</a>
+                <Phone className="w-4 h-4 text-sky-400 shrink-0" />
+                <a href="tel:+27110000000" className="text-gray-400 hover:text-sky-400 transition-colors">+27 11 000 0000</a>
               </li>
               <li className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-orange-400 shrink-0" />
-                <a href="mailto:info@glenandalearning.co.za" className="text-gray-400 hover:text-orange-400 transition-colors">info@glenandalearning.co.za</a>
+                <Mail className="w-4 h-4 text-sky-400 shrink-0" />
+                <a href="mailto:info@glenandalearning.co.za" className="text-gray-400 hover:text-sky-400 transition-colors">info@glenandalearning.co.za</a>
               </li>
               <li className="pt-2">
                 <Link
                   to="/apply"
-                  className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-white text-sm font-bold px-5 py-3 rounded-xl transition-all"
+                  className="inline-flex items-center gap-2 bg-[#5c061c] hover:bg-[#7e0b27] text-white text-sm font-bold px-5 py-3 rounded-xl transition-all border border-white/10"
                 >
-                  <GraduationCap className="h-4 w-4" /> Apply Now <ArrowRight className="h-4 w-4" />
+                  <GraduationCap className="h-4 w-4 text-sky-300" /> Apply Now <ArrowRight className="h-4 w-4 text-sky-300" />
                 </Link>
               </li>
             </ul>
@@ -100,7 +99,7 @@ const Footer = () => {
 
         <div className="border-t border-white/[0.06] pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-gray-500">
-            © {new Date().getFullYear()} Glenanda Learning Center. All rights reserved.
+            © {new Date().getFullYear()} Glenanda Learning Centre. All rights reserved.
           </p>
           <div className="flex items-center gap-6 text-xs text-gray-500">
             <span>POPIA Compliant</span>
@@ -109,7 +108,7 @@ const Footer = () => {
           </div>
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center hover:bg-orange-500 hover:border-orange-500 transition-all text-gray-400"
+            className="w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center hover:bg-sky-500 hover:border-sky-500 transition-all text-gray-400"
           >
             <ArrowUp className="w-4 h-4" />
           </button>

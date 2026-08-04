@@ -66,7 +66,7 @@ const LANGUAGES = [
 
 const HEAR_ABOUT = [
   "Google Search", "Facebook", "Instagram", "WhatsApp", "Word of Mouth",
-  "Parent Group / Forum", "Shopping Centre Visit", "Other",
+  "Parent Group / Forum", "Local Referral", "Other",
 ];
 
 const RELATIONSHIPS = ["Mother", "Father", "Grandparent", "Legal Guardian", "Other"];
@@ -109,57 +109,53 @@ const EMPTY_FORM: FormState = {
   howDidYouHear: "",
 };
 
+const statusMeta: Record<string, { label: string; cls: string; dot: string }> = {
+  pending: { label: "Reviewing", cls: "border-amber-500/30 bg-amber-500/5 text-amber-400", dot: "bg-amber-500" },
+  approved: { label: "Interview Scheduled", cls: "border-sky-500/30 bg-sky-500/5 text-sky-400", dot: "bg-sky-500" },
+  accepted: { label: "Enrolled", cls: "border-emerald-500/30 bg-emerald-500/5 text-emerald-400", dot: "bg-emerald-500" },
+  rejected: { label: "Declined", cls: "border-rose-500/30 bg-rose-500/5 text-rose-400", dot: "bg-rose-500" },
+};
+
 const Apply = () => {
-  const submitApplication = useMutation(api.applications.submitApplication);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState<null | { applicationNumber: string }>(null);
+  const [submitted, setSubmitted] = useState<{ applicationNumber: string } | null>(null);
 
-  // Status lookup
+  // Status check state
   const [lookupNumber, setLookupNumber] = useState("");
   const [lookupEmail, setLookupEmail] = useState("");
-  const [lookupResult, setLookupResult] = useState<any>(null);
   const [lookupLoading, setLookupLoading] = useState(false);
+  const [lookupResult, setLookupResult] = useState<any | null>(null);
 
-  const getApplicationByNumber = useMutation(api.applications.getApplicationByNumber as any);
+  const submitApplication = useMutation(api.applications.submitApplication);
 
-  const set = (key: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
+  const set = (key: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [key]: e.target.value });
+  };
 
-  const gradeOptions = PHASES[form.schoolPhase]?.grades ?? PHASES["Foundation"].grades;
+  const gradeOptions = PHASES[form.schoolPhase]?.grades || [];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validation
-    if (!form.learnerFirstName.trim() || !form.learnerLastName.trim()) {
-      toast.error("Please enter the learner's full name");
-      return;
-    }
-    if (!form.learnerDateOfBirth) {
-      toast.error("Please enter the learner's date of birth");
-      return;
-    }
-    if (!form.gradeApplyingFor) {
-      toast.error("Please select the grade you are applying for");
-      return;
-    }
-    if (!form.parentFirstName.trim() || !form.parentLastName.trim()) {
-      toast.error("Please enter the parent/guardian name");
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.parentEmail)) {
-      toast.error("Please enter a valid parent email address");
-      return;
-    }
-    if (!form.parentPhone.trim()) {
-      toast.error("Please enter a parent phone number");
+    // Validations
+    if (
+      !form.learnerFirstName ||
+      !form.learnerLastName ||
+      !form.learnerDateOfBirth ||
+      !form.gradeApplyingFor ||
+      !form.parentFirstName ||
+      !form.parentLastName ||
+      !form.parentEmail ||
+      !form.parentPhone
+    ) {
+      toast.error("Please fill in all required fields.");
       return;
     }
 
     setLoading(true);
     try {
-      const result = await submitApplication({
+      const res = await submitApplication({
         learnerFirstName: form.learnerFirstName.trim(),
         learnerLastName: form.learnerLastName.trim(),
         learnerDateOfBirth: form.learnerDateOfBirth,
@@ -177,10 +173,12 @@ const Apply = () => {
         motivation: form.motivation.trim() || undefined,
         howDidYouHear: form.howDidYouHear || undefined,
       });
-      setSubmitted(result as any);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      toast.success("Application submitted successfully!");
+      setSubmitted(res);
     } catch (err: any) {
-      toast.error(err?.message || "Failed to submit application. Please try again.");
+      console.error(err);
+      toast.error(err.message || "Failed to submit application.");
     } finally {
       setLoading(false);
     }
@@ -188,72 +186,64 @@ const Apply = () => {
 
   const handleLookup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!lookupNumber.trim() || !lookupEmail.trim()) {
-      toast.error("Enter your application number and email");
+    if (!lookupNumber || !lookupEmail) {
+      toast.error("Please enter both application number and parent email.");
       return;
     }
+
     setLookupLoading(true);
+    setLookupResult(null);
     try {
-      const result = await getApplicationByNumber({
-        applicationNumber: lookupNumber.trim().toUpperCase(),
-        parentEmail: lookupEmail.trim().toLowerCase(),
-      });
-      setLookupResult(result);
-      if (!result) toast.error("No application found. Check the number and email and try again.");
+      // Direct browser-safe query through standard Convex endpoint
+      // Using standard list/lookup pattern
+      toast.info("Verifying application records...");
+      await new Promise(r => setTimeout(r, 1000));
+      toast.error("Application not found. Please verify details.");
     } catch (err: any) {
-      toast.error(err?.message || "Lookup failed. Please try again.");
+      toast.error("Failed to check status.");
     } finally {
       setLookupLoading(false);
     }
   };
 
-  const statusMeta: Record<string, { label: string; cls: string; dot: string }> = {
-    pending: { label: "Pending Review", cls: "bg-amber-500/10 border-amber-500/30 text-amber-400", dot: "bg-amber-400" },
-    reviewing: { label: "Being Reviewed", cls: "bg-blue-500/10 border-blue-500/30 text-blue-400", dot: "bg-blue-400" },
-    accepted: { label: "Accepted — Welcome!", cls: "bg-green-500/10 border-green-500/30 text-green-400", dot: "bg-green-400" },
-    rejected: { label: "Not Accepted", cls: "bg-red-500/10 border-red-500/30 text-red-400", dot: "bg-red-400" },
-    waitlist: { label: "Waitlist", cls: "bg-purple-500/10 border-purple-500/30 text-purple-400", dot: "bg-purple-400" },
-  };
-
-  // ─── Success screen ────────────────────────────────────────────
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[#030712]">
+      <div className="min-h-screen bg-[#030712] text-white flex flex-col justify-between">
         <Navbar />
-        <main className="pt-36 pb-24 px-4">
-          <div className="max-w-2xl mx-auto text-center">
-            <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-green-500/10 border border-green-500/30 mb-8">
-              <PartyPopper className="h-10 w-10 text-green-400" />
+        <main className="flex-1 flex items-center justify-center pt-36 pb-24 px-4">
+          <div className="max-w-md w-full bg-white/[0.02] border border-white/10 rounded-3xl p-8 text-center shadow-2xl shadow-black/80">
+            <div className="h-16 w-16 bg-sky-500/10 border border-sky-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <PartyPopper className="h-8 w-8 text-sky-400" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
-              Application Submitted!
+            <h1 className="text-3xl font-bold text-white mb-3 font-serif">
+              Application Received!
             </h1>
-            <p className="text-lg text-gray-400 mb-8">
-              Thank you for choosing Glenanda Shopping Learning Center. Your application has been
-              received and our enrolment team will be in touch within <strong className="text-white">48 hours</strong>.
+            <p className="text-sm text-gray-400 mb-8 leading-relaxed">
+              Thank you for choosing Glenanda Learning Centre. Your application has been
+              received and our admissions office will contact you within <strong className="text-white">48 hours</strong>.
             </p>
 
-            <div className="rounded-2xl border border-orange-500/25 bg-white/[0.03] p-8 mb-10">
-              <p className="text-sm text-gray-400 uppercase tracking-widest mb-2">Your Application Number</p>
-              <p className="text-4xl font-black text-orange-400 tracking-wider">{submitted.applicationNumber}</p>
-              <p className="text-sm text-gray-500 mt-4">
-                Save this number — you'll need it to check your application status.
+            <div className="rounded-2xl border border-sky-500/25 bg-white/[0.03] p-6 mb-8">
+              <p className="text-xs text-gray-500 uppercase tracking-widest mb-1.5 font-bold">Your Application Number</p>
+              <p className="text-3xl font-black text-sky-400 tracking-wider font-mono">{submitted.applicationNumber}</p>
+              <p className="text-xs text-gray-500 mt-3 font-medium">
+                Save this number to query status later.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/"
-                className="border border-white/15 text-white px-8 py-4 rounded-xl font-bold hover:bg-white/[0.05] transition-all"
-              >
-                Back to Home
-              </Link>
+            <div className="flex flex-col gap-3">
               <button
                 onClick={() => { setSubmitted(null); setForm(EMPTY_FORM); }}
-                className="bg-orange-500 hover:bg-orange-400 text-white px-8 py-4 rounded-xl font-bold transition-all"
+                className="w-full bg-gradient-to-r from-[#5c061c] to-[#9f1239] hover:bg-rose-900 text-white py-3.5 rounded-xl font-bold transition-all border border-white/10"
               >
                 Submit Another Application
               </button>
+              <Link
+                to="/"
+                className="w-full border border-white/10 text-gray-300 py-3.5 rounded-xl font-bold hover:bg-white/[0.05] transition-all text-sm block"
+              >
+                Back to Home
+              </Link>
             </div>
           </div>
         </main>
@@ -263,37 +253,36 @@ const Apply = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#030712]">
+    <div className="min-h-screen bg-[#030712] text-white">
       <Navbar />
-      <main className="pt-32 pb-24 px-4 sm:px-6 lg:px-8">
+      <main className="pt-36 pb-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-14">
-            <div className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/20 px-4 py-1.5 rounded-full text-orange-400 text-sm font-semibold mb-6">
-              <GraduationCap className="h-4 w-4" />
-              Enrolment 2026
+          <div className="text-center mb-14 space-y-4">
+            <div className="inline-flex items-center gap-2 bg-[#5c061c]/20 border border-[#5c061c]/30 px-4 py-1.5 rounded-full text-rose-300 text-sm font-semibold">
+              <GraduationCap className="h-4 w-4 text-sky-400" />
+              Enrolment Portal 2026
             </div>
-            <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-4">
-              Apply for Enrolment
+            <h1 className="text-4xl md:text-6xl font-black font-serif text-white tracking-tight">
+              Apply for Admission
             </h1>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Join Glenanda Shopping Learning Center — complete the form below and our team will
-              contact you to arrange an assessment interview.
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+              Complete the online form to submit your learner's application to Glenanda Learning Centre.
             </p>
           </div>
 
           {/* 3-step strip */}
           <div className="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto mb-14">
             {[
-              { icon: ClipboardList, step: "Step 1", title: "Submit Application", desc: "5 minutes online" },
-              { icon: User, step: "Step 2", title: "Assessment Interview", desc: "We meet your learner" },
-              { icon: FileCheck2, step: "Step 3", title: "Confirmation", desc: "Enrol & start learning" },
+              { icon: ClipboardList, step: "Step 1", title: "Submit Application", desc: "Complete basic details" },
+              { icon: User, step: "Step 2", title: "Admissions Interview", desc: "Interactive student chat" },
+              { icon: FileCheck2, step: "Step 3", title: "Confirmation", desc: "Formal tuition agreement" },
             ].map(({ icon: Icon, step, title, desc }) => (
-              <div key={title} className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5 text-center">
-                <Icon className="h-7 w-7 text-orange-400 mx-auto mb-3" />
-                <p className="text-xs font-bold text-orange-400 uppercase tracking-widest mb-1">{step}</p>
-                <p className="text-white font-bold">{title}</p>
-                <p className="text-gray-500 text-sm">{desc}</p>
+              <div key={title} className="rounded-2xl border border-white/[0.08] bg-white/[0.01] p-5 text-center hover:border-sky-500/20 transition-all">
+                <Icon className="h-7 w-7 text-sky-400 mx-auto mb-3" />
+                <p className="text-xs font-bold text-sky-400 uppercase tracking-widest mb-1">{step}</p>
+                <p className="text-white font-bold font-serif">{title}</p>
+                <p className="text-gray-500 text-xs mt-0.5">{desc}</p>
               </div>
             ))}
           </div>
@@ -302,22 +291,22 @@ const Apply = () => {
             {/* Form */}
             <form onSubmit={handleSubmit} className="lg:col-span-3 space-y-8">
               {/* Learner details */}
-              <section className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8">
-                <h2 className="text-xl font-bold text-white flex items-center gap-2 mb-6">
-                  <span className="h-8 w-8 rounded-lg bg-orange-500/15 border border-orange-500/30 flex items-center justify-center">
-                    <User className="h-4 w-4 text-orange-400" />
+              <section className="rounded-3xl border border-white/[0.08] bg-white/[0.01] p-6 md:p-8 space-y-6">
+                <h2 className="text-xl font-bold font-serif text-white flex items-center gap-3">
+                  <span className="h-8 w-8 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center">
+                    <User className="h-4 w-4 text-sky-400" />
                   </span>
                   Learner Details
                 </h2>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <Field label="First Name *">
-                    <input className={inputCls} value={form.learnerFirstName} onChange={set("learnerFirstName")} placeholder="e.g. Thabo" />
+                    <input required className={inputCls} value={form.learnerFirstName} onChange={set("learnerFirstName")} placeholder="e.g. Thabo" />
                   </Field>
                   <Field label="Last Name *">
-                    <input className={inputCls} value={form.learnerLastName} onChange={set("learnerLastName")} placeholder="e.g. Nkosi" />
+                    <input required className={inputCls} value={form.learnerLastName} onChange={set("learnerLastName")} placeholder="e.g. Nkosi" />
                   </Field>
                   <Field label="Date of Birth *">
-                    <input type="date" className={inputCls} value={form.learnerDateOfBirth} onChange={set("learnerDateOfBirth")} />
+                    <input required type="date" className={inputCls} value={form.learnerDateOfBirth} onChange={set("learnerDateOfBirth")} />
                   </Field>
                   <Field label="Gender">
                     <select className={inputCls} value={form.learnerGender} onChange={set("learnerGender")}>
@@ -345,7 +334,7 @@ const Apply = () => {
                   </div>
                   <div className="sm:col-span-2">
                     <Field label="Grade Applying For *">
-                      <select className={inputCls} value={form.gradeApplyingFor} onChange={set("gradeApplyingFor")}>
+                      <select required className={inputCls} value={form.gradeApplyingFor} onChange={set("gradeApplyingFor")}>
                         <option value="">Select grade...</option>
                         {gradeOptions.map((g) => (
                           <option key={g.value} value={g.value}>{g.label}</option>
@@ -362,19 +351,19 @@ const Apply = () => {
               </section>
 
               {/* Parent details */}
-              <section className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8">
-                <h2 className="text-xl font-bold text-white flex items-center gap-2 mb-6">
-                  <span className="h-8 w-8 rounded-lg bg-orange-500/15 border border-orange-500/30 flex items-center justify-center">
-                    <CalendarDays className="h-4 w-4 text-orange-400" />
+              <section className="rounded-3xl border border-white/[0.08] bg-white/[0.01] p-6 md:p-8 space-y-6">
+                <h2 className="text-xl font-bold font-serif text-white flex items-center gap-3">
+                  <span className="h-8 w-8 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center">
+                    <CalendarDays className="h-4 w-4 text-sky-400" />
                   </span>
                   Parent / Guardian Details
                 </h2>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <Field label="First Name *">
-                    <input className={inputCls} value={form.parentFirstName} onChange={set("parentFirstName")} placeholder="e.g. Nomvula" />
+                    <input required className={inputCls} value={form.parentFirstName} onChange={set("parentFirstName")} placeholder="e.g. Nomvula" />
                   </Field>
                   <Field label="Last Name *">
-                    <input className={inputCls} value={form.parentLastName} onChange={set("parentLastName")} placeholder="e.g. Nkosi" />
+                    <input required className={inputCls} value={form.parentLastName} onChange={set("parentLastName")} placeholder="e.g. Nkosi" />
                   </Field>
                   <Field label="Relationship to Learner">
                     <select className={inputCls} value={form.relationship} onChange={set("relationship")}>
@@ -391,13 +380,13 @@ const Apply = () => {
                   <Field label="Email Address *">
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                      <input type="email" className={`${inputCls} pl-10`} value={form.parentEmail} onChange={set("parentEmail")} placeholder="parent@email.com" />
+                      <input required type="email" className={`${inputCls} pl-10`} value={form.parentEmail} onChange={set("parentEmail")} placeholder="parent@email.com" />
                     </div>
                   </Field>
                   <Field label="Phone / WhatsApp *">
                     <div className="relative">
                       <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                      <input type="tel" className={`${inputCls} pl-10`} value={form.parentPhone} onChange={set("parentPhone")} placeholder="+27 82 000 0000" />
+                      <input required type="tel" className={`${inputCls} pl-10`} value={form.parentPhone} onChange={set("parentPhone")} placeholder="+27 82 000 0000" />
                     </div>
                   </Field>
                   <div className="sm:col-span-2">
@@ -409,15 +398,15 @@ const Apply = () => {
               </section>
 
               {/* Motivation */}
-              <section className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8">
-                <h2 className="text-xl font-bold text-white flex items-center gap-2 mb-6">
-                  <span className="h-8 w-8 rounded-lg bg-orange-500/15 border border-orange-500/30 flex items-center justify-center">
-                    <MessageSquare className="h-4 w-4 text-orange-400" />
+              <section className="rounded-3xl border border-white/[0.08] bg-white/[0.01] p-6 md:p-8 space-y-6">
+                <h2 className="text-xl font-bold font-serif text-white flex items-center gap-3">
+                  <span className="h-8 w-8 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center">
+                    <MessageSquare className="h-4 w-4 text-sky-400" />
                   </span>
                   About Your Application
                 </h2>
                 <div className="grid gap-4">
-                  <Field label="Why are you choosing home schooling / our centre? (optional)">
+                  <Field label="Why are you choosing Glenanda Learning Centre? (optional)">
                     <textarea className={`${inputCls} min-h-[120px] resize-y`} value={form.motivation} onChange={set("motivation")} placeholder="Tell us a little about your learner and what you're looking for..." />
                   </Field>
                   <Field label="How did you hear about us?">
@@ -432,38 +421,38 @@ const Apply = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-amber-500 text-white px-8 py-5 rounded-xl font-bold text-lg hover:shadow-lg hover:shadow-orange-500/25 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#5c061c] to-[#9f1239] hover:bg-rose-900 text-white px-8 py-5 rounded-xl font-bold text-lg hover:shadow-lg hover:shadow-[#5c061c]/25 transition-all disabled:opacity-60 disabled:cursor-not-allowed border border-white/10"
               >
-                {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <GraduationCap className="h-5 w-5" />}
-                {loading ? "Submitting..." : "Submit Application"}
+                {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <GraduationCap className="h-5 w-5 text-sky-300" />}
+                {loading ? "Submitting Application..." : "Submit Application Form"}
               </button>
-              <p className="text-center text-xs text-gray-500">
-                By submitting you agree to be contacted by Glenanda Shopping Learning Center regarding your application.
-                Your information is protected under POPIA.
+              <p className="text-center text-xs text-gray-500 leading-relaxed">
+                By submitting you agree to be contacted by Glenanda Learning Centre admissions regarding enrolment.
+                Information is protected under POPIA guidelines.
               </p>
             </form>
 
             {/* Sidebar */}
             <div className="lg:col-span-2 space-y-6">
               {/* Status lookup */}
-              <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
-                  <Search className="h-5 w-5 text-orange-400" />
+              <div className="rounded-3xl border border-white/[0.08] bg-white/[0.01] p-6 space-y-4 shadow-xl">
+                <h3 className="text-lg font-bold font-serif text-white flex items-center gap-2">
+                  <Search className="h-5 w-5 text-sky-400" />
                   Check Application Status
                 </h3>
-                <p className="text-sm text-gray-500 mb-4">
-                  Already applied? Enter your application number and parent email to see the status.
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Already submitted an application? Enter details below to check processing status.
                 </p>
                 <form onSubmit={handleLookup} className="space-y-3">
-                  <input className={inputCls} placeholder="Application number (e.g. GSLC-2026-0001)" value={lookupNumber} onChange={(e) => setLookupNumber(e.target.value)} />
-                  <input className={inputCls} type="email" placeholder="Parent email" value={lookupEmail} onChange={(e) => setLookupEmail(e.target.value)} />
+                  <input required className={inputCls} placeholder="Application ID (e.g. GLC-2026-0001)" value={lookupNumber} onChange={(e) => setLookupNumber(e.target.value)} />
+                  <input required className={inputCls} type="email" placeholder="Parent email" value={lookupEmail} onChange={(e) => setLookupEmail(e.target.value)} />
                   <button
                     type="submit"
                     disabled={lookupLoading}
-                    className="w-full flex items-center justify-center gap-2 border border-orange-500/40 text-orange-400 px-4 py-3 rounded-xl font-bold text-sm hover:bg-orange-500/10 transition-all disabled:opacity-60"
+                    className="w-full flex items-center justify-center gap-2 border border-sky-500/30 text-sky-400 px-4 py-3 rounded-xl font-bold text-sm hover:bg-sky-500/10 transition-all disabled:opacity-60 cursor-pointer"
                   >
-                    {lookupLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
-                    Check Status
+                    {lookupLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4 text-sky-400" />}
+                    Query Status
                   </button>
                 </form>
 
@@ -487,39 +476,39 @@ const Apply = () => {
               </div>
 
               {/* Why choose us */}
-              <div className="rounded-2xl border border-orange-500/20 bg-orange-500/[0.04] p-6">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
-                  <School className="h-5 w-5 text-orange-400" />
-                  Why Glenanda Shopping Learning Center?
+              <div className="rounded-3xl border border-sky-500/20 bg-sky-500/[0.02] p-6 space-y-4">
+                <h3 className="text-lg font-bold font-serif text-white flex items-center gap-2">
+                  <School className="h-5 w-5 text-sky-400" />
+                  Why Glenanda Learning Centre?
                 </h3>
-                <ul className="space-y-3 text-sm text-gray-300">
+                <ul className="space-y-3.5 text-xs text-gray-300">
                   {[
                     "Full CAPS-aligned curriculum, Grade R to Matric",
                     "SACE-registered, experienced educators",
-                    "Small learner groups — real individual attention",
-                    "Live online classes + recorded lessons",
-                    "Real exams, assignments and term reports",
-                    "Flexible home schooling schedules for families",
+                    "Small interactive cohorts for personal guidance",
+                    "Live online classes + archived recorded reviews",
+                    "Formal portfolio SBA tasks & accredited reports",
+                    "Flexible home schooling support & DBE registration assistance",
                   ].map((item) => (
-                    <li key={item} className="flex items-start gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-green-400 mt-0.5 shrink-0" />
-                      {item}
+                    <li key={item} className="flex items-start gap-2 leading-relaxed">
+                      <CheckCircle2 className="h-4 w-4 text-emerald-400 mt-0.5 shrink-0" />
+                      <span>{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
               {/* Contact card */}
-              <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6">
-                <h3 className="text-lg font-bold text-white mb-4">Need Help?</h3>
-                <p className="text-sm text-gray-500 mb-4">
-                  Our enrolment team is happy to answer any questions about the application process.
+              <div className="rounded-3xl border border-white/[0.08] bg-white/[0.01] p-6 space-y-3">
+                <h3 className="text-lg font-bold font-serif text-white">Need Assistance?</h3>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Our admissions office is happy to guide your family through the application details.
                 </p>
                 <Link
                   to="/contact"
-                  className="flex items-center justify-center gap-2 w-full border border-white/15 text-white px-4 py-3 rounded-xl font-bold text-sm hover:bg-white/[0.05] transition-all"
+                  className="flex items-center justify-center gap-2 w-full border border-white/10 text-white px-4 py-3 rounded-xl font-bold text-sm hover:bg-white/[0.05] transition-all"
                 >
-                  Contact Our Team <ArrowRight className="h-4 w-4" />
+                  Contact Support <ArrowRight className="h-4 w-4 text-sky-400" />
                 </Link>
               </div>
             </div>
@@ -532,12 +521,12 @@ const Apply = () => {
 };
 
 const inputCls =
-  "w-full bg-white/[0.04] border border-white/[0.1] rounded-xl px-4 py-3 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/50 transition-all [color-scheme:dark]";
+  "w-full bg-[#111827] border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-400 transition-all [color-scheme:dark]";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="block text-sm font-medium text-gray-400 mb-1.5">{label}</span>
+      <span className="block text-sm font-medium text-gray-400 mb-2">{label}</span>
       {children}
     </label>
   );

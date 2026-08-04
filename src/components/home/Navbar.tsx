@@ -23,18 +23,18 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           {/* Brand */}
-          <Link to="/" className="flex items-center gap-3 group">
+          <Link to="/" className="flex items-center gap-4 group">
             <img
               src="/logo-school.jpeg"
               alt="Glenanda Learning Center"
-              className="h-12 w-auto rounded-xl border border-white/10 group-hover:border-orange-500/40 transition-colors"
+              className="h-16 w-auto rounded-xl border border-white/10 group-hover:border-sky-400/40 transition-colors shadow-md"
             />
             <div className="hidden sm:block">
-              <span className="block font-extrabold tracking-tight text-white text-lg leading-tight">
+              <span className="block font-black tracking-tight text-white text-xl leading-none font-serif">
                 Glenanda
               </span>
-              <span className="block text-xs font-semibold text-orange-400 uppercase tracking-widest">
-                Learning Center
+              <span className="block text-[10px] font-bold text-sky-400 uppercase tracking-[0.2em] mt-1 leading-none">
+                Learning Centre
               </span>
             </div>
           </Link>
@@ -48,15 +48,15 @@ const Navbar = () => {
             <div className="w-px h-6 bg-white/10 mx-2" />
             <Link
               to="/login"
-              className="text-gray-300 hover:text-orange-400 transition-colors font-medium text-sm px-3 py-2"
+              className="text-gray-300 hover:text-sky-400 transition-colors font-medium text-sm px-3 py-2"
             >
               Sign In
             </Link>
             <Link
               to="/apply"
-              className="flex items-center gap-2 bg-orange-500 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-orange-400 hover:shadow-lg hover:shadow-orange-500/25 transition-all transform hover:scale-[1.02] ml-2"
+              className="flex items-center gap-2 bg-[#5c061c] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-[#7e0b27] hover:shadow-lg hover:shadow-[#5c061c]/25 transition-all transform hover:scale-[1.02] ml-2 border border-white/10"
             >
-              <GraduationCap className="h-4 w-4" />
+              <GraduationCap className="h-4 w-4 text-sky-300" />
               Apply Now
             </Link>
           </div>
@@ -79,9 +79,9 @@ const Navbar = () => {
             <Link to="/login" className="text-center text-gray-300 font-medium py-2">Sign In</Link>
             <Link
               to="/apply"
-              className="text-center flex items-center justify-center gap-2 bg-orange-500 text-white px-5 py-3 rounded-xl font-bold"
+              className="text-center flex items-center justify-center gap-2 bg-[#5c061c] text-white px-5 py-3 rounded-xl font-bold border border-white/10"
             >
-              Apply Now <ArrowRight className="h-4 w-4" />
+              Apply Now <ArrowRight className="h-4 w-4 text-sky-300" />
             </Link>
           </div>
         </div>
@@ -94,7 +94,7 @@ function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
   return (
     <Link
       to={to}
-      className="text-gray-300 hover:text-orange-400 transition-colors font-medium text-sm px-3 py-2 rounded-lg hover:bg-white/[0.04]"
+      className="text-gray-300 hover:text-sky-400 transition-colors font-medium text-sm px-3 py-2 rounded-lg hover:bg-white/[0.04]"
     >
       {children}
     </Link>
@@ -106,7 +106,7 @@ function MobileNavLink({ to, onClick, children }: { to: string; onClick: () => v
     <Link
       to={to}
       onClick={onClick}
-      className="block text-gray-300 hover:text-orange-400 text-lg font-medium py-2"
+      className="block text-gray-300 hover:text-sky-400 text-lg font-medium py-2"
     >
       {children}
     </Link>

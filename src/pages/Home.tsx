@@ -47,23 +47,23 @@ const Home = () => {
         {/* Enrolment CTA */}
         <section className="py-28 relative overflow-hidden bg-[#030712]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="relative overflow-hidden rounded-3xl border border-orange-500/20">
+            <div className="relative overflow-hidden rounded-3xl border border-[#5c061c]/30">
               {/* Gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-600 via-orange-500 to-amber-500" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#5c061c] via-[#860d29] to-sky-950" />
               <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2" />
               <div className="absolute bottom-0 right-0 w-96 h-96 bg-black/10 rounded-full blur-[100px] translate-x-1/2 translate-y-1/2" />
 
               <div className="relative z-10 p-12 md:p-20 text-center">
                 <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur px-4 py-1.5 rounded-full text-white text-sm font-semibold mb-8">
-                  <GraduationCap className="h-4 w-4" />
+                  <GraduationCap className="h-4 w-4 text-sky-300" />
                   Enrolment for 2026 is now open
                 </div>
-                <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-6">
+                <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-6 font-serif">
                   Give Your Child the Gift of
                   <br className="hidden md:block" /> Quality Education
                 </h2>
                 <p className="text-xl text-white/85 mb-10 max-w-2xl mx-auto">
-                  Join Glenanda Learning Center — a caring home schooling community with
+                  Join Glenanda Learning Centre — a caring home schooling community with
                   certified educators, a full CAPS curriculum, and real assessments that track your
                   child's true progress.
                 </p>
@@ -76,8 +76,8 @@ const Home = () => {
                     { icon: GraduationCap, title: "3. Welcome Aboard", desc: "Start learning immediately" },
                   ].map(({ icon: Icon, title, desc }) => (
                     <div key={title} className="bg-black/20 backdrop-blur rounded-2xl p-4 border border-white/10">
-                      <Icon className="h-6 w-6 text-white mb-2 mx-auto" />
-                      <p className="text-white font-bold text-sm">{title}</p>
+                      <Icon className="h-6 w-6 text-sky-300 mb-2 mx-auto" />
+                      <p className="text-white font-bold text-sm font-serif">{title}</p>
                       <p className="text-white/70 text-xs mt-1">{desc}</p>
                     </div>
                   ))}
@@ -86,9 +86,9 @@ const Home = () => {
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
                   <Link
                     to="/apply"
-                    className="bg-white text-orange-600 px-10 py-5 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all transform hover:scale-[1.02] shadow-xl flex items-center justify-center gap-2"
+                    className="bg-white text-[#5c061c] px-10 py-5 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all transform hover:scale-[1.02] shadow-xl flex items-center justify-center gap-2"
                   >
-                    Start Your Application <ArrowRight className="h-5 w-5" />
+                    Start Your Application <ArrowRight className="h-5 w-5 text-sky-400" />
                   </Link>
                   <Link
                     to="/contact"

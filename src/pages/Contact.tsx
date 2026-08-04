@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Link } from "react-router";
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
-import { Mail, Phone, MapPin, Send, MessageSquare, Clock } from "lucide-react";
+import { Mail, Phone, MapPin, Send, MessageSquare, Clock, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
 const Contact = () => {
-  const [form, setForm] = useState({ name: "", email: "", school: "", role: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", grade: "", role: "", message: "" });
   const [sending, setSending] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -16,182 +16,182 @@ const Contact = () => {
       return;
     }
     setSending(true);
-    // Simulate sending — in production this would call an API
     await new Promise((r) => setTimeout(r, 1500));
     setSending(false);
-    toast.success("Message sent! We'll get back to you within 24 hours.");
-    setForm({ name: "", email: "", school: "", role: "", message: "" });
+    toast.success("Message sent! Academic advising will contact you shortly.");
+    setForm({ name: "", email: "", grade: "", role: "", message: "" });
   };
 
   return (
-    <div>
+    <div className="bg-[#030712] min-h-screen text-white">
       <Navbar />
       <main>
         {/* Hero */}
-        <section className="relative pt-32 pb-20 bg-gradient-to-b from-[#f97316]/10 to-background">
+        <section className="relative pt-36 pb-20 bg-gradient-to-b from-[#5c061c]/10 via-[#030712] to-[#030712]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl">
-              <div className="inline-block bg-[#f97316]/10 text-[#f97316] text-sm font-bold px-4 py-1.5 rounded-full mb-6 uppercase tracking-wider">
-                Contact Us
+            <div className="max-w-2xl space-y-4">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#5c061c]/20 border border-[#5c061c]/30 text-rose-300 text-xs font-bold uppercase tracking-widest">
+                <Sparkles className="w-3.5 h-3.5 text-sky-400" />
+                Contact Admissions
               </div>
-              <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-                Let's Start a Conversation
+              <h1 className="text-5xl md:text-6xl font-black font-serif text-white tracking-tight">
+                Connect With Us
               </h1>
-              <p className="text-xl text-gray-400">
-                Whether you're a school principal, district official, or parent — we'd love to
-                hear from you. Our team typically responds within 24 hours.
+              <p className="text-xl text-gray-400 leading-relaxed">
+                Whether you're inquiring about the CAPS curriculum, live online classes, tuition fees, or standard enrolment — we're here to guide your family.
               </p>
             </div>
           </div>
         </section>
 
-        <section className="py-20">
+        <section className="py-20 border-t border-white/[0.05]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid md:grid-cols-3 gap-12">
               {/* Contact Info */}
               <div className="space-y-8">
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-6">Get in Touch</h3>
+                  <h3 className="text-xl font-bold font-serif text-white mb-6">Academy Information</h3>
                   <div className="space-y-6">
                     <div className="flex items-start gap-4">
-                      <div className="bg-[#f97316]/10 p-3 rounded-xl shrink-0">
-                        <MapPin className="w-5 h-5 text-[#f97316]" />
+                      <div className="bg-sky-500/10 p-3 rounded-xl shrink-0 border border-sky-500/20">
+                        <MapPin className="w-5 h-5 text-sky-400" />
                       </div>
                       <div>
-                        <p className="font-medium text-white">Head Office</p>
-                        <p className="text-gray-500 text-sm">123 Ubuntu Street, Johannesburg, Gauteng, 2000</p>
+                        <p className="font-medium text-white font-serif">Physical Campus</p>
+                        <p className="text-gray-400 text-sm mt-1 leading-relaxed">Glenanda, Johannesburg, Gauteng, 2091</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <div className="bg-[#f97316]/10 p-3 rounded-xl shrink-0">
-                        <Phone className="w-5 h-5 text-[#f97316]" />
+                      <div className="bg-sky-500/10 p-3 rounded-xl shrink-0 border border-sky-500/20">
+                        <Phone className="w-5 h-5 text-sky-400" />
                       </div>
                       <div>
-                        <p className="font-medium text-white">Phone & WhatsApp</p>
-                        <p className="text-gray-500 text-sm">067 653 0791</p>
-                        <p className="text-gray-500 text-sm">Mon–Fri, 8am–5pm SAST</p>
+                        <p className="font-medium text-white font-serif">Phone & WhatsApp</p>
+                        <p className="text-gray-400 text-sm mt-1 leading-relaxed">+27 11 000 0000</p>
+                        <p className="text-gray-500 text-xs mt-0.5">Mon–Fri, 8:00 AM – 5:00 PM SAST</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <div className="bg-[#f97316]/10 p-3 rounded-xl shrink-0">
-                        <Mail className="w-5 h-5 text-[#f97316]" />
+                      <div className="bg-sky-500/10 p-3 rounded-xl shrink-0 border border-sky-500/20">
+                        <Mail className="w-5 h-5 text-sky-400" />
                       </div>
                       <div>
-                        <p className="font-medium text-white">Email</p>
-                        <p className="text-gray-500 text-sm">info@glenandarsa.com</p>
-                        <p className="text-gray-500 text-sm">glenandarsa.com</p>
+                        <p className="font-medium text-white font-serif">Academic Advising</p>
+                        <p className="text-gray-400 text-sm mt-1 leading-relaxed">admissions@glenandalearning.co.za</p>
+                        <p className="text-gray-400 text-sm">info@glenandalearning.co.za</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <div className="bg-[#f97316]/10 p-3 rounded-xl shrink-0">
-                        <Clock className="w-5 h-5 text-[#f97316]" />
+                      <div className="bg-sky-500/10 p-3 rounded-xl shrink-0 border border-sky-500/20">
+                        <Clock className="w-5 h-5 text-sky-400" />
                       </div>
                       <div>
-                        <p className="font-medium text-white">Response Time</p>
-                        <p className="text-gray-500 text-sm">Within 24 hours on business days</p>
+                        <p className="font-medium text-white font-serif">Admissions Response</p>
+                        <p className="text-gray-400 text-sm mt-1 leading-relaxed">Within 24 hours on academic days</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gray-50 dark:bg-[#1c1c1c] rounded-2xl p-6 border border-white/[0.08]">
-                  <h4 className="font-bold text-white mb-3">Enterprise & Government</h4>
-                  <p className="text-sm text-gray-500 mb-4">
-                    For district-wide deployments, SITA procurement, or government partnerships:
+                <div className="bg-white/[0.02] rounded-3xl p-6 border border-white/[0.08] space-y-3">
+                  <h4 className="font-bold text-white font-serif">Accreditation Support</h4>
+                  <p className="text-xs text-gray-400 leading-relaxed">
+                    Our advisors assist families in registering with the provincial Department of Basic Education (DBE) for formal home education compliance.
                   </p>
-                  <p className="text-sm font-medium text-[#f97316]">enterprise@Glenanda Shopping Learning Center.co.za</p>
                 </div>
               </div>
 
               {/* Contact Form */}
               <div className="md:col-span-2">
-                <div className="bg-white/[0.03] rounded-2xl p-8 border border-white/[0.08] shadow-sm">
-                  <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                    <MessageSquare className="w-5 h-5 text-[#f97316]" />
-                    Send Us a Message
+                <div className="bg-white/[0.02] rounded-3xl p-8 border border-white/[0.08] shadow-2xl shadow-black/50">
+                  <h3 className="text-xl font-bold font-serif text-white mb-6 flex items-center gap-2">
+                    <MessageSquare className="w-5 h-5 text-sky-400" />
+                    Inquire Online
                   </h3>
-                  <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                          Full Name <span className="text-orange-500">*</span>
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                          Parent / Guardian Name <span className="text-rose-500">*</span>
                         </label>
                         <input
                           type="text"
+                          required
                           value={form.name}
                           onChange={(e) => setForm({ ...form, name: e.target.value })}
-                          className="w-full bg-gray-50 dark:bg-[#121212] border border-white/[0.08] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#f97316]/50"
-                          placeholder="Your name"
+                          className="w-full bg-[#111827] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-400 transition-all"
+                          placeholder="First and last name"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                          Email <span className="text-orange-500">*</span>
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                          Email Address <span className="text-rose-500">*</span>
                         </label>
                         <input
                           type="email"
+                          required
                           value={form.email}
                           onChange={(e) => setForm({ ...form, email: e.target.value })}
-                          className="w-full bg-gray-50 dark:bg-[#121212] border border-white/[0.08] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#f97316]/50"
-                          placeholder="you@school.co.za"
+                          className="w-full bg-[#111827] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-400 transition-all"
+                          placeholder="parent@example.com"
                         />
                       </div>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                          School / Organisation
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                          Learner's Current Grade
                         </label>
                         <input
                           type="text"
-                          value={form.school}
-                          onChange={(e) => setForm({ ...form, school: e.target.value })}
-                          className="w-full bg-gray-50 dark:bg-[#121212] border border-white/[0.08] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#f97316]/50"
-                          placeholder="School name"
+                          value={form.grade}
+                          onChange={(e) => setForm({ ...form, grade: e.target.value })}
+                          className="w-full bg-[#111827] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-400 transition-all"
+                          placeholder="e.g. Grade 10"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                          Your Role
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                          Inquiry Type
                         </label>
                         <select
                           value={form.role}
                           onChange={(e) => setForm({ ...form, role: e.target.value })}
-                          className="w-full bg-gray-50 dark:bg-[#121212] border border-white/[0.08] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#f97316]/50"
+                          className="w-full bg-[#111827] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-400 transition-all"
                         >
-                          <option value="">Select role...</option>
-                          <option value="principal">Principal / Headmaster</option>
-                          <option value="teacher">Teacher / Educator</option>
-                          <option value="admin">School Administrator</option>
-                          <option value="district">District Official</option>
-                          <option value="parent">Parent</option>
-                          <option value="other">Other</option>
+                          <option value="">Select option...</option>
+                          <option value="enrolment">New Enrolment Inquiries</option>
+                          <option value="fees">Fee Schedules & Payment Plans</option>
+                          <option value="curriculum">CAPS Syllabus & Assessment Details</option>
+                          <option value="tutoring">Private Tutoring Support</option>
+                          <option value="other">General Academic Q&A</option>
                         </select>
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                        Message <span className="text-orange-500">*</span>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Your Message <span className="text-rose-500">*</span>
                       </label>
                       <textarea
                         rows={5}
+                        required
                         value={form.message}
                         onChange={(e) => setForm({ ...form, message: e.target.value })}
-                        className="w-full bg-gray-50 dark:bg-[#121212] border border-white/[0.08] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#f97316]/50 resize-none"
-                        placeholder="Tell us about your school and how we can help..."
+                        className="w-full bg-[#111827] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-400 transition-all resize-none"
+                        placeholder="Tell us about your learner and any specific questions you have..."
                       />
                     </div>
                     <button
                       type="submit"
                       disabled={sending}
-                      className="w-full bg-[#f97316] text-black px-6 py-4 rounded-xl font-bold text-lg hover:bg-[#ea580c] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                      className="w-full bg-gradient-to-r from-[#5c061c] to-[#9f1239] hover:bg-rose-900 text-white px-6 py-4 rounded-xl font-bold text-lg hover:shadow-lg hover:shadow-[#5c061c]/30 transition-all disabled:opacity-50 flex items-center justify-center gap-2 border border-white/10"
                     >
                       {sending ? (
-                        <>Sending...</>
+                        <>Sending Inquiries...</>
                       ) : (
                         <>
-                          <Send className="w-5 h-5" />
-                          Send Message
+                          <Send className="w-5 h-5 text-sky-300" />
+                          Send Inquiry Message
                         </>
                       )}
                     </button>
@@ -203,19 +203,19 @@ const Contact = () => {
         </section>
 
         {/* FAQ Teaser */}
-        <section className="py-16 bg-gray-50 dark:bg-[#1c1c1c]">
-          <div className="max-w-4xl mx-auto px-4 text-center">
-            <h2 className="text-2xl font-bold text-white mb-4">
-              Frequently Asked Questions
+        <section className="py-20 relative overflow-hidden bg-gradient-to-b from-[#030712] to-[#5c061c]/10 border-t border-white/[0.05]">
+          <div className="max-w-4xl mx-auto px-4 text-center space-y-4">
+            <h2 className="text-3xl font-extrabold font-serif text-white">
+              Academic Frequently Asked Questions
             </h2>
-            <p className="text-gray-500 mb-6">
-              Have a quick question? Check out our FAQ page for instant answers.
+            <p className="text-gray-400 max-w-lg mx-auto">
+              Find immediate answers regarding terms, assessments, and DBE registration.
             </p>
             <Link
               to="/faq"
-              className="inline-flex items-center gap-2 text-[#f97316] font-bold hover:underline"
+              className="inline-flex items-center gap-1.5 text-sky-400 font-bold hover:text-sky-300 transition-colors pt-2"
             >
-              Visit FAQ Page →
+              Visit FAQ Database <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </section>

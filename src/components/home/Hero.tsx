@@ -15,14 +15,14 @@ const Hero = () => {
     canvas.height = canvas.offsetHeight;
 
     const particles: { x: number; y: number; r: number; dx: number; dy: number; alpha: number }[] = [];
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 70; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        r: Math.random() * 1.5 + 0.5,
-        dx: (Math.random() - 0.5) * 0.3,
-        dy: (Math.random() - 0.5) * 0.3,
-        alpha: Math.random() * 0.5 + 0.1,
+        r: Math.random() * 1.8 + 0.4,
+        dx: (Math.random() - 0.5) * 0.25,
+        dy: (Math.random() - 0.5) * 0.25,
+        alpha: Math.random() * 0.6 + 0.1,
       });
     }
 
@@ -32,7 +32,10 @@ const Hero = () => {
       particles.forEach((p) => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(249, 115, 22, ${p.alpha})`;
+        // Using light sky blue and silver-burgundy color particles
+        ctx.fillStyle = p.x % 2 === 0 
+          ? `rgba(56, 189, 248, ${p.alpha})` 
+          : `rgba(244, 63, 94, ${p.alpha * 0.5})`;
         ctx.fill();
         p.x += p.dx;
         p.y += p.dy;
@@ -46,26 +49,26 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="relative pt-28 pb-16 overflow-hidden min-h-screen flex items-center bg-[#030712]">
+    <section className="relative pt-36 pb-24 overflow-hidden min-h-screen flex items-center bg-[#030712]">
       {/* Particle canvas */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full pointer-events-none"
-        style={{ opacity: 0.6 }}
+        style={{ opacity: 0.7 }}
       />
 
       {/* Background glows */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-[700px] h-[700px] bg-orange-600/[0.07] rounded-full blur-[160px]" />
-        <div className="absolute bottom-0 left-[-100px] w-[500px] h-[500px] bg-amber-500/[0.06] rounded-full blur-[130px]" />
-        <div className="absolute top-1/3 left-1/3 w-[300px] h-[300px] bg-orange-400/[0.04] rounded-full blur-[100px]" />
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-rose-950/[0.08] rounded-full blur-[180px]" />
+        <div className="absolute bottom-0 left-[-100px] w-[600px] h-[600px] bg-sky-950/[0.08] rounded-full blur-[140px]" />
+        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] bg-rose-900/[0.03] rounded-full blur-[120px]" />
         {/* Subtle grid */}
         <div
           className="absolute inset-0"
           style={{
             backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
-            backgroundSize: "80px 80px",
+              "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)",
+            backgroundSize: "90px 90px",
           }}
         />
         {/* Top fade */}
@@ -73,50 +76,59 @@ const Hero = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
 
           {/* ── LEFT ── */}
-          <div className="space-y-9">
+          <div className="lg:col-span-7 space-y-9">
 
             {/* Live badge */}
-            <div className="inline-flex items-center gap-2.5 bg-orange-500/[0.08] border border-orange-500/25 px-4 py-2 rounded-full">
+            <div className="inline-flex items-center gap-2.5 bg-sky-500/[0.06] border border-sky-500/20 px-4 py-2 rounded-full">
               <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-500" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-sky-400" />
               </span>
-              <span className="text-orange-400 text-sm font-semibold tracking-wide">
+              <span className="text-sky-300 text-sm font-semibold tracking-wide">
                 2026 Enrolments Now Open
               </span>
             </div>
 
-            {/* Headline */}
-            <div className="space-y-4">
-              <h1 className="text-5xl md:text-6xl xl:text-7xl font-black tracking-tight leading-[1.05]">
-                <span className="text-white">Glenanda</span>
-                <br />
-                <span
-                  className="bg-clip-text text-transparent"
-                  style={{
-                    backgroundImage: "linear-gradient(135deg, #f97316 0%, #fbbf24 50%, #f97316 100%)",
-                    backgroundSize: "200% auto",
-                    animation: "shimmer 3s linear infinite",
-                  }}
-                >
-                  Learning Center
-                </span>
-              </h1>
-              <p className="text-lg text-gray-400 max-w-lg leading-relaxed">
-                A quality <strong className="text-white font-semibold">home schooling centre</strong> offering a
+            {/* Headline and crest */}
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+                <img 
+                  src="/logo-school.jpeg" 
+                  alt="Glenanda Learning Centre Seal" 
+                  className="h-24 w-auto rounded-2xl shadow-xl shadow-black/40 border border-white/10 shrink-0 self-start"
+                />
+                <div>
+                  <h1 className="text-5xl md:text-6xl xl:text-7xl font-black tracking-tight leading-[1.05] font-serif">
+                    <span className="text-white">Glenanda</span>
+                    <br />
+                    <span
+                      className="bg-clip-text text-transparent"
+                      style={{
+                        backgroundImage: "linear-gradient(135deg, #f43f5e 0%, #38bdf8 50%, #f43f5e 100%)",
+                        backgroundSize: "200% auto",
+                        animation: "shimmer 4s linear infinite",
+                      }}
+                    >
+                      Learning Centre
+                    </span>
+                  </h1>
+                </div>
+              </div>
+              <p className="text-lg text-gray-400 max-w-xl leading-relaxed">
+                A prestigious <strong className="text-white font-semibold">home schooling centre</strong> offering a
                 full CAPS-aligned curriculum from Grade&nbsp;R to Matric. Live online classes,
-                AI-powered study support, and real assessments that track every learner's true potential.
+                AI-powered study support, and certified assessment plans to release your child's highest potential.
               </p>
             </div>
 
             {/* Feature pills */}
             <div className="flex flex-wrap gap-2.5">
               {[
-                { icon: Video, label: "Live Online Classes", color: "text-orange-400", bg: "bg-orange-500/10 border-orange-500/20" },
-                { icon: Sparkles, label: "AI Study Buddy", color: "text-amber-400", bg: "bg-amber-500/10 border-amber-500/20" },
+                { icon: Video, label: "Live Online Classes", color: "text-sky-400", bg: "bg-sky-500/10 border-sky-500/20" },
+                { icon: Sparkles, label: "AI Study Buddy", color: "text-rose-400", bg: "bg-rose-500/10 border-rose-500/20" },
                 { icon: BookOpen, label: "CAPS Aligned R–12", color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20" },
                 { icon: Zap, label: "Real Exams & Reports", color: "text-violet-400", bg: "bg-violet-500/10 border-violet-500/20" },
               ].map(({ icon: Icon, label, color, bg }) => (
@@ -134,19 +146,19 @@ const Hero = () => {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
               <Link
                 to="/apply"
-                className="group relative flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-bold text-lg text-white overflow-hidden transition-all hover:scale-[1.02] hover:shadow-2xl hover:shadow-orange-500/25"
-                style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)" }}
+                className="group relative flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-bold text-lg text-white overflow-hidden transition-all hover:scale-[1.02] hover:shadow-2xl hover:shadow-[#5c061c]/30"
+                style={{ background: "linear-gradient(135deg, #5c061c, #9f1239)" }}
               >
                 <span className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors duration-300" />
-                <GraduationCap className="h-5 w-5 relative" />
+                <GraduationCap className="h-5 w-5 text-sky-300 relative" />
                 <span className="relative">Apply for Enrolment</span>
                 <ArrowRight className="h-5 w-5 relative group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 to="/programs"
-                className="flex items-center justify-center gap-2.5 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/[0.06] hover:border-orange-500/40 transition-all"
+                className="flex items-center justify-center gap-2.5 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/[0.06] hover:border-sky-500/40 transition-all"
               >
-                <PlayCircle className="h-5 w-5 text-orange-400" />
+                <PlayCircle className="h-5 w-5 text-sky-400" />
                 Explore Programmes
               </Link>
             </div>
@@ -156,7 +168,7 @@ const Hero = () => {
               <div className="flex items-center gap-2">
                 <div className="flex">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-amber-400 fill-amber-400" />
+                    <Star key={i} className="h-4 w-4 text-sky-400 fill-sky-400" />
                   ))}
                 </div>
                 <span className="text-sm text-gray-400">Trusted by families in Gauteng</span>
@@ -166,14 +178,14 @@ const Hero = () => {
                 SACE-registered educators
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-400">
-                <Award className="h-4 w-4 text-orange-400 shrink-0" />
+                <Award className="h-4 w-4 text-sky-400 shrink-0" />
                 CAPS certified
               </div>
             </div>
           </div>
 
           {/* ── RIGHT — glassmorphism dashboard card ── */}
-          <div className="hidden lg:flex flex-col gap-4 relative">
+          <div className="hidden lg:flex lg:col-span-5 flex-col gap-4 relative">
 
             {/* Floating top-left stat */}
             <div
@@ -195,13 +207,13 @@ const Hero = () => {
               style={{ background: "linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)", backdropFilter: "blur(24px)" }}
             >
               {/* Card glow */}
-              <div className="absolute -top-24 -right-24 w-64 h-64 bg-orange-500/10 rounded-full blur-[80px] pointer-events-none" />
+              <div className="absolute -top-24 -right-24 w-64 h-64 bg-sky-500/10 rounded-full blur-[80px] pointer-events-none" />
 
               {/* Card header */}
               <div className="flex items-center justify-between mb-7">
                 <div className="flex items-center gap-3">
-                  <div className="h-11 w-11 rounded-2xl bg-orange-500/15 border border-orange-500/30 flex items-center justify-center">
-                    <GraduationCap className="h-6 w-6 text-orange-400" />
+                  <div className="h-11 w-11 rounded-2xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center">
+                    <GraduationCap className="h-6 w-6 text-sky-400" />
                   </div>
                   <div>
                     <p className="text-white font-bold">Learner Progress</p>
@@ -215,8 +227,8 @@ const Hero = () => {
 
               {/* Subject progress bars */}
               {[
-                { sub: "Mathematics", mark: 86, color: "from-orange-400 to-orange-500" },
-                { sub: "English Home Language", mark: 78, color: "from-amber-400 to-yellow-500" },
+                { sub: "Mathematics", mark: 86, color: "from-rose-500 to-[#9f1239]" },
+                { sub: "English Home Language", mark: 78, color: "from-sky-400 to-blue-500" },
                 { sub: "Natural Sciences", mark: 91, color: "from-emerald-400 to-green-500" },
                 { sub: "History", mark: 74, color: "from-violet-400 to-purple-500" },
               ].map((row) => (
@@ -237,9 +249,9 @@ const Hero = () => {
               {/* Mini stat grid */}
               <div className="mt-7 grid grid-cols-3 gap-3">
                 {[
-                  { label: "Assignments", value: "12/12", color: "text-orange-400", glow: "bg-orange-500/10" },
+                  { label: "Assignments", value: "12/12", color: "text-rose-400", glow: "bg-rose-500/10" },
                   { label: "Avg Score", value: "82%", color: "text-emerald-400", glow: "bg-emerald-500/10" },
-                  { label: "Attendance", value: "98%", color: "text-amber-400", glow: "bg-amber-500/10" },
+                  { label: "Attendance", value: "98%", color: "text-sky-400", glow: "bg-sky-500/10" },
                 ].map((stat) => (
                   <div
                     key={stat.label}
@@ -253,8 +265,8 @@ const Hero = () => {
 
               {/* CAPS badge */}
               <div
-                className="absolute -top-4 -right-4 rounded-2xl text-white px-4 py-3 shadow-xl rotate-6 border border-orange-400/30"
-                style={{ background: "linear-gradient(135deg, #f97316, #f59e0b)" }}
+                className="absolute -top-4 -right-4 rounded-2xl text-white px-4 py-3 shadow-xl rotate-6 border border-sky-400/30"
+                style={{ background: "linear-gradient(135deg, #5c061c, #9f1239)" }}
               >
                 <p className="text-xs font-black">CAPS</p>
                 <p className="text-[9px] opacity-90 font-semibold">Certified</p>
@@ -266,8 +278,8 @@ const Hero = () => {
               className="absolute -bottom-6 -left-6 rounded-2xl border border-white/10 px-5 py-4 backdrop-blur-2xl flex items-center gap-3 z-20"
               style={{ background: "rgba(255,255,255,0.04)" }}
             >
-              <div className="h-10 w-10 rounded-full bg-orange-500/15 border border-orange-500/30 flex items-center justify-center">
-                <Users className="h-5 w-5 text-orange-400" />
+              <div className="h-10 w-10 rounded-full bg-sky-500/15 border border-sky-500/30 flex items-center justify-center">
+                <Users className="h-5 w-5 text-sky-400" />
               </div>
               <div>
                 <p className="text-white text-sm font-bold">Applications Open</p>
