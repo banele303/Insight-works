@@ -1,302 +1,334 @@
-import { ArrowRight, Video, Sparkles, BookOpen, Zap, GraduationCap, CheckCircle2, PlayCircle, Star, Users, TrendingUp, Award } from "lucide-react";
 import { Link } from "react-router";
-import { useEffect, useRef } from "react";
 
 const Hero = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-
-    const particles: { x: number; y: number; r: number; dx: number; dy: number; alpha: number }[] = [];
-    for (let i = 0; i < 70; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        r: Math.random() * 1.8 + 0.4,
-        dx: (Math.random() - 0.5) * 0.25,
-        dy: (Math.random() - 0.5) * 0.25,
-        alpha: Math.random() * 0.6 + 0.1,
-      });
-    }
-
-    let animId: number;
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach((p) => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        // Using light sky blue and silver-burgundy color particles
-        ctx.fillStyle = p.x % 2 === 0 
-          ? `rgba(56, 189, 248, ${p.alpha})` 
-          : `rgba(244, 63, 94, ${p.alpha * 0.5})`;
-        ctx.fill();
-        p.x += p.dx;
-        p.y += p.dy;
-        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
-      });
-      animId = requestAnimationFrame(draw);
-    };
-    draw();
-    return () => cancelAnimationFrame(animId);
-  }, []);
-
   return (
-    <section className="relative pt-36 pb-24 overflow-hidden min-h-screen flex items-center bg-[#030712]">
-      {/* Particle canvas */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 w-full h-full pointer-events-none"
-        style={{ opacity: 0.7 }}
-      />
+    <section className="relative min-h-screen overflow-hidden bg-[#0a0608] flex flex-col">
 
-      {/* Background glows */}
+      {/* ── BACKGROUND TEXTURE ── */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-rose-950/[0.08] rounded-full blur-[180px]" />
-        <div className="absolute bottom-0 left-[-100px] w-[600px] h-[600px] bg-sky-950/[0.08] rounded-full blur-[140px]" />
-        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] bg-rose-900/[0.03] rounded-full blur-[120px]" />
-        {/* Subtle grid */}
+        {/* Noise texture */}
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 opacity-[0.03]"
           style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)",
-            backgroundSize: "90px 90px",
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+            backgroundRepeat: "repeat",
+            backgroundSize: "128px",
           }}
         />
-        {/* Top fade */}
-        <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#030712] to-transparent" />
+        {/* Deep burgundy glow — top right */}
+        <div className="absolute -top-40 -right-40 w-[700px] h-[700px] rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(92,6,28,0.35) 0%, transparent 70%)" }} />
+        {/* Sky blue glow — bottom left */}
+        <div className="absolute -bottom-20 -left-20 w-[500px] h-[500px] rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%)" }} />
+        {/* Thin horizontal rule accent */}
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#9f1239]/40 to-transparent" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+      {/* ── TOP NAV SPACE ── */}
+      <div className="h-20 shrink-0" />
 
-          {/* ── LEFT ── */}
-          <div className="lg:col-span-7 space-y-9">
+      {/* ── MAIN CONTENT ── */}
+      <div className="flex-1 flex items-center relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20 items-center">
 
-            {/* Live badge */}
-            <div className="inline-flex items-center gap-2.5 bg-sky-500/[0.06] border border-sky-500/20 px-4 py-2 rounded-full">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-sky-400" />
-              </span>
-              <span className="text-sky-300 text-sm font-semibold tracking-wide">
-                2026 Enrolments Now Open
-              </span>
-            </div>
+            {/* ── LEFT — Typography + CTAs ── */}
+            <div className="flex flex-col gap-8">
 
-            {/* Headline and crest */}
-            <div className="space-y-6">
-              <div className="flex flex-col gap-6">
-                <h1 className="text-5xl md:text-6xl xl:text-7xl font-black tracking-tight leading-[1.05] font-serif">
-                  <span className="text-white">Glenanda</span>
-                  <br />
-                  <span
-                    className="bg-clip-text text-transparent"
-                    style={{
-                      backgroundImage: "linear-gradient(135deg, #f43f5e 0%, #38bdf8 50%, #f43f5e 100%)",
-                      backgroundSize: "200% auto",
-                      animation: "shimmer 4s linear infinite",
-                    }}
-                  >
-                    Learning Centre
-                  </span>
-                </h1>
-              </div>
-              <p className="text-lg text-gray-400 max-w-xl leading-relaxed">
-                A prestigious <strong className="text-white font-semibold">home schooling centre</strong> offering a
-                full CAPS-aligned curriculum from Grade&nbsp;R to Matric. Live online classes,
-                AI-powered study support, and certified assessment plans to release your child's highest potential.
-              </p>
-            </div>
-
-            {/* Feature pills */}
-            <div className="flex flex-wrap gap-2.5">
-              {[
-                { icon: Video, label: "Live Online Classes", color: "text-sky-400", bg: "bg-sky-500/10 border-sky-500/20" },
-                { icon: Sparkles, label: "AI Study Buddy", color: "text-rose-400", bg: "bg-rose-500/10 border-rose-500/20" },
-                { icon: BookOpen, label: "CAPS Aligned R–12", color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20" },
-                { icon: Zap, label: "Real Exams & Reports", color: "text-violet-400", bg: "bg-violet-500/10 border-violet-500/20" },
-              ].map(({ icon: Icon, label, color, bg }) => (
-                <div
-                  key={label}
-                  className={`flex items-center gap-2 ${bg} border px-3.5 py-2 rounded-full text-sm font-medium transition-all hover:scale-[1.03] cursor-default`}
+              {/* Eyebrow tag */}
+              <div className="flex items-center gap-3">
+                <div className="h-px w-10 bg-[#9f1239]" />
+                <span
+                  className="text-xs font-bold tracking-[0.25em] uppercase"
+                  style={{ color: "#e2a0b0", fontFamily: "'DM Sans', sans-serif" }}
                 >
-                  <Icon className={`h-3.5 w-3.5 ${color}`} />
-                  <span className="text-gray-200">{label}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-              <Link
-                to="/apply"
-                className="group relative flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-bold text-lg text-white overflow-hidden transition-all hover:scale-[1.02] hover:shadow-2xl hover:shadow-[#5c061c]/30"
-                style={{ background: "linear-gradient(135deg, #5c061c, #9f1239)" }}
-              >
-                <span className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors duration-300" />
-                <GraduationCap className="h-5 w-5 text-sky-300 relative" />
-                <span className="relative">Apply for Enrolment</span>
-                <ArrowRight className="h-5 w-5 relative group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link
-                to="/programs"
-                className="flex items-center justify-center gap-2.5 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/[0.06] hover:border-sky-500/40 transition-all"
-              >
-                <PlayCircle className="h-5 w-5 text-sky-400" />
-                Explore Programmes
-              </Link>
-            </div>
-
-            {/* Trust row */}
-            <div className="flex flex-wrap items-center gap-6 pt-1">
-              <div className="flex items-center gap-2">
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-sky-400 fill-sky-400" />
-                  ))}
-                </div>
-                <span className="text-sm text-gray-400">Trusted by families in Gauteng</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-gray-400">
-                <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                SACE-registered educators
-              </div>
-              <div className="flex items-center gap-2 text-sm text-gray-400">
-                <Award className="h-4 w-4 text-sky-400 shrink-0" />
-                CAPS certified
-              </div>
-            </div>
-          </div>
-
-          {/* ── RIGHT — glassmorphism dashboard card ── */}
-          <div className="hidden lg:flex lg:col-span-5 flex-col gap-4 relative">
-
-            {/* Floating top-left stat */}
-            <div
-              className="absolute -top-8 -left-8 z-20 rounded-2xl border border-white/10 px-5 py-3 backdrop-blur-2xl flex items-center gap-3 animate-float-slow"
-              style={{ background: "rgba(255,255,255,0.04)" }}
-            >
-              <div className="h-9 w-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
-                <TrendingUp className="h-4 w-4 text-emerald-400" />
-              </div>
-              <div>
-                <p className="text-white text-sm font-bold">94% Pass Rate</p>
-                <p className="text-gray-500 text-xs">Matric 2025 cohort</p>
-              </div>
-            </div>
-
-            {/* Main card */}
-            <div
-              className="relative rounded-3xl border border-white/[0.09] p-8 shadow-2xl shadow-black/60 overflow-hidden"
-              style={{ background: "linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)", backdropFilter: "blur(24px)" }}
-            >
-              {/* Card glow */}
-              <div className="absolute -top-24 -right-24 w-64 h-64 bg-sky-500/10 rounded-full blur-[80px] pointer-events-none" />
-
-              {/* Card header */}
-              <div className="flex items-center justify-between mb-7">
-                <div className="flex items-center gap-3">
-                  <div className="h-11 w-11 rounded-2xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center">
-                    <GraduationCap className="h-6 w-6 text-sky-400" />
-                  </div>
-                  <div>
-                    <p className="text-white font-bold">Learner Progress</p>
-                    <p className="text-gray-500 text-xs">Term 3 · 2026</p>
-                  </div>
-                </div>
-                <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 px-3 py-1 rounded-full">
-                  On Track ✓
+                  Gauteng · Est. 2020
                 </span>
               </div>
 
-              {/* Subject progress bars */}
-              {[
-                { sub: "Mathematics", mark: 86, color: "from-rose-500 to-[#9f1239]" },
-                { sub: "English Home Language", mark: 78, color: "from-sky-400 to-blue-500" },
-                { sub: "Natural Sciences", mark: 91, color: "from-emerald-400 to-green-500" },
-                { sub: "History", mark: 74, color: "from-violet-400 to-purple-500" },
-              ].map((row) => (
-                <div key={row.sub} className="mb-5">
-                  <div className="flex justify-between text-sm mb-2">
-                    <span className="text-gray-300 font-medium">{row.sub}</span>
-                    <span className="text-white font-extrabold">{row.mark}%</span>
-                  </div>
-                  <div className="h-2.5 rounded-full bg-white/[0.05] overflow-hidden border border-white/[0.04]">
-                    <div
-                      className={`h-full rounded-full bg-gradient-to-r ${row.color} transition-all duration-1000`}
-                      style={{ width: `${row.mark}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-
-              {/* Mini stat grid */}
-              <div className="mt-7 grid grid-cols-3 gap-3">
-                {[
-                  { label: "Assignments", value: "12/12", color: "text-rose-400", glow: "bg-rose-500/10" },
-                  { label: "Avg Score", value: "82%", color: "text-emerald-400", glow: "bg-emerald-500/10" },
-                  { label: "Attendance", value: "98%", color: "text-sky-400", glow: "bg-sky-500/10" },
-                ].map((stat) => (
-                  <div
-                    key={stat.label}
-                    className={`rounded-2xl ${stat.glow} border border-white/[0.07] p-4 text-center transition-transform hover:scale-[1.03]`}
+              {/* Headline */}
+              <div>
+                <h1
+                  className="leading-[1.0] tracking-[-0.02em]"
+                  style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(3rem, 6vw, 5.5rem)", fontWeight: 900, color: "#fff" }}
+                >
+                  Where Every
+                  <br />
+                  <span
+                    style={{
+                      fontStyle: "italic",
+                      background: "linear-gradient(90deg, #f43f5e, #38bdf8)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                    }}
                   >
-                    <p className={`text-xl font-black ${stat.color}`}>{stat.value}</p>
-                    <p className="text-[11px] text-gray-500 mt-0.5">{stat.label}</p>
+                    Child Thrives
+                  </span>
+                  <br />
+                  <span className="text-white">Academically.</span>
+                </h1>
+              </div>
+
+              {/* Sub-copy */}
+              <p
+                className="text-[#a09aa5] leading-relaxed max-w-lg"
+                style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "1.05rem" }}
+              >
+                Glenanda Learning Centre is a CAPS-aligned home schooling centre offering
+                structured live lessons, certified assessment plans, and dedicated educators
+                from Grade R through to Matric — all from the comfort of your home.
+              </p>
+
+              {/* Credential strip */}
+              <div className="flex flex-wrap gap-x-6 gap-y-3">
+                {[
+                  "SACE-Registered Educators",
+                  "CAPS Curriculum R–12",
+                  "Live Daily Lessons",
+                  "Certified Report Cards",
+                ].map((item) => (
+                  <div key={item} className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-[#38bdf8]" />
+                    <span
+                      className="text-[#ccc] text-sm font-medium"
+                      style={{ fontFamily: "'DM Sans', sans-serif" }}
+                    >
+                      {item}
+                    </span>
                   </div>
                 ))}
               </div>
 
-              {/* CAPS badge */}
+              {/* CTAs */}
+              <div className="flex flex-col sm:flex-row gap-4 pt-2">
+                <Link
+                  to="/apply"
+                  id="hero-apply-btn"
+                  className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 text-white font-bold text-base overflow-hidden transition-all duration-300"
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    background: "linear-gradient(135deg, #7f0c26 0%, #c01442 100%)",
+                    borderRadius: "4px",
+                    letterSpacing: "0.04em",
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 16px 40px rgba(159,18,57,0.4)"; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLElement).style.boxShadow = "none"; }}
+                >
+                  Apply for Enrolment
+                  <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
+                </Link>
+                <Link
+                  to="/programs"
+                  id="hero-programs-btn"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold text-base border transition-all duration-300"
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    color: "#e2e8f0",
+                    borderColor: "rgba(255,255,255,0.12)",
+                    borderRadius: "4px",
+                    letterSpacing: "0.02em",
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(56,189,248,0.4)"; (e.currentTarget as HTMLElement).style.color = "#38bdf8"; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.12)"; (e.currentTarget as HTMLElement).style.color = "#e2e8f0"; }}
+                >
+                  View Programmes
+                </Link>
+              </div>
+
+              {/* Social proof */}
               <div
-                className="absolute -top-4 -right-4 rounded-2xl text-white px-4 py-3 shadow-xl rotate-6 border border-sky-400/30"
-                style={{ background: "linear-gradient(135deg, #5c061c, #9f1239)" }}
+                className="flex items-center gap-4 pt-2 border-t"
+                style={{ borderColor: "rgba(255,255,255,0.07)" }}
               >
-                <p className="text-xs font-black">CAPS</p>
-                <p className="text-[9px] opacity-90 font-semibold">Certified</p>
+                {/* Avatars */}
+                <div className="flex -space-x-2">
+                  {["#5c061c", "#9f1239", "#38bdf8", "#0284c7", "#0ea5e9"].map((color, i) => (
+                    <div
+                      key={i}
+                      className="h-8 w-8 rounded-full border-2 border-[#0a0608] flex items-center justify-center text-white text-xs font-bold"
+                      style={{ background: color, zIndex: 5 - i }}
+                    >
+                      {["T", "K", "L", "A", "M"][i]}
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <p className="text-white text-sm font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    200+ enrolled learners
+                  </p>
+                  <p className="text-[#888] text-xs" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    Trusted by families across Gauteng
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* Bottom floating badge */}
-            <div
-              className="absolute -bottom-6 -left-6 rounded-2xl border border-white/10 px-5 py-4 backdrop-blur-2xl flex items-center gap-3 z-20"
-              style={{ background: "rgba(255,255,255,0.04)" }}
-            >
-              <div className="h-10 w-10 rounded-full bg-sky-500/15 border border-sky-500/30 flex items-center justify-center">
-                <Users className="h-5 w-5 text-sky-400" />
-              </div>
-              <div>
-                <p className="text-white text-sm font-bold">Applications Open</p>
-                <p className="text-xs text-gray-400">Limited seats per grade</p>
-              </div>
-            </div>
+            {/* ── RIGHT — Image collage ── */}
+            <div className="hidden lg:grid grid-cols-5 grid-rows-6 gap-3 h-[560px]">
 
+              {/* Large portrait — student studying */}
+              <div
+                className="col-span-3 row-span-4 rounded-2xl overflow-hidden relative"
+                style={{ boxShadow: "0 30px 60px rgba(0,0,0,0.5)" }}
+              >
+                <img
+                  src="/hero-student.jpg"
+                  alt="Student studying at Glenanda Learning Centre"
+                  className="w-full h-full object-cover"
+                />
+                {/* Overlay label */}
+                <div
+                  className="absolute bottom-0 left-0 right-0 p-5"
+                  style={{ background: "linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%)" }}
+                >
+                  <p
+                    className="text-white font-bold text-sm"
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}
+                  >
+                    Structured Daily Learning
+                  </p>
+                  <p className="text-[#aaa] text-xs mt-0.5" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    Live classes · Grade R to Matric
+                  </p>
+                </div>
+              </div>
+
+              {/* Study room card */}
+              <div
+                className="col-span-2 row-span-3 rounded-2xl overflow-hidden relative"
+                style={{ boxShadow: "0 20px 40px rgba(0,0,0,0.4)" }}
+              >
+                <img
+                  src="/hero-room.jpg"
+                  alt="Home study environment"
+                  className="w-full h-full object-cover"
+                />
+                <div
+                  className="absolute inset-0"
+                  style={{ background: "linear-gradient(135deg, rgba(92,6,28,0.3) 0%, transparent 60%)" }}
+                />
+              </div>
+
+              {/* Stats card */}
+              <div
+                className="col-span-2 row-span-3 rounded-2xl p-5 flex flex-col justify-between"
+                style={{
+                  background: "linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  backdropFilter: "blur(20px)",
+                }}
+              >
+                <div>
+                  <p
+                    className="text-4xl font-black text-white"
+                    style={{ fontFamily: "'Playfair Display', serif" }}
+                  >
+                    94%
+                  </p>
+                  <p
+                    className="text-[#e2a0b0] text-sm font-semibold mt-1"
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}
+                  >
+                    Matric Pass Rate
+                  </p>
+                  <p className="text-[#666] text-xs mt-0.5" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    2025 cohort
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  {[
+                    { label: "Maths", pct: 86 },
+                    { label: "English", pct: 78 },
+                    { label: "Science", pct: 91 },
+                  ].map((s) => (
+                    <div key={s.label}>
+                      <div className="flex justify-between text-xs mb-1">
+                        <span className="text-[#aaa]" style={{ fontFamily: "'DM Sans', sans-serif" }}>{s.label}</span>
+                        <span className="text-white font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>{s.pct}%</span>
+                      </div>
+                      <div className="h-1 rounded-full bg-white/5 overflow-hidden">
+                        <div
+                          className="h-full rounded-full"
+                          style={{
+                            width: `${s.pct}%`,
+                            background: "linear-gradient(90deg, #9f1239, #38bdf8)",
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Graduate photo */}
+              <div
+                className="col-span-3 row-span-2 rounded-2xl overflow-hidden relative"
+                style={{ boxShadow: "0 20px 40px rgba(0,0,0,0.4)" }}
+              >
+                <img
+                  src="/hero-graduate.jpg"
+                  alt="Glenanda Learning Centre graduate"
+                  className="w-full h-full object-cover object-top"
+                />
+                {/* CAPS badge overlay */}
+                <div
+                  className="absolute top-3 right-3 px-3 py-1.5 rounded text-white text-xs font-black tracking-widest uppercase"
+                  style={{
+                    background: "linear-gradient(135deg, #5c061c, #9f1239)",
+                    fontFamily: "'DM Sans', sans-serif",
+                    letterSpacing: "0.12em",
+                  }}
+                >
+                  CAPS Certified
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Shimmer keyframe */}
+      {/* ── BOTTOM STRIP ── */}
+      <div
+        className="relative z-10 border-t"
+        style={{ borderColor: "rgba(255,255,255,0.06)" }}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <p
+              className="text-[#555] text-xs tracking-widest uppercase"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}
+            >
+              Enrolments open for 2026
+            </p>
+            <div className="flex flex-wrap gap-x-8 gap-y-2">
+              {[
+                { num: "R–12", label: "All Grades" },
+                { num: "200+", label: "Learners" },
+                { num: "CAPS", label: "Aligned" },
+                { num: "100%", label: "Online" },
+              ].map((s) => (
+                <div key={s.label} className="flex items-center gap-2">
+                  <span
+                    className="font-black text-white text-sm"
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}
+                  >
+                    {s.num}
+                  </span>
+                  <span className="text-[#555] text-xs" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    {s.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <style>{`
-        @keyframes shimmer {
-          0% { background-position: 0% center; }
-          100% { background-position: 200% center; }
-        }
-        @keyframes float-slow {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-8px); }
-        }
-        .animate-float-slow {
-          animation: float-slow 4s ease-in-out infinite;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@400;500;600;700;800&display=swap');
       `}</style>
     </section>
   );
