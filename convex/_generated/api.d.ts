@@ -37,6 +37,7 @@ import type * as http from "../http.js";
 import type * as learningPaths from "../learningPaths.js";
 import type * as liveClasses from "../liveClasses.js";
 import type * as lms from "../lms.js";
+import type * as masterSeed from "../masterSeed.js";
 import type * as messages from "../messages.js";
 import type * as notifications from "../notifications.js";
 import type * as parents from "../parents.js";
@@ -93,6 +94,7 @@ declare const fullApi: ApiFromModules<{
   learningPaths: typeof learningPaths;
   liveClasses: typeof liveClasses;
   lms: typeof lms;
+  masterSeed: typeof masterSeed;
   messages: typeof messages;
   notifications: typeof notifications;
   parents: typeof parents;

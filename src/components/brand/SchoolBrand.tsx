@@ -10,10 +10,10 @@ export function SchoolBrand({ to = "/", compact = false }: SchoolBrandProps) {
     <div className={`flex items-center gap-2 ${compact ? "" : ""}`}>
       <img
         src="/logo-school.jpeg"
-        alt="Glenanda Shopping Learning Center"
+        alt="Glenanda Learning Center"
         className={`${compact ? "h-8 w-auto" : "h-11 w-auto"} rounded-xl`}
       />
-      {!compact && <span className="font-extrabold tracking-tight text-gray-900 dark:text-white text-xl">Glenanda Shopping Learning Center</span>}
+      {!compact && <span className="font-extrabold tracking-tight text-gray-900 dark:text-white text-xl">Glenanda Learning Center</span>}
     </div>
   );
 
