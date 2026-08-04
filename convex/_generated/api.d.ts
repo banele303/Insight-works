@@ -48,6 +48,7 @@ import type * as schoolSettings from "../schoolSettings.js";
 import type * as search from "../search.js";
 import type * as seed from "../seed.js";
 import type * as stats from "../stats.js";
+import type * as studentSeed from "../studentSeed.js";
 import type * as studyBuddy from "../studyBuddy.js";
 import type * as studyGroups from "../studyGroups.js";
 import type * as subjects from "../subjects.js";
@@ -105,6 +106,7 @@ declare const fullApi: ApiFromModules<{
   search: typeof search;
   seed: typeof seed;
   stats: typeof stats;
+  studentSeed: typeof studentSeed;
   studyBuddy: typeof studyBuddy;
   studyGroups: typeof studyGroups;
   subjects: typeof subjects;

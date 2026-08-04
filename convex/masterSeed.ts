@@ -602,11 +602,13 @@ export const runMasterSeed = mutation({
     ];
 
     for (const s of demoStudents) {
+      let studentId;
       const existing = await ctx.db
         .query("users")
         .withIndex("email", (q) => q.eq("email", s.email))
         .first();
       if (existing) {
+        studentId = existing._id;
         await ctx.db.patch(existing._id, {
           name: s.name,
           role: "student",
@@ -616,7 +618,7 @@ export const runMasterSeed = mutation({
           bio: s.bio,
         });
       } else {
-        await ctx.db.insert("users", {
+        studentId = await ctx.db.insert("users", {
           name: s.name,
           email: s.email,
           role: "student",
@@ -626,8 +628,18 @@ export const runMasterSeed = mutation({
           bio: s.bio,
         });
       }
+
+      // Explicitly link student to class.students array
+      if (s.studentClass) {
+        const clsDoc = await ctx.db.get(s.studentClass);
+        if (clsDoc && !clsDoc.students.includes(studentId)) {
+          await ctx.db.patch(s.studentClass, {
+            students: [...clsDoc.students, studentId],
+          });
+        }
+      }
     }
-    log.push(`✅ 5 Demo Students ready`);
+    log.push(`✅ 5 Demo Students ready and linked to classes`);
 
     return {
       success: true,
