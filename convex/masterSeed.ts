@@ -497,10 +497,143 @@ export const runMasterSeed = mutation({
       }
     }
 
+    // ─────────────────────────────────────────────────────────────
+    // 6. DEMO USERS — 5 Demo Teachers & 5 Demo Students
+    // ─────────────────────────────────────────────────────────────
+    const demoTeachers = [
+      {
+        name: "Mr. Thabo Mokoena",
+        email: "thabo.mokoena@glenandalearning.co.za",
+        role: "teacher" as const,
+        bio: "Head of Physical Sciences & Mathematics with 12+ years CAPS teaching experience.",
+      },
+      {
+        name: "Mrs. Sarah van der Merwe",
+        email: "sarah.vandermerwe@glenandalearning.co.za",
+        role: "teacher" as const,
+        bio: "Senior Educator specializing in English Home Language & Afrikaans FAL.",
+      },
+      {
+        name: "Ms. Nomsa Khumalo",
+        email: "nomsa.khumalo@glenandalearning.co.za",
+        role: "teacher" as const,
+        bio: "Life Orientation & History Specialist committed to holistic learner development.",
+      },
+      {
+        name: "Mr. Sipho Ndlovu",
+        email: "sipho.ndlovu@glenandalearning.co.za",
+        role: "teacher" as const,
+        bio: "Humanities & Economics HOD guiding learners towards academic distinction.",
+      },
+      {
+        name: "Mrs. Lerato Moloi",
+        email: "lerato.moloi@glenandalearning.co.za",
+        role: "teacher" as const,
+        bio: "Technology & Computer Applications specialist blending digital skills with CAPS.",
+      },
+    ];
+
+    for (const t of demoTeachers) {
+      const existing = await ctx.db
+        .query("users")
+        .withIndex("email", (q) => q.eq("email", t.email))
+        .first();
+      if (existing) {
+        await ctx.db.patch(existing._id, {
+          name: t.name,
+          role: "teacher",
+          isActive: true,
+          isApproved: true,
+          bio: t.bio,
+        });
+      } else {
+        await ctx.db.insert("users", {
+          name: t.name,
+          email: t.email,
+          role: "teacher",
+          isActive: true,
+          isApproved: true,
+          bio: t.bio,
+        });
+      }
+    }
+    log.push(`✅ 5 Demo Teachers ready`);
+
+    // Get class IDs for students
+    const allClasses = await ctx.db.query("classes").collect();
+    const classByNameMap = new Map(allClasses.map((c) => [c.name, c._id]));
+
+    const demoStudents = [
+      {
+        name: "Zanele Dlamini",
+        email: "zanele.dlamini@student.glenandalearning.co.za",
+        role: "student" as const,
+        studentClass: classByNameMap.get("Grade 10"),
+        bio: "Grade 10 learner passionate about Mathematics and Physical Sciences.",
+      },
+      {
+        name: "Liam Patel",
+        email: "liam.patel@student.glenandalearning.co.za",
+        role: "student" as const,
+        studentClass: classByNameMap.get("Grade 11"),
+        bio: "Grade 11 candidate focusing on Information Technology and Accounting.",
+      },
+      {
+        name: "Sipho Zulu",
+        email: "sipho.zulu@student.glenandalearning.co.za",
+        role: "student" as const,
+        studentClass: classByNameMap.get("Grade 12"),
+        bio: "Grade 12 Matric candidate aiming for distinction in CAPS examinations.",
+      },
+      {
+        name: "Thandiwe Mbedzi",
+        email: "thandiwe.mbedzi@student.glenandalearning.co.za",
+        role: "student" as const,
+        studentClass: classByNameMap.get("Grade 8"),
+        bio: "Senior Phase Grade 8 student active in STEM and study groups.",
+      },
+      {
+        name: "Amara Okafor",
+        email: "amara.okafor@student.glenandalearning.co.za",
+        role: "student" as const,
+        studentClass: classByNameMap.get("Grade 4"),
+        bio: "Intermediate Phase Grade 4 learner enthusiastic about Natural Sciences & Tech.",
+      },
+    ];
+
+    for (const s of demoStudents) {
+      const existing = await ctx.db
+        .query("users")
+        .withIndex("email", (q) => q.eq("email", s.email))
+        .first();
+      if (existing) {
+        await ctx.db.patch(existing._id, {
+          name: s.name,
+          role: "student",
+          isActive: true,
+          isApproved: true,
+          studentClass: s.studentClass,
+          bio: s.bio,
+        });
+      } else {
+        await ctx.db.insert("users", {
+          name: s.name,
+          email: s.email,
+          role: "student",
+          isActive: true,
+          isApproved: true,
+          studentClass: s.studentClass,
+          bio: s.bio,
+        });
+      }
+    }
+    log.push(`✅ 5 Demo Students ready`);
+
     return {
       success: true,
       log,
-      summary: `Done! Subjects: ${subjectsCreated + subjectsUpdated} | Classes: ${classesCreated + classesUpdated} (Grade R–12) | Admin: ${adminEmail}`,
+      summary: `Done! Subjects: ${subjectsCreated + subjectsUpdated} | Classes: ${classesCreated + classesUpdated} (Grade R–12) | Admin: ${adminEmail} | 5 Demo Teachers & 5 Demo Students created`,
     };
   },
 });
+
