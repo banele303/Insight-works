@@ -26,12 +26,12 @@ const Navbar = () => {
           <Link to="/" className="flex items-center gap-3 group">
             <img
               src="/logo-school.jpeg"
-              alt="Glenanda Shopping Learning Center"
+              alt="Glenanda Learning Center"
               className="h-12 w-auto rounded-xl border border-white/10 group-hover:border-orange-500/40 transition-colors"
             />
             <div className="hidden sm:block">
               <span className="block font-extrabold tracking-tight text-white text-lg leading-tight">
-                Glenanda Shopping
+                Glenanda
               </span>
               <span className="block text-xs font-semibold text-orange-400 uppercase tracking-widest">
                 Learning Center

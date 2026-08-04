@@ -11,12 +11,12 @@ const Footer = () => {
             <div className="flex items-center gap-3">
               <img
                 src="/logo-school.jpeg"
-                alt="Glenanda Shopping Learning Center"
+                alt="Glenanda Learning Center"
                 className="h-12 w-auto rounded-xl border border-white/10"
               />
               <div>
                 <span className="text-xl font-extrabold tracking-tight text-white">
-                  Glenanda Shopping <span className="text-orange-400">Learning Center</span>
+                  Glenanda <span className="text-orange-400">Learning Center</span>
                 </span>
                 <p className="text-[10px] text-gray-500 -mt-0.5">Quality Education, Real Results</p>
               </div>
@@ -76,7 +76,7 @@ const Footer = () => {
             <ul className="space-y-4 text-sm">
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-orange-400 mt-0.5 shrink-0" />
-                <span className="text-gray-400">Glenanda Shopping Centre, Johannesburg, Gauteng</span>
+                <span className="text-gray-400">Glenanda, Johannesburg, Gauteng</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-orange-400 shrink-0" />
@@ -100,7 +100,7 @@ const Footer = () => {
 
         <div className="border-t border-white/[0.06] pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-gray-500">
-            © {new Date().getFullYear()} Glenanda Shopping Learning Center. All rights reserved.
+            © {new Date().getFullYear()} Glenanda Learning Center. All rights reserved.
           </p>
           <div className="flex items-center gap-6 text-xs text-gray-500">
             <span>POPIA Compliant</span>

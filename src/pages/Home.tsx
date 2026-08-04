@@ -63,7 +63,7 @@ const Home = () => {
                   <br className="hidden md:block" /> Quality Education
                 </h2>
                 <p className="text-xl text-white/85 mb-10 max-w-2xl mx-auto">
-                  Join Glenanda Shopping Learning Center — a caring home schooling community with
+                  Join Glenanda Learning Center — a caring home schooling community with
                   certified educators, a full CAPS curriculum, and real assessments that track your
                   child's true progress.
                 </p>
