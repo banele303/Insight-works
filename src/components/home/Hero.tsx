@@ -94,28 +94,21 @@ const Hero = () => {
 
             {/* Headline and crest */}
             <div className="space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-6">
-                <img 
-                  src="/logo-school.jpeg" 
-                  alt="Glenanda Learning Centre Seal" 
-                  className="h-24 w-auto rounded-2xl shadow-xl shadow-black/40 border border-white/10 shrink-0 self-start"
-                />
-                <div>
-                  <h1 className="text-5xl md:text-6xl xl:text-7xl font-black tracking-tight leading-[1.05] font-serif">
-                    <span className="text-white">Glenanda</span>
-                    <br />
-                    <span
-                      className="bg-clip-text text-transparent"
-                      style={{
-                        backgroundImage: "linear-gradient(135deg, #f43f5e 0%, #38bdf8 50%, #f43f5e 100%)",
-                        backgroundSize: "200% auto",
-                        animation: "shimmer 4s linear infinite",
-                      }}
-                    >
-                      Learning Centre
-                    </span>
-                  </h1>
-                </div>
+              <div className="flex flex-col gap-6">
+                <h1 className="text-5xl md:text-6xl xl:text-7xl font-black tracking-tight leading-[1.05] font-serif">
+                  <span className="text-white">Glenanda</span>
+                  <br />
+                  <span
+                    className="bg-clip-text text-transparent"
+                    style={{
+                      backgroundImage: "linear-gradient(135deg, #f43f5e 0%, #38bdf8 50%, #f43f5e 100%)",
+                      backgroundSize: "200% auto",
+                      animation: "shimmer 4s linear infinite",
+                    }}
+                  >
+                    Learning Centre
+                  </span>
+                </h1>
               </div>
               <p className="text-lg text-gray-400 max-w-xl leading-relaxed">
                 A prestigious <strong className="text-white font-semibold">home schooling centre</strong> offering a
