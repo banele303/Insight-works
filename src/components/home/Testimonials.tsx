@@ -1,154 +1,205 @@
-import { Star } from "lucide-react";
-
 const testimonials = [
   {
     name: "Mrs. Nomsa Dlamini",
-    role: "Principal",
-    school: "Ekurhuleni Secondary School, Gauteng",
-    avatar: "https://i.pravatar.cc/150?img=47",
-    rating: 5,
+    role: "Parent · Grade 10 learner",
+    initials: "ND",
+    color: "#9f1239",
     quote:
-      "Glenanda Shopping Learning Center transformed how we manage our school. Our teachers spend less time on admin and more time in the classroom. The report cards alone saved us two full weeks of work each term.",
-    tag: "Administration",
+      "Glenanda Learning Centre completely changed our family's experience with home schooling. The teachers are exceptional and my son's marks have improved dramatically. The report cards are detailed and honest.",
+    tag: "Parent Feedback",
   },
   {
     name: "Mr. Thabo Mokoena",
-    role: "HOD Mathematics",
-    school: "Soweto High School, Johannesburg",
-    avatar: "https://i.pravatar.cc/150?img=12",
-    rating: 5,
+    role: "Parent · Grade 7 learner",
+    initials: "TM",
+    color: "#38bdf8",
     quote:
-      "The Grade Insights dashboard is incredible. I can see exactly which learners are struggling with algebra and intervene before the exams. Our Maths pass rate improved by 18% this year.",
-    tag: "Analytics",
+      "The live classes are incredibly well-structured. My daughter never feels like she's missing out compared to traditional school. If anything, she gets more one-on-one attention and support.",
+    tag: "Parent Feedback",
   },
   {
     name: "Ms. Fatima Adams",
-    role: "Deputy Principal",
-    school: "Boland High School, Western Cape",
-    avatar: "https://i.pravatar.cc/150?img=32",
-    rating: 5,
+    role: "Parent · Grade 4 learner",
+    initials: "FA",
+    color: "#5c061c",
     quote:
-      "The timetabling feature is a lifesaver. What used to take our admin staff three days now takes 20 minutes. And it's always conflict-free. Absolutely brilliant South African software.",
-    tag: "Timetabling",
+      "I was nervous about home schooling but Glenanda made it seamless. From the very first day the onboarding was clear, the timetable was set, and the teachers were welcoming. Highly recommended.",
+    tag: "Parent Feedback",
   },
   {
     name: "Mr. Sipho Ndlovu",
-    role: "IT Coordinator",
-    school: "uMgungundlovu School, KZN",
-    avatar: "https://i.pravatar.cc/150?img=68",
-    rating: 5,
+    role: "Parent · Matric learner",
+    initials: "SN",
+    color: "#0ea5e9",
     quote:
-      "The online classes are structured and the reports are honest — we always know exactly how our daughter is doing. Communication with teachers has never been this easy.",
-    tag: "Communication",
+      "My son wrote Matric with Glenanda and passed with a Bachelor's pass. The CAPS coverage was thorough, the assessments were rigorous, and the educators pushed him to his best potential.",
+    tag: "Parent Feedback",
   },
   {
     name: "Dr. Liesl van Wyk",
-    role: "Circuit Manager",
-    school: "Boland Circuit, Western Cape DoE",
-    avatar: "https://i.pravatar.cc/150?img=21",
-    rating: 5,
+    role: "Parent · Grade 8 & 10 learners",
+    initials: "LV",
+    color: "#9f1239",
     quote:
-      "We piloted Glenanda Shopping Learning Center across 12 schools in our circuit. The DBE compliance of the reports and the POPIA-aligned data handling gave us complete confidence to roll it out district-wide.",
-    tag: "Compliance",
+      "We have two children enrolled and the difference in academic confidence is remarkable. The Glenanda team genuinely cares about each learner individually — it shows in every class.",
+    tag: "Parent Feedback",
   },
   {
     name: "Ms. Zanele Khumalo",
-    role: "Grade 10 Teacher",
-    school: "Thembisa Secondary, Ekurhuleni",
-    avatar: "https://i.pravatar.cc/150?img=56",
-    rating: 5,
+    role: "Parent · Grade 11 learner",
+    initials: "ZK",
+    color: "#38bdf8",
     quote:
-      "I use the AI Study Buddy with my learners and the difference is remarkable. They can get help at home late at night. My learners feel more confident and arrive better prepared for class.",
-    tag: "AI Learning",
+      "What I love most is the transparency — I can see my child's progress every week. The educators communicate openly and respond quickly. It feels like a real partnership.",
+    tag: "Parent Feedback",
   },
 ];
 
-const tagColors: Record<string, string> = {
-  Administration: "bg-[#f97316]/10 text-[#f97316] border-[#f97316]/20",
-  Analytics: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-  Timetabling: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-  Communication: "bg-orange-500/10 text-orange-400 border-orange-500/20",
-  Compliance: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
-  "AI Learning": "bg-pink-500/10 text-pink-400 border-pink-500/20",
-};
-
 const Testimonials = () => {
   return (
-    <section id="testimonials" className="py-28 relative overflow-hidden">
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-[#f97316]/[0.02] to-transparent pointer-events-none" />
+    <section
+      id="testimonials"
+      className="py-28 relative overflow-hidden"
+      style={{ background: "#060408", fontFamily: "'DM Sans', sans-serif" }}
+    >
+      {/* Decorative glow */}
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] pointer-events-none"
+        style={{ background: "radial-gradient(ellipse, rgba(56,189,248,0.04) 0%, transparent 70%)" }}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
         {/* Header */}
-        <div className="text-center mb-16 space-y-4">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-[#f97316]/10 border border-[#f97316]/20 text-[#f97316] text-xs font-bold uppercase tracking-widest">
-            Testimonials
-          </span>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white">
-            Trusted by Educators{" "}
-            <span className="text-[#f97316]">Across South Africa</span>
-          </h2>
-          <p className="text-gray-400 max-w-xl mx-auto">
-            Real stories from principals, teachers, and district managers who've
-            transformed their schools with Glenanda Shopping Learning Center.
-          </p>
-        </div>
-
-        {/* Average rating bar */}
-        <div className="flex items-center justify-center gap-4 mb-14">
-          <div className="flex items-center gap-1">
-            {[1, 2, 3, 4, 5].map((s) => (
-              <Star key={s} className="w-6 h-6 fill-yellow-400 text-yellow-400" />
-            ))}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-end mb-20">
+          <div>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="h-px w-10 bg-[#9f1239]" />
+              <span className="text-xs font-bold tracking-[0.25em] uppercase" style={{ color: "#e2a0b0" }}>
+                What Parents Say
+              </span>
+            </div>
+            <h2
+              className="leading-[1.05] tracking-tight"
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontSize: "clamp(2.2rem, 4vw, 3.5rem)",
+                fontWeight: 900,
+                color: "#fff",
+              }}
+            >
+              Trusted by Families
+              <br />
+              <span style={{ fontStyle: "italic", color: "#38bdf8" }}>Across Gauteng</span>
+            </h2>
           </div>
-          <span className="text-3xl font-black text-white">5.0</span>
-          <span className="text-gray-500 dark:text-gray-400 text-sm">
-            from families across Gauteng
-          </span>
+
+          {/* Rating block */}
+          <div className="flex items-center gap-6">
+            <div
+              className="rounded-2xl p-6 flex flex-col items-center justify-center"
+              style={{
+                background: "linear-gradient(135deg, #5c061c, #9f1239)",
+                minWidth: "120px",
+              }}
+            >
+              <p
+                className="text-white font-black text-5xl"
+                style={{ fontFamily: "'Playfair Display', serif", lineHeight: 1 }}
+              >
+                5.0
+              </p>
+              <div className="flex gap-0.5 mt-2">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className="text-yellow-400 text-lg">★</span>
+                ))}
+              </div>
+              <p className="text-white/70 text-xs mt-1">Average rating</p>
+            </div>
+            <p className="text-[#888] text-sm leading-relaxed max-w-xs">
+              Every review is submitted by real parents of enrolled learners. We believe in full transparency.
+            </p>
+          </div>
         </div>
 
-        {/* Testimonials masonry-style grid */}
-        <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+        {/* Testimonials grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {testimonials.map((t, idx) => (
             <div
               key={idx}
-              className="break-inside-avoid group bg-white/[0.03] border border-white/[0.08] rounded-2xl p-7 hover:border-[#f97316]/30 hover:shadow-xl transition-all duration-300"
+              className="rounded-2xl p-7 flex flex-col gap-5 transition-all duration-300"
+              style={{
+                background: "rgba(255,255,255,0.025)",
+                border: "1px solid rgba(255,255,255,0.07)",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = `${t.color}30`;
+                (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.04)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.07)";
+                (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.025)";
+              }}
             >
-              {/* Stars + tag */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex gap-0.5">
-                  {Array.from({ length: t.rating }).map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-                <span
-                  className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${tagColors[t.tag]}`}
-                >
-                  {t.tag}
-                </span>
+              {/* Stars */}
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className="text-yellow-400 text-sm">★</span>
+                ))}
               </div>
 
               {/* Quote */}
-              <p className="text-gray-300 leading-relaxed mb-6 text-sm italic">
+              <p className="text-[#bbb] text-sm leading-relaxed italic flex-1">
                 "{t.quote}"
               </p>
 
               {/* Author */}
-              <div className="flex items-center gap-3">
-                <img
-                  src={t.avatar}
-                  alt={t.name}
-                  className="w-11 h-11 rounded-full object-cover border-2 border-[#f97316]/40"
-                />
+              <div className="flex items-center gap-3 pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                <div
+                  className="h-10 w-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
+                  style={{ background: t.color }}
+                >
+                  {t.initials}
+                </div>
                 <div>
-                  <p className="font-bold text-white text-sm">{t.name}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{t.role}</p>
-                  <p className="text-xs text-[#f97316] font-medium">{t.school}</p>
+                  <p className="text-white font-bold text-sm">{t.name}</p>
+                  <p className="text-[#666] text-xs">{t.role}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
+
+        {/* Bottom image */}
+        <div
+          className="mt-14 relative rounded-2xl overflow-hidden"
+          style={{ height: "220px" }}
+        >
+          <img
+            src="/img-graduation.jpg"
+            alt="Glenanda Learning Centre graduate success"
+            className="w-full h-full object-cover"
+            style={{ filter: "brightness(0.45)" }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{ background: "linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)" }}
+          />
+          <div className="absolute left-8 top-1/2 -translate-y-1/2">
+            <p
+              className="text-white font-bold text-2xl max-w-sm"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              Join hundreds of families who chose Glenanda.
+            </p>
+            <p className="text-[#aaa] text-sm mt-2">Enrolments for 2026 are now open.</p>
+          </div>
+        </div>
       </div>
+
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+      `}</style>
     </section>
   );
 };

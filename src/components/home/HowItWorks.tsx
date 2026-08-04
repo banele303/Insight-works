@@ -1,319 +1,203 @@
-import { useState } from "react";
-import {
-  FileText,
-  UserCheck,
-  Video,
-  BarChart3,
-  ArrowRight,
-  CheckCircle,
-  Sparkles,
-  ShieldCheck,
-  Zap,
-  BookOpen,
-  GraduationCap,
-} from "lucide-react";
 import { Link } from "react-router";
 
 const steps = [
   {
-    id: "01",
-    icon: FileText,
-    badge: "Step 01",
-    title: "Easy Enrolment",
-    subtitle: "Quick Online Application",
-    desc: "Submit your learner's details and select their CAPS grade (Grade R to 12). Our admissions team reviews and approves applications within 24 hours.",
-    color: "from-rose-500 to-rose-700",
-    textColor: "text-rose-400",
-    bgColor: "bg-rose-500/10",
-    borderColor: "border-rose-500/30",
-    glowColor: "rgba(244, 63, 94, 0.15)",
-    preview: {
-      tag: "Admissions Portal",
-      title: "Online Application Status",
-      status: "Approved for 2026",
-      items: [
-        { label: "Grade Selection", value: "Grade 10 FET Phase" },
-        { label: "Curriculum", value: "Full CAPS Aligned" },
-        { label: "Verification", value: "DBE & SACE Verified" },
-      ],
-    },
+    num: "01",
+    title: "Submit Your Application",
+    desc: "Fill in your learner's details online. Our admissions team reviews and responds within 24 hours — no lengthy paperwork.",
   },
   {
-    id: "02",
-    icon: UserCheck,
-    badge: "Step 02",
+    num: "02",
     title: "Personalised Onboarding",
-    subtitle: "Custom Learning Portal",
-    desc: "Get instant access to the parent & student portals. View your learner's timetable, textbook materials, and personalized study schedules.",
-    color: "from-sky-400 to-blue-500",
-    textColor: "text-sky-400",
-    bgColor: "bg-sky-500/10",
-    borderColor: "border-sky-500/30",
-    glowColor: "rgba(56, 189, 248, 0.15)",
-    preview: {
-      tag: "Learner Portal",
-      title: "Active Learning Hub",
-      status: "Configured",
-      items: [
-        { label: "Enrolled Subjects", value: "7 CAPS Subjects" },
-        { label: "Timetable Sync", value: "Daily Live Schedule" },
-        { label: "Resource Library", value: "Textbooks & Past Papers" },
-      ],
-    },
+    desc: "Get instant access to the parent & learner portals. View timetables, CAPS textbooks, and your personalised study schedule.",
   },
   {
-    id: "03",
-    icon: Video,
-    badge: "Step 03",
-    title: "Live Classes & AI Support",
-    subtitle: "Interactive Daily Learning",
-    desc: "Learners attend live classes taught by SACE-registered educators, and use our 24/7 AI Study Buddy for instant homework help and practice tests.",
-    color: "from-emerald-400 to-teal-500",
-    textColor: "text-emerald-400",
-    bgColor: "bg-emerald-500/10",
-    borderColor: "border-emerald-500/30",
-    glowColor: "rgba(16, 185, 129, 0.15)",
-    preview: {
-      tag: "Live Classroom",
-      title: "Mathematics Grade 10",
-      status: "Live Now • 98 Attending",
-      items: [
-        { label: "Educator", value: "Mr. Thabo Mokoena (SACE)" },
-        { label: "AI Assistant", value: "Active 24/7 for Q&A" },
-        { label: "Interactive Tools", value: "Shared Whiteboard & Chat" },
-      ],
-    },
+    num: "03",
+    title: "Attend Live Daily Classes",
+    desc: "Learners join live sessions with SACE-registered educators each day — interactive, structured, and curriculum-aligned.",
   },
   {
-    id: "04",
-    icon: BarChart3,
-    badge: "Step 04",
-    title: "Assessments & Reports",
-    subtitle: "Certified Academic Progress",
-    desc: "Complete CAPS-aligned SBA tasks, term exams, and real-time assessments. Parents receive detailed report cards and diagnostic progress insights.",
-    color: "from-violet-400 to-purple-500",
-    textColor: "text-violet-400",
-    bgColor: "bg-violet-500/10",
-    borderColor: "border-violet-500/30",
-    glowColor: "rgba(139, 92, 246, 0.15)",
-    preview: {
-      tag: "Progress Analytics",
-      title: "Term 3 Report Summary",
-      status: "84% Overall Average",
-      items: [
-        { label: "SBA Submissions", value: "100% Completed" },
-        { label: "Term Average", value: "Level 7 (Distinction)" },
-        { label: "Report Card", value: "Official CAPS Verified" },
-      ],
-    },
+    num: "04",
+    title: "Certified Assessments & Reports",
+    desc: "Complete CAPS-aligned SBA tasks and term exams. Parents receive official report cards every term.",
   },
 ];
 
 const HowItWorks = () => {
-  const [activeStep, setActiveStep] = useState(0);
-
-  const currentPreview = steps[activeStep].preview;
-
   return (
-    <section id="how-it-works" className="py-28 bg-[#030712] relative overflow-hidden">
-      {/* Dynamic ambient lighting */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full blur-[160px] transition-all duration-700"
-          style={{ background: steps[activeStep].glowColor }}
-        />
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-          }}
-        />
-      </div>
+    <section
+      id="how-it-works"
+      className="py-28 relative overflow-hidden"
+      style={{ background: "#080508", fontFamily: "'DM Sans', sans-serif" }}
+    >
+      {/* Subtle burgundy glow */}
+      <div
+        className="absolute top-0 right-0 w-[600px] h-[600px] pointer-events-none"
+        style={{ background: "radial-gradient(circle, rgba(92,6,28,0.18) 0%, transparent 70%)" }}
+      />
+      <div
+        className="absolute bottom-0 left-0 w-[400px] h-[400px] pointer-events-none"
+        style={{ background: "radial-gradient(circle, rgba(56,189,248,0.05) 0%, transparent 70%)" }}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#5c061c]/10 border border-[#5c061c]/20 text-rose-300 text-xs font-bold uppercase tracking-widest">
-            <Sparkles className="w-3.5 h-3.5 text-sky-400" />
-            Simple 4-Step Process
+
+        {/* Section header */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
+          <div>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="h-px w-10 bg-[#9f1239]" />
+              <span className="text-xs font-bold tracking-[0.25em] uppercase" style={{ color: "#e2a0b0" }}>
+                Simple Process
+              </span>
+            </div>
+            <h2
+              className="leading-[1.05] tracking-tight"
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontSize: "clamp(2.2rem, 4vw, 3.5rem)",
+                fontWeight: 900,
+                color: "#fff",
+              }}
+            >
+              How Glenanda
+              <br />
+              <span style={{ fontStyle: "italic", color: "#38bdf8" }}>Learning Works</span>
+            </h2>
           </div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
-            How <span className="bg-clip-text text-transparent bg-gradient-to-r from-rose-400 via-sky-400 to-rose-500">Glenanda Learning</span> Works
-          </h2>
-          <p className="text-gray-400 text-lg leading-relaxed">
-            From seamless enrolment to official CAPS-aligned report cards — we empower learners to excel with live interactive classes and AI-guided study support.
+          <p className="text-[#888] leading-relaxed text-base lg:pt-8">
+            From enrolment to your child's first official report card — our structured four-step journey keeps every learner on track with the full CAPS curriculum.
           </p>
         </div>
 
-        {/* Interactive Steps Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          {/* Left Column: Interactive Step Cards */}
-          <div className="lg:col-span-6 space-y-4">
-            {steps.map((step, idx) => {
-              const Icon = step.icon;
-              const isActive = activeStep === idx;
+        {/* Main content grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 
-              return (
+          {/* Left — image + enrolment scene */}
+          <div className="flex flex-col gap-4">
+            {/* Big image */}
+            <div
+              className="relative rounded-2xl overflow-hidden"
+              style={{ height: "360px", boxShadow: "0 30px 60px rgba(0,0,0,0.5)" }}
+            >
+              <img
+                src="/img-online-class.jpg"
+                alt="Student attending live online class at Glenanda Learning Centre"
+                className="w-full h-full object-cover"
+              />
+              <div
+                className="absolute inset-0"
+                style={{ background: "linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%)" }}
+              />
+              {/* Overlay badge */}
+              <div
+                className="absolute bottom-5 left-5 right-5 flex items-center justify-between"
+              >
+                <div>
+                  <p className="text-white font-bold text-sm" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    Live Daily Classes
+                  </p>
+                  <p className="text-[#aaa] text-xs">SACE-registered educators · Grade R–12</p>
+                </div>
                 <div
-                  key={step.id}
-                  onClick={() => setActiveStep(idx)}
-                  className={`group relative cursor-pointer rounded-2xl p-6 transition-all duration-300 border ${
-                    isActive
-                      ? "bg-white/[0.06] border-sky-500/40 shadow-xl shadow-black/40 scale-[1.01]"
-                      : "bg-white/[0.02] border-white/[0.07] hover:bg-white/[0.04] hover:border-white/15"
-                  }`}
+                  className="px-3 py-1.5 rounded text-white text-xs font-black"
+                  style={{ background: "linear-gradient(135deg, #5c061c, #9f1239)", letterSpacing: "0.08em" }}
                 >
-                  <div className="flex items-start gap-5">
-                    {/* Icon Container */}
-                    <div
-                      className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border transition-transform duration-300 ${
-                        isActive
-                          ? `${step.bgColor} ${step.borderColor} scale-110 shadow-lg`
-                          : "bg-white/[0.04] border-white/10 group-hover:scale-105"
-                      }`}
-                    >
-                      <Icon
-                        className={`w-7 h-7 ${
-                          isActive ? step.textColor : "text-gray-400 group-hover:text-gray-200"
-                        }`}
-                      />
-                    </div>
-
-                    {/* Step Details */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1">
-                        <span
-                          className={`text-xs font-bold uppercase tracking-wider ${
-                            isActive ? step.textColor : "text-gray-500"
-                          }`}
-                        >
-                          {step.badge}
-                        </span>
-                        {isActive && (
-                          <span className="flex items-center gap-1 text-xs font-bold text-sky-400 bg-sky-500/10 px-2.5 py-0.5 rounded-full border border-sky-500/20">
-                            Active Step <ArrowRight className="w-3 h-3" />
-                          </span>
-                        )}
-                      </div>
-                      <h3 className="text-xl font-bold text-white mb-1.5 font-serif">
-                        {step.title}
-                      </h3>
-                      <p className="text-sm text-gray-400 leading-relaxed">
-                        {step.desc}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Active Indicator Bar */}
-                  {isActive && (
-                    <div className="absolute left-0 top-3 bottom-3 w-1 bg-gradient-to-b from-sky-400 to-blue-500 rounded-r-full" />
-                  )}
+                  LIVE
                 </div>
-              );
-            })}
-          </div>
-
-          {/* Right Column: Live Interactive Mockup Card */}
-          <div className="lg:col-span-6">
-            <div className="relative rounded-3xl border border-white/10 bg-white/[0.03] backdrop-blur-2xl p-8 shadow-2xl shadow-black/60 overflow-hidden">
-              {/* Top Card Header */}
-              <div className="flex items-center justify-between border-b border-white/[0.08] pb-6 mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-green-500/80" />
-                  <span className="ml-2 text-xs font-semibold text-gray-500 tracking-wider uppercase">
-                    {currentPreview.tag}
-                  </span>
-                </div>
-                <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full flex items-center gap-1.5">
-                  <CheckCircle className="w-3.5 h-3.5" />
-                  {currentPreview.status}
-                </span>
               </div>
+            </div>
 
-              {/* Preview Title */}
-              <div className="mb-6">
-                <h4 className="text-2xl font-black text-white mb-1 font-serif">
-                  {currentPreview.title}
-                </h4>
-                <p className="text-xs text-gray-400 font-sans">
-                  Glenanda Learning Centre Platform • Grade R–12 CAPS Ecosystem
-                </p>
+            {/* Two small cards below */}
+            <div className="grid grid-cols-2 gap-4">
+              <div
+                className="rounded-2xl overflow-hidden relative"
+                style={{ height: "160px", boxShadow: "0 10px 30px rgba(0,0,0,0.4)" }}
+              >
+                <img src="/img-teacher.jpg" alt="SACE-registered teacher" className="w-full h-full object-cover" />
+                <div
+                  className="absolute inset-0"
+                  style={{ background: "linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%)" }}
+                />
+                <p className="absolute bottom-3 left-3 text-white text-xs font-bold">SACE Educators</p>
               </div>
-
-              {/* Items List */}
-              <div className="space-y-4 mb-8">
-                {currentPreview.items.map((item, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center justify-between p-4 rounded-xl bg-white/[0.03] border border-white/[0.07] transition-all hover:bg-white/[0.05]"
+              <div
+                className="rounded-2xl p-5 flex flex-col justify-between"
+                style={{
+                  background: "linear-gradient(135deg, rgba(56,189,248,0.07), rgba(255,255,255,0.02))",
+                  border: "1px solid rgba(56,189,248,0.15)",
+                }}
+              >
+                <p className="text-[#38bdf8] text-xs font-bold uppercase tracking-widest">Pass Rate</p>
+                <div>
+                  <p
+                    className="text-white text-4xl font-black"
+                    style={{ fontFamily: "'Playfair Display', serif" }}
                   >
-                    <span className="text-sm font-medium text-gray-300">
-                      {item.label}
-                    </span>
-                    <span className="text-sm font-bold text-sky-400">
-                      {item.value}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Interactive Footer Banner inside card */}
-              <div className="rounded-xl bg-gradient-to-r from-rose-500/5 via-sky-500/5 to-rose-500/5 border border-rose-500/20 p-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-rose-500/20 flex items-center justify-center">
-                    <ShieldCheck className="w-5 h-5 text-rose-400" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-white leading-tight">Full CAPS Alignment</p>
-                    <p className="text-[10px] text-gray-400 leading-tight">SACE-registered educators & real assessments</p>
-                  </div>
+                    94%
+                  </p>
+                  <p className="text-[#888] text-xs mt-1">Matric 2025 cohort</p>
                 </div>
-                <Link
-                  to="/apply"
-                  className="px-4 py-2 rounded-lg bg-[#5c061c] hover:bg-[#7e0b27] text-white font-bold text-xs transition-colors shrink-0 flex items-center gap-1 border border-white/10"
-                >
-                  Apply <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Bottom CTA Banner */}
-        <div className="mt-20 relative rounded-3xl overflow-hidden border border-rose-500/20 bg-gradient-to-r from-[#5c061c]/10 via-sky-950/20 to-[#5c061c]/10 p-8 md:p-12">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-8 relative z-10">
-            <div className="space-y-2 text-center lg:text-left">
-              <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-sky-400">
-                <Zap className="w-4 h-4 text-rose-400" /> 2026 Academic Year Admission
-              </span>
-              <h3 className="text-3xl md:text-4xl font-extrabold text-white font-serif">
-                Ready to Give Your Child a Brighter Future?
-              </h3>
-              <p className="text-gray-300 max-w-2xl text-base">
-                Join Glenanda Learning Centre today. Full CAPS curriculum, live expert classes, and interactive AI study assistance for Grade R to Matric.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row items-center gap-4 shrink-0 w-full lg:w-auto">
+          {/* Right — numbered steps */}
+          <div className="flex flex-col gap-0">
+            {steps.map((step, idx) => (
+              <div
+                key={step.num}
+                className="flex gap-6 pb-8 relative"
+                style={{ borderLeft: idx < steps.length - 1 ? "1px solid rgba(255,255,255,0.07)" : "1px solid transparent", marginLeft: "20px", paddingLeft: "32px" }}
+              >
+                {/* Circle number */}
+                <div
+                  className="absolute -left-[20px] top-0 w-10 h-10 rounded-full flex items-center justify-center text-sm font-black shrink-0"
+                  style={{
+                    background: idx === 0 ? "linear-gradient(135deg, #5c061c, #9f1239)" : "rgba(255,255,255,0.04)",
+                    border: idx === 0 ? "none" : "1px solid rgba(255,255,255,0.1)",
+                    color: idx === 0 ? "#fff" : "#666",
+                    fontFamily: "'DM Sans', sans-serif",
+                  }}
+                >
+                  {step.num}
+                </div>
+
+                <div className="flex flex-col gap-2 pt-1">
+                  <h3
+                    className="text-white font-bold text-lg"
+                    style={{ fontFamily: "'Playfair Display', serif" }}
+                  >
+                    {step.title}
+                  </h3>
+                  <p className="text-[#888] text-sm leading-relaxed">{step.desc}</p>
+                </div>
+              </div>
+            ))}
+
+            {/* CTA */}
+            <div className="mt-4" style={{ marginLeft: "20px", paddingLeft: "32px" }}>
               <Link
                 to="/apply"
-                className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-[#5c061c] to-[#9f1239] text-white font-extrabold text-base hover:shadow-lg hover:shadow-[#5c061c]/30 transition-all hover:scale-[1.02] text-center flex items-center justify-center gap-2 border border-white/10"
+                className="inline-flex items-center gap-2 px-7 py-3.5 text-white font-bold text-sm transition-all duration-300"
+                style={{
+                  background: "linear-gradient(135deg, #7f0c26, #c01442)",
+                  borderRadius: "4px",
+                  letterSpacing: "0.04em",
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 30px rgba(159,18,57,0.4)"; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLElement).style.boxShadow = "none"; }}
               >
-                <GraduationCap className="w-5 h-5 text-sky-300" /> Start Application
-              </Link>
-              <Link
-                to="/contact"
-                className="w-full sm:w-auto px-8 py-4 rounded-xl border border-white/20 text-white font-bold text-base hover:bg-white/10 transition-all text-center flex items-center justify-center gap-2"
-              >
-                <BookOpen className="w-5 h-5 text-sky-400" /> Talk to Us
+                Start Your Application →
               </Link>
             </div>
           </div>
         </div>
       </div>
+
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+      `}</style>
     </section>
   );
 };

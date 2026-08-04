@@ -1,195 +1,178 @@
-import { useState } from "react";
-import {
-  Brain,
-  BarChart3,
-  CalendarDays,
-  FileText,
-  MessageSquare,
-  Shield,
-  Smartphone,
-  Zap,
-  CheckCircle2,
-} from "lucide-react";
-
-const categories = ["All", "Administration", "Learning", "Communication", "Analytics"];
+import { Link } from "react-router";
 
 const features = [
   {
-    icon: Brain,
-    title: "AI Study Buddy",
-    desc: "Personalised AI tutor that adapts to each learner's pace, providing hints, explanations, and practice questions aligned to CAPS.",
-    tags: ["Learning"],
-    badge: "AI Powered",
-    badgeColor: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-    iconColor: "text-purple-400",
-    iconBg: "bg-purple-500/10",
-    highlights: ["Personalised learning paths", "Instant feedback", "CAPS aligned"],
+    label: "Live Classes",
+    title: "Daily Interactive Lessons",
+    desc: "Every learner attends structured live sessions with SACE-registered educators. Classes are recorded so nothing is ever missed.",
+    img: "/img-online-class.jpg",
+    stat: "Daily",
+    statLabel: "Live sessions",
   },
   {
-    icon: BarChart3,
-    title: "Grade Insights Dashboard",
-    desc: "Real-time analytics for teachers and principals — track performance trends, identify at-risk learners, and celebrate top achievers.",
-    tags: ["Analytics"],
-    badge: "Real-time",
-    badgeColor: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    iconColor: "text-blue-400",
-    iconBg: "bg-blue-500/10",
-    highlights: ["Cohort comparisons", "At-risk alerts", "NSC readiness scores"],
+    label: "Expert Teachers",
+    title: "SACE-Registered Educators",
+    desc: "All our teachers are certified and subject-specialist — passionate about helping South African learners achieve their best results.",
+    img: "/img-teacher.jpg",
+    stat: "100%",
+    statLabel: "SACE certified",
   },
   {
-    icon: CalendarDays,
-    title: "Smart Timetabling",
-    desc: "Generate conflict-free, CAPS-aligned school timetables in minutes. Handle teacher availability, room allocation, and phase-based scheduling automatically.",
-    tags: ["Administration"],
-    badge: "Auto-generate",
-    badgeColor: "bg-[#dc2626]/10 text-[#dc2626] border-[#dc2626]/20",
-    iconColor: "text-[#dc2626]",
-    iconBg: "bg-[#dc2626]/10",
-    highlights: ["Conflict detection", "Room allocation", "Substitute planning"],
+    label: "CAPS Curriculum",
+    title: "Full National Curriculum",
+    desc: "Every subject, every grade — Grade R to Matric — covered in full alignment with South Africa's CAPS framework.",
+    img: "/img-books.jpg",
+    stat: "R–12",
+    statLabel: "All grades",
   },
   {
-    icon: FileText,
-    title: "Digital Report Cards",
-    desc: "Generate professional DBE-compliant report cards with one click. Supports all phases from Foundation to FET, including SBA tracking.",
-    tags: ["Administration"],
-    badge: "DBE Compliant",
-    badgeColor: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
-    iconColor: "text-yellow-400",
-    iconBg: "bg-yellow-500/10",
-    highlights: ["One-click generation", "Multi-phase support", "Parent download"],
-  },
-  {
-    icon: MessageSquare,
-    title: "Parent Communication Hub",
-    desc: "Send announcements, report progress, and manage consent forms — all in one secure, POPIA-compliant system.",
-    tags: ["Communication"],
-    badge: "POPIA Compliant",
-    badgeColor: "bg-orange-500/10 text-orange-400 border-orange-500/20",
-    iconColor: "text-orange-400",
-    iconBg: "bg-orange-500/10",
-    highlights: ["Bulk announcements", "Read receipts", "Consent management"],
-  },
-  {
-    icon: Shield,
-    title: "Secure Admin Controls",
-    desc: "Role-based access for principals, HODs, teachers, and admin staff. Full audit trails and data governance aligned to POPIA regulations.",
-    tags: ["Administration"],
-    badge: "Enterprise Grade",
-    badgeColor: "bg-red-500/10 text-red-400 border-red-500/20",
-    iconColor: "text-red-400",
-    iconBg: "bg-red-500/10",
-    highlights: ["Role-based access", "Full audit trail", "Data encryption"],
-  },
-  {
-    icon: Smartphone,
-    title: "Mobile-First Design",
-    desc: "Accessible on any device — teachers can mark attendance on a tablet, parents can track progress on a phone, and learners can study anywhere.",
-    tags: ["Learning", "Communication"],
-    badge: "Cross-platform",
-    badgeColor: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
-    iconColor: "text-cyan-400",
-    iconBg: "bg-cyan-500/10",
-    highlights: ["iOS & Android", "Offline mode", "Low data mode"],
-  },
-  {
-    icon: Zap,
-    title: "Instant Assessment Engine",
-    desc: "Create, distribute, and auto-mark quizzes and tests. Supports multiple question types including multiple-choice, short answer, and essay with AI marking.",
-    tags: ["Learning", "Analytics"],
-    badge: "AI Marking",
-    badgeColor: "bg-[#dc2626]/10 text-[#dc2626] border-[#dc2626]/20",
-    iconColor: "text-[#dc2626]",
-    iconBg: "bg-[#dc2626]/10",
-    highlights: ["Auto-marking", "Question bank", "Plagiarism detection"],
+    label: "Results",
+    title: "Proven Academic Results",
+    desc: "Our learners consistently achieve distinction-level results. Join a community where excellence is the standard.",
+    img: "/img-graduation.jpg",
+    stat: "94%",
+    statLabel: "Matric pass rate",
   },
 ];
 
 const Features = () => {
-  const [activeCategory, setActiveCategory] = useState("All");
-
-  const filtered =
-    activeCategory === "All"
-      ? features
-      : features.filter((f) => f.tags.includes(activeCategory));
-
   return (
-    <section id="features" className="py-28 relative overflow-hidden">
-      {/* Background blobs */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#dc2626]/5 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/5 blur-[120px] rounded-full pointer-events-none" />
-
+    <section
+      id="features"
+      className="py-28 relative overflow-hidden"
+      style={{ background: "#0a0608", fontFamily: "'DM Sans', sans-serif" }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header */}
-        <div className="text-center mb-16 space-y-4">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-[#dc2626]/10 border border-[#dc2626]/20 text-[#dc2626] text-xs font-bold uppercase tracking-widest">
-            Platform Features
-          </span>
-          <h2 className="text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white leading-tight">
-            Everything Your School{" "}
-            <span className="text-[#dc2626]">Needs to Thrive</span>
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
-            A comprehensive, all-in-one learning system built for South African home schooling —
-            from admin to analytics, teaching to communication.
+
+        {/* Section header */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-20">
+          <div>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="h-px w-10 bg-[#9f1239]" />
+              <span className="text-xs font-bold tracking-[0.25em] uppercase" style={{ color: "#e2a0b0" }}>
+                Why Glenanda
+              </span>
+            </div>
+            <h2
+              className="leading-[1.05] tracking-tight"
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontSize: "clamp(2.2rem, 4vw, 3.5rem)",
+                fontWeight: 900,
+                color: "#fff",
+              }}
+            >
+              Everything Your Child
+              <br />
+              <span style={{ fontStyle: "italic", color: "#38bdf8" }}>Needs to Excel</span>
+            </h2>
+          </div>
+          <p className="text-[#888] max-w-md leading-relaxed text-base lg:text-right">
+            A complete home schooling solution — from live certified classes to official CAPS report cards — all under one roof.
           </p>
         </div>
 
-        {/* Filter Tabs */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-5 py-2 rounded-full text-sm font-semibold border transition-all duration-200 ${
-                activeCategory === cat
-                  ? "bg-[#dc2626] text-black border-[#dc2626] shadow-lg shadow-[#dc2626]/20"
-                  : "bg-transparent border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-[#dc2626]/50 hover:text-[#dc2626]"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {/* Feature Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filtered.map((feature, idx) => (
+        {/* Feature cards — 2×2 grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {features.map((feature, idx) => (
             <div
               key={idx}
-              className="group relative bg-white dark:bg-[#1a1a1a] border border-gray-100 dark:border-gray-800 rounded-2xl p-6 hover:border-[#dc2626]/40 hover:shadow-xl hover:shadow-[#dc2626]/5 transition-all duration-300 flex flex-col"
+              className="group relative rounded-2xl overflow-hidden flex flex-col"
+              style={{
+                border: "1px solid rgba(255,255,255,0.07)",
+                background: "rgba(255,255,255,0.02)",
+                transition: "border-color 0.3s, transform 0.3s",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(56,189,248,0.2)";
+                (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.07)";
+                (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+              }}
             >
-              {/* Top badge */}
-              <div className="flex items-start justify-between mb-4">
-                <div className={`p-3 rounded-xl ${feature.iconBg}`}>
-                  <feature.icon className={`w-6 h-6 ${feature.iconColor}`} />
+              {/* Image */}
+              <div className="relative overflow-hidden" style={{ height: "220px" }}>
+                <img
+                  src={feature.img}
+                  alt={feature.title}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div
+                  className="absolute inset-0"
+                  style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(8,5,8,0.8) 100%)" }}
+                />
+                {/* Stat overlay */}
+                <div className="absolute bottom-4 right-4 text-right">
+                  <p
+                    className="text-white font-black text-3xl"
+                    style={{ fontFamily: "'Playfair Display', serif" }}
+                  >
+                    {feature.stat}
+                  </p>
+                  <p className="text-[#aaa] text-xs">{feature.statLabel}</p>
                 </div>
-                <span
-                  className={`text-xs font-bold px-2.5 py-1 rounded-full border ${feature.badgeColor}`}
+                {/* Label pill */}
+                <div
+                  className="absolute top-4 left-4 px-3 py-1 rounded text-xs font-bold text-white"
+                  style={{ background: "rgba(92,6,28,0.85)", letterSpacing: "0.06em" }}
                 >
-                  {feature.badge}
-                </span>
+                  {feature.label}
+                </div>
               </div>
 
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-                {feature.title}
-              </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-4 flex-1">
-                {feature.desc}
-              </p>
-
-              {/* Highlights */}
-              <ul className="space-y-1.5 mt-auto">
-                {feature.highlights.map((h, i) => (
-                  <li key={i} className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#dc2626] shrink-0" />
-                    {h}
-                  </li>
-                ))}
-              </ul>
+              {/* Text */}
+              <div className="p-7 flex flex-col gap-3">
+                <h3
+                  className="text-white font-bold text-xl"
+                  style={{ fontFamily: "'Playfair Display', serif" }}
+                >
+                  {feature.title}
+                </h3>
+                <p className="text-[#888] text-sm leading-relaxed">{feature.desc}</p>
+              </div>
             </div>
           ))}
         </div>
+
+        {/* Bottom CTA */}
+        <div
+          className="mt-16 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6"
+          style={{
+            background: "linear-gradient(135deg, rgba(92,6,28,0.15) 0%, rgba(56,189,248,0.05) 100%)",
+            border: "1px solid rgba(159,18,57,0.2)",
+          }}
+        >
+          <div>
+            <p
+              className="text-white font-bold text-xl"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              Ready to give your child the best start?
+            </p>
+            <p className="text-[#888] text-sm mt-1">Enrolments for 2026 are open now. Limited seats per grade.</p>
+          </div>
+          <Link
+            to="/apply"
+            className="shrink-0 inline-flex items-center gap-2 px-8 py-4 text-white font-bold text-sm transition-all duration-300"
+            style={{
+              background: "linear-gradient(135deg, #7f0c26, #c01442)",
+              borderRadius: "4px",
+              whiteSpace: "nowrap",
+              letterSpacing: "0.04em",
+            }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 30px rgba(159,18,57,0.4)"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = "none"; }}
+          >
+            Apply Now →
+          </Link>
+        </div>
       </div>
+
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+      `}</style>
     </section>
   );
 };
