@@ -4,7 +4,7 @@ import {
   Calendar, Clock, CreditCard, HelpCircle, PhoneCall, ShieldCheck,
   Check, Sparkles, ChevronDown, ChevronLeft, ChevronRight,
   Video, MapPin, CheckCircle2, User, Mail, Phone, MessageSquare,
-  ExternalLink, ArrowRight, RotateCcw
+  ExternalLink, ArrowRight, RotateCcw, Download
 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useMutation } from "convex/react";
@@ -341,9 +341,31 @@ const Booking = () => {
                     className="flex-1 inline-flex items-center justify-center gap-2 bg-[#156e52] hover:bg-[#0f5940] text-white px-5 py-3 rounded-xl font-bold text-sm shadow-sm transition-all cursor-pointer"
                   >
                     <Calendar className="w-4 h-4" />
-                    Add to Calendar
+                    Add to Google Calendar
                     <ExternalLink className="w-3.5 h-3.5 opacity-80" />
                   </a>
+
+                  <button
+                    onClick={() => {
+                      ComposioService.downloadIcsFile({
+                        clientName: bookingConfirmed.clientName,
+                        clientEmail: bookingConfirmed.clientEmail,
+                        clientPhone: bookingConfirmed.clientPhone,
+                        serviceType: bookingConfirmed.serviceType,
+                        format: bookingConfirmed.format,
+                        date: bookingConfirmed.date,
+                        timeSlot: bookingConfirmed.timeSlot,
+                        duration: bookingConfirmed.duration,
+                        rate: bookingConfirmed.rate,
+                        notes: bookingConfirmed.notes,
+                      });
+                      toast.success("Downloaded calendar (.ics) file!");
+                    }}
+                    className="inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-800 px-4 py-3 rounded-xl font-bold text-sm transition-all cursor-pointer"
+                  >
+                    <Download className="w-4 h-4" />
+                    Download .ics
+                  </button>
 
                   <a
                     href={`https://wa.me/27795501557?text=${encodeURIComponent(
