@@ -49,6 +49,49 @@ export default defineSchema({
     capacity: v.number(),
   }).index("by_name_year", ["name", "academicYear"]),
 
+  blogs: defineTable({
+    title: v.string(),
+    slug: v.string(),
+    category: v.string(),
+    categoryColor: v.optional(v.string()),
+    excerpt: v.string(),
+    content: v.string(),
+    coverImage: v.optional(v.string()),
+    coverStorageId: v.optional(v.id("_storage")),
+    author: v.string(),
+    authorAvatar: v.optional(v.string()),
+    authorRole: v.optional(v.string()),
+    date: v.string(),
+    readTime: v.string(),
+    published: v.boolean(),
+    views: v.optional(v.number()),
+    tags: v.optional(v.array(v.string())),
+    createdAt: v.optional(v.number()),
+    updatedAt: v.optional(v.number()),
+  })
+    .index("by_slug", ["slug"])
+    .index("by_published", ["published"]),
+
+  clinicalDocuments: defineTable({
+    title: v.string(),
+    category: v.string(),
+    description: v.optional(v.string()),
+    storageId: v.optional(v.id("_storage")),
+    fileUrl: v.optional(v.string()),
+    fileName: v.string(),
+    fileSize: v.string(),
+    fileType: v.string(),
+    format: v.string(),
+    uploadedBy: v.string(),
+    uploaderEmail: v.optional(v.string()),
+    isPublic: v.boolean(),
+    popiaCompliant: v.boolean(),
+    downloads: v.optional(v.number()),
+    createdAt: v.number(),
+  })
+    .index("by_category", ["category"])
+    .index("by_isPublic", ["isPublic"]),
+
   subjects: defineTable({
     name: v.string(),
     code: v.string(),
@@ -376,6 +419,11 @@ export default defineSchema({
     date: v.string(),
     endDate: v.optional(v.string()),
     type: v.union(
+      v.literal("session"),
+      v.literal("counselling"),
+      v.literal("coaching"),
+      v.literal("workshop"),
+      v.literal("supervision"),
       v.literal("exam"),
       v.literal("sports"),
       v.literal("holiday"),
@@ -948,4 +996,66 @@ export default defineSchema({
     .index("by_grade", ["gradeApplyingFor"])
     .index("by_email", ["parentEmail"])
     .index("by_created", ["createdAt"]),
+
+  // ─── APPOINTMENTS & SESSIONS (INSIGHT WORKS BOOKINGS) ───────────────
+  bookings: defineTable({
+    clientName: v.string(),
+    clientEmail: v.string(),
+    clientPhone: v.string(),
+    serviceType: v.string(),
+    format: v.string(), // "In-Person Consulting Room" | "Telehealth Video Session"
+    date: v.string(), // "YYYY-MM-DD"
+    timeSlot: v.string(), // "10:00 AM"
+    duration: v.string(), // "60 min"
+    rate: v.string(), // "R750"
+    notes: v.optional(v.string()),
+    status: v.union(
+      v.literal("confirmed"),
+      v.literal("pending"),
+      v.literal("completed"),
+      v.literal("cancelled")
+    ),
+    composioSyncStatus: v.optional(v.string()), // "synced" | "pending"
+    googleCalendarEventId: v.optional(v.string()),
+    emailDispatched: v.optional(v.boolean()),
+    createdAt: v.number(),
+  }).index("by_date", ["date"])
+    .index("by_status", ["status"])
+    .index("by_client_email", ["clientEmail"]),
+
+  // ─── THERAPY & COACHING VIDEO SESSIONS ────────────────────────────────────
+  therapySessions: defineTable({
+    roomId: v.string(),                          // unique room code (shared via invite link)
+    bookingId: v.optional(v.id("bookings")),     // linked booking if any
+    therapistId: v.optional(v.id("users")),      // logged-in therapist/coach
+    clientName: v.optional(v.string()),          // guest name when client joins without account
+    clientUserId: v.optional(v.id("users")),     // logged-in client id if applicable
+    sessionType: v.optional(v.string()),         // "Individual Counselling" | "Life Coaching" | etc.
+    status: v.union(
+      v.literal("waiting"),
+      v.literal("active"),
+      v.literal("ended")
+    ),
+    startedAt: v.optional(v.number()),
+    endedAt: v.optional(v.number()),
+    // Live transcript (accumulated during session)
+    transcript: v.optional(v.string()),
+    // AI-generated structured notes (saved after session ends)
+    aiNotes: v.optional(v.string()),             // JSON string of structured notes
+    // Manual notes added by therapist during session
+    manualNotes: v.optional(v.string()),
+    createdAt: v.number(),
+    // WebRTC signaling exchange (offer/answer/ICE candidates via Convex)
+    signals: v.optional(v.array(v.object({
+      id: v.string(),
+      sender: v.string(),                       // userId or "guest:{clientName}"
+      target: v.string(),
+      type: v.string(),                         // "offer" | "answer" | "candidate"
+      payload: v.string(),                      // JSON-stringified SDP or ICE candidate
+      createdAt: v.number(),
+    }))),
+  }).index("by_roomId", ["roomId"])
+    .index("by_therapistId", ["therapistId"])
+    .index("by_status", ["status"]),
 });
+

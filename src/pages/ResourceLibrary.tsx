@@ -1,202 +1,157 @@
 import { useState } from "react";
-import { useQuery } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const capsApi = api as any;
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  FileText, Download, ShieldCheck, Search, Filter,
+  BookOpen, Clock, Lock, Sparkles, CheckCircle2, ArrowUpRight
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, FileText, BookOpen, Download, Search } from "lucide-react";
+import { Link } from "react-router";
+import type { Id } from "../../convex/_generated/dataModel";
+
+const CATEGORIES = [
+  "All",
+  "CBT & Grounding",
+  "Couples Tools",
+  "Intake & Legal",
+  "Mindfulness & Worksheets",
+  "Life Coaching",
+  "Assessment Forms",
+];
 
 export default function ResourceLibrary() {
-  const [selectedGrade, setSelectedGrade] = useState<number>(0); // 0 = all
-  const [selectedLanguage, setSelectedLanguage] = useState("en");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState("past-papers");
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
-  const allSubjects = useQuery(capsApi.capsActions?.getCapsSubjects, {});
-  const pastPapers = useQuery(capsApi.capsActions?.getPastPapers, selectedGrade ? { grade: selectedGrade } : {});
-  const studyResources = useQuery(capsApi.capsActions?.getStudyResources, selectedGrade ? { grade: selectedGrade } : {});
+  const documents = useQuery(api.documents.getDocuments, {
+    category: selectedCategory === "All" ? undefined : selectedCategory,
+  }) || [];
 
-  const langName = (code: string) => {
-    const map: Record<string, string> = { en: "English", zu: "isiZulu", xh: "isiXhosa", af: "Afrikaans", nso: "Sepedi", tn: "Setswana", st: "Sesotho", ts: "Xitsonga", ss: "siSwati", ve: "Tshivenda", nr: "isiNdebele" };
-    return map[code] || code;
+  const incrementDownloadMutation = useMutation(api.documents.incrementDownload);
+
+  const handleDownload = (docId: Id<"clinicalDocuments">, url: string) => {
+    incrementDownloadMutation({ id: docId }).catch(() => {});
+    window.open(url, "_blank");
   };
 
-
-
-  const filterBySearch = (items: any[]) => {
-    if (!searchQuery) return items;
-    const q = searchQuery.toLowerCase();
-    return items.filter((i: any) => i.title?.toLowerCase().includes(q) || i.description?.toLowerCase().includes(q));
-  };
+  const filteredDocs = documents.filter((d) => {
+    const matchesSearch =
+      !search ||
+      d.title.toLowerCase().includes(search.toLowerCase()) ||
+      (d.description && d.description.toLowerCase().includes(search.toLowerCase())) ||
+      d.fileName.toLowerCase().includes(search.toLowerCase());
+    return matchesSearch;
+  });
 
   return (
-    <div className="p-6 space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Resource Library</h1>
-        <p className="text-muted-foreground">Browse past papers, study materials, and syllabus content for all grades and languages.</p>
+    <div className="p-6 max-w-7xl mx-auto space-y-6 text-zinc-900 dark:text-zinc-100 bg-white dark:bg-black min-h-screen" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      {/* ── HEADER (Vercel Style) ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800/80 pb-6">
+        <div>
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-1">
+            <BookOpen className="w-4 h-4" /> Therapeutic Sanctuary Materials
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
+            Clinical Resource Library
+          </h1>
+          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+            Download evidence-based psychoeducation worksheets, CBT thought journals, and grounding exercises.
+          </p>
+        </div>
+
+        <Link
+          to="/booking"
+          className="inline-flex items-center gap-2 bg-[#156e52] hover:bg-[#0f5940] text-white px-4 py-2 rounded-xl text-xs font-bold shadow-xs transition-all cursor-pointer"
+        >
+          Book Consultation <ArrowUpRight className="w-3.5 h-3.5" />
+        </Link>
       </div>
 
-      {/* Filters */}
-      <div className="flex gap-4 items-end flex-wrap">
-        <div className="relative flex-1 min-w-[200px] max-w-md">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+      {/* ── SEARCH & CATEGORIES ── */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="relative w-full sm:w-80">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
           <Input
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search resources..."
-            className="pl-9"
+            placeholder="Search exercises and worksheets..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9 h-10 bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800/80 rounded-xl"
           />
         </div>
-        <div>
-          <Select value={String(selectedGrade)} onValueChange={(v) => setSelectedGrade(Number(v))}>
-            <SelectTrigger className="w-44">
-              <SelectValue placeholder="Grade" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="0">All Grades</SelectItem>
-              {[1,2,3,4,5,6,7,8,9,10,11,12].map(g => (
-                <SelectItem key={g} value={String(g)}>Grade {g}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div>
-          <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
-            <SelectTrigger className="w-44">
-              <SelectValue placeholder="Language" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="en">English</SelectItem>
-              <SelectItem value="af">Afrikaans</SelectItem>
-              <SelectItem value="zu">isiZulu</SelectItem>
-              <SelectItem value="xh">isiXhosa</SelectItem>
-              <SelectItem value="nso">Sepedi</SelectItem>
-              <SelectItem value="tn">Setswana</SelectItem>
-              <SelectItem value="st">Sesotho</SelectItem>
-              <SelectItem value="ts">Xitsonga</SelectItem>
-              <SelectItem value="ss">siSwati</SelectItem>
-              <SelectItem value="ve">Tshivenda</SelectItem>
-              <SelectItem value="nr">isiNdebele</SelectItem>
-            </SelectContent>
-          </Select>
+
+        <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-1">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+                selectedCategory === cat
+                  ? "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900"
+                  : "bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="past-papers">Past Papers</TabsTrigger>
-          <TabsTrigger value="study-materials">Study Materials</TabsTrigger>
-          <TabsTrigger value="syllabus">Syllabus</TabsTrigger>
-        </TabsList>
+      {/* ── RESOURCE GRID ── */}
+      {filteredDocs.length === 0 ? (
+        <div className="text-center py-20 border border-dashed border-zinc-300 dark:border-zinc-800/80 rounded-3xl p-8 bg-zinc-50/50 dark:bg-zinc-950/40">
+          <FileText className="w-12 h-12 text-zinc-300 dark:text-zinc-700 mx-auto mb-3" />
+          <h3 className="text-base font-bold text-zinc-800 dark:text-zinc-200">No resources found</h3>
+          <p className="text-xs text-zinc-500 mt-1">Try another search keyword or switch categories.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredDocs.map((doc) => (
+            <div
+              key={doc._id}
+              className="flex flex-col justify-between rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800/80 p-5 shadow-xs hover:border-emerald-500/40 dark:hover:border-zinc-700 hover:shadow-md transition-all group"
+            >
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2.5 py-0.5 rounded-full border border-emerald-200/60 dark:border-emerald-800/60">
+                    {doc.category}
+                  </span>
+                  <Badge variant="outline" className="text-[10px] font-mono border-zinc-200 dark:border-zinc-800">
+                    {doc.format}
+                  </Badge>
+                </div>
 
-        <TabsContent value="past-papers" className="space-y-4">
-          {pastPapers === undefined ? (
-            <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
-          ) : filterBySearch(pastPapers).length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">
-              <FileText className="h-12 w-12 mx-auto mb-4 opacity-30" />
-              <p>No past papers found. Try adjusting your filters.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filterBySearch(pastPapers).map((pp: any) => (
-                <Card key={pp._id} className="hover:shadow-md transition-shadow">
-                  <CardHeader className="pb-2">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Badge variant="secondary" className="text-xs">{pp.paperType}</Badge>
-                      <Badge variant="outline" className="text-xs">Grade {pp.grade}</Badge>
-                      <Badge variant="outline" className="text-xs">{pp.year}</Badge>
-                    </div>
-                    <CardTitle className="text-base">{pp.title}</CardTitle>
-                    <CardDescription className="text-xs">{langName(pp.language)}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-1 mb-3">
-                      {pp.tags?.map((tag: string) => (
-                        <Badge key={tag} variant="outline" className="text-[10px]">{tag}</Badge>
-                      ))}
-                    </div>
-                    <Button variant="outline" size="sm" className="w-full" asChild>
-                      <a href={pp.fileUrl} target="_blank" rel="noreferrer">
-                        <Download className="mr-2 h-3 w-3" /> Download
-                      </a>
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-        </TabsContent>
+                <h3 className="font-bold text-sm text-zinc-900 dark:text-zinc-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors line-clamp-2 leading-snug">
+                  {doc.title}
+                </h3>
 
-        <TabsContent value="study-materials" className="space-y-4">
-          {studyResources === undefined ? (
-            <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
-          ) : filterBySearch(studyResources).length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">
-              <BookOpen className="h-12 w-12 mx-auto mb-4 opacity-30" />
-              <p>No study materials found. Try adjusting your filters.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filterBySearch(studyResources).map((r: any) => (
-                <Card key={r._id} className="hover:shadow-md transition-shadow">
-                  <CardHeader className="pb-2">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Badge variant="secondary" className="text-xs">{r.resourceType}</Badge>
-                      <Badge variant="outline" className="text-xs">Grade {r.grade}</Badge>
-                    </div>
-                    <CardTitle className="text-base">{r.title}</CardTitle>
-                    <CardDescription className="text-xs line-clamp-2">{r.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Button variant="outline" size="sm" className="w-full" asChild>
-                      <a href={r.fileUrl} target="_blank" rel="noreferrer">
-                        <Download className="mr-2 h-3 w-3" /> Download
-                      </a>
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-        </TabsContent>
+                {doc.description && (
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-2 leading-relaxed">
+                    {doc.description}
+                  </p>
+                )}
+              </div>
 
-        <TabsContent value="syllabus" className="space-y-4">
-          {allSubjects === undefined ? (
-            <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
-          ) : (
-            <div className="space-y-6">
-              {["Foundation", "Intermediate", "Senior", "FET"].map(phase => {
-                const phaseSubjects = allSubjects.filter((s: any) => s.phase === phase);
-                if (phaseSubjects.length === 0) return null;
-                return (
-                  <div key={phase}>
-                    <h3 className="text-lg font-bold mb-3">{phase} Phase</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                      {phaseSubjects.map((s: any) => (
-                        <Card key={s._id} className="p-4">
-                          <div className="flex items-center justify-between mb-1">
-                            <h4 className="font-semibold text-sm">{s.name}</h4>
-                            <Badge variant={s.isCompulsory ? "default" : "outline"} className="text-[10px]">
-                              {s.isCompulsory ? "Compulsory" : "Elective"}
-                            </Badge>
-                          </div>
-                          <p className="text-xs text-muted-foreground">Grade {s.grade} • {s.code}</p>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
+              <div className="pt-4 mt-4 border-t border-zinc-100 dark:border-zinc-900 flex items-center justify-between">
+                <div className="text-[11px] text-zinc-400 dark:text-zinc-500 font-mono">
+                  <span>{doc.fileSize}</span>
+                  {doc.downloads !== undefined && <span> · {doc.downloads} downloads</span>}
+                </div>
+
+                <Button
+                  onClick={() => handleDownload(doc._id, doc.downloadUrl)}
+                  size="sm"
+                  variant="outline"
+                  className="h-8 rounded-xl border-zinc-200 dark:border-zinc-800 text-xs font-bold gap-1.5 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 hover:text-emerald-600 dark:hover:text-emerald-400 cursor-pointer"
+                >
+                  <Download className="w-3.5 h-3.5" /> Download
+                </Button>
+              </div>
             </div>
-          )}
-        </TabsContent>
-      </Tabs>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

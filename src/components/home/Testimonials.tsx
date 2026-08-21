@@ -1,57 +1,60 @@
+import { Link } from "react-router";
+import { ArrowRight, Quote } from "lucide-react";
+
 const testimonials = [
   {
-    name: "Mrs. Nomsa Dlamini",
-    role: "Parent · Grade 10 learner",
-    initials: "ND",
-    color: "#9f1239",
+    name: "Client A.",
+    role: "Individual Counselling · Anxiety & Stress",
+    initials: "A",
+    color: "#156e52",
+    bg: "bg-emerald-100 text-[#156e52]",
     quote:
-      "Glenanda Learning Centre completely changed our family's experience with home schooling. The teachers are exceptional and my son's marks have improved dramatically. The report cards are detailed and honest.",
-    tag: "Parent Feedback",
+      "Working with Maletsatsi at Insight Works has given me practical tools to navigate overwhelming anxiety in ways I never thought possible. She creates a space of pure empathy and zero judgment.",
   },
   {
-    name: "Mr. Thabo Mokoena",
-    role: "Parent · Grade 7 learner",
+    name: "T. & M.",
+    role: "Couples Counselling · Relationship Support",
     initials: "TM",
-    color: "#38bdf8",
+    color: "#ea7627",
+    bg: "bg-amber-100 text-[#ea7627]",
     quote:
-      "The live classes are incredibly well-structured. My daughter never feels like she's missing out compared to traditional school. If anything, she gets more one-on-one attention and support.",
-    tag: "Parent Feedback",
+      "We were experiencing significant communication breakdown when we booked our first session. Through careful guided dialogue, we learned how to listen without defensiveness and rebuild genuine connection.",
   },
   {
-    name: "Ms. Fatima Adams",
-    role: "Parent · Grade 4 learner",
-    initials: "FA",
-    color: "#5c061c",
+    name: "Anonymous Client",
+    role: "Telehealth Sessions · South Africa",
+    initials: "AC",
+    color: "#156e52",
+    bg: "bg-emerald-100 text-emerald-800",
     quote:
-      "I was nervous about home schooling but Glenanda made it seamless. From the very first day the onboarding was clear, the timetable was set, and the teachers were welcoming. Highly recommended.",
-    tag: "Parent Feedback",
+      "I was skeptical about online sessions, but it felt deeply connected and safe. The privacy and ease of booking from home made regular counselling finally work for my demanding schedule.",
   },
   {
-    name: "Mr. Sipho Ndlovu",
-    role: "Parent · Matric learner",
+    name: "S.N.",
+    role: "Trauma Recovery & Emotional Healing",
     initials: "SN",
-    color: "#0ea5e9",
+    color: "#ea7627",
+    bg: "bg-amber-100 text-[#ea7627]",
     quote:
-      "My son wrote Matric with Glenanda and passed with a Bachelor's pass. The CAPS coverage was thorough, the assessments were rigorous, and the educators pushed him to his best potential.",
-    tag: "Parent Feedback",
+      "Working through past emotional distress felt like an insurmountable weight. Maletsatsi's patient, compassionate guidance helped me release deep emotional burdens and rediscover inner peace.",
   },
   {
-    name: "Dr. Liesl van Wyk",
-    role: "Parent · Grade 8 & 10 learners",
-    initials: "LV",
-    color: "#9f1239",
+    name: "Client L.",
+    role: "Life Coaching & Personal Growth",
+    initials: "L",
+    color: "#156e52",
+    bg: "bg-emerald-100 text-[#156e52]",
     quote:
-      "We have two children enrolled and the difference in academic confidence is remarkable. The Glenanda team genuinely cares about each learner individually — it shows in every class.",
-    tag: "Parent Feedback",
+      "I felt completely stuck in my routines. The life coaching sessions provided clarity, actionable boundary exercises, and the mindset shift needed to step into self-mastery.",
   },
   {
-    name: "Ms. Zanele Khumalo",
-    role: "Parent · Grade 11 learner",
-    initials: "ZK",
-    color: "#38bdf8",
+    name: "M.K.",
+    role: "Youth & Young Adult Support",
+    initials: "MK",
+    color: "#ea7627",
+    bg: "bg-amber-100 text-[#ea7627]",
     quote:
-      "What I love most is the transparency — I can see my child's progress every week. The educators communicate openly and respond quickly. It feels like a real partnership.",
-    tag: "Parent Feedback",
+      "Insight Works gave our family a collaborative bridge during a really tough transition. The empathetic support for our young adult daughter made all the difference in her confidence.",
   },
 ];
 
@@ -59,147 +62,148 @@ const Testimonials = () => {
   return (
     <section
       id="testimonials"
-      className="py-28 relative overflow-hidden"
-      style={{ background: "#060408", fontFamily: "'DM Sans', sans-serif" }}
+      className="py-24 lg:py-32 relative overflow-hidden bg-[#fbfdfc]"
+      style={{ fontFamily: "'DM Sans', sans-serif" }}
     >
-      {/* Decorative glow */}
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] pointer-events-none"
-        style={{ background: "radial-gradient(ellipse, rgba(56,189,248,0.04) 0%, transparent 70%)" }}
-      />
+      {/* Decorative ambient gradients */}
+      <div className="absolute top-0 left-1/3 w-[600px] h-[600px] bg-emerald-100/40 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-10 w-[450px] h-[450px] bg-amber-100/30 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-        {/* Header */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-end mb-20">
-          <div>
-            <div className="flex items-center gap-3 mb-5">
-              <div className="h-px w-10 bg-[#9f1239]" />
-              <span className="text-xs font-bold tracking-[0.25em] uppercase" style={{ color: "#e2a0b0" }}>
-                What Parents Say
+        {/* Section Header */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-16 lg:mb-20">
+          <div className="lg:col-span-7">
+            <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200/80 px-3.5 py-1 rounded-full mb-4">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#156e52]" />
+              <span className="text-xs font-bold tracking-[0.2em] uppercase text-[#156e52]">
+                Client Experiences
               </span>
             </div>
             <h2
-              className="leading-[1.05] tracking-tight"
+              className="leading-[1.08] tracking-tight text-[#0f2820]"
               style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: "clamp(2.2rem, 4vw, 3.5rem)",
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontSize: "clamp(2.25rem, 4vw, 3.5rem)",
                 fontWeight: 900,
-                color: "#fff",
               }}
             >
-              Trusted by Families
-              <br />
-              <span style={{ fontStyle: "italic", color: "#38bdf8" }}>Across Gauteng</span>
+              Stories of{" "}
+              <span
+                className="italic"
+                style={{
+                  background: "linear-gradient(135deg, #156e52 0%, #52b74c 50%, #ea7627 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                Growth, Clarity & Healing
+              </span>
             </h2>
           </div>
 
-          {/* Rating block */}
-          <div className="flex items-center gap-6">
+          {/* Rating Block */}
+          <div className="lg:col-span-5 flex items-center gap-5 lg:justify-end">
             <div
-              className="rounded-2xl p-6 flex flex-col items-center justify-center"
+              className="rounded-3xl p-5 sm:p-6 flex flex-col items-center justify-center text-white shadow-lg shadow-emerald-900/15 shrink-0"
               style={{
-                background: "linear-gradient(135deg, #5c061c, #9f1239)",
-                minWidth: "120px",
+                background: "linear-gradient(135deg, #156e52 0%, #52b74c 100%)",
+                minWidth: "130px",
               }}
             >
               <p
-                className="text-white font-black text-5xl"
+                className="font-black text-4xl sm:text-5xl"
                 style={{ fontFamily: "'Playfair Display', serif", lineHeight: 1 }}
               >
-                5.0
+                4.9
               </p>
-              <div className="flex gap-0.5 mt-2">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-yellow-400 text-lg">★</span>
+              <div className="flex gap-0.5 mt-2 text-amber-300 text-sm">
+                {"★★★★★".split("").map((s, i) => (
+                  <span key={i}>{s}</span>
                 ))}
               </div>
-              <p className="text-white/70 text-xs mt-1">Average rating</p>
+              <p className="text-emerald-100 text-[11px] font-medium mt-1">Average rating</p>
             </div>
-            <p className="text-[#888] text-sm leading-relaxed max-w-xs">
-              Every review is submitted by real parents of enrolled learners. We believe in full transparency.
+            <p className="text-[#64748b] text-xs sm:text-sm leading-relaxed max-w-xs">
+              All feedback is shared with explicit permission. Identifying details are altered to protect client privacy in full accordance with POPIA.
             </p>
           </div>
         </div>
 
-        {/* Testimonials grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {/* Testimonials 3x2 Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {testimonials.map((t, idx) => (
             <div
               key={idx}
-              className="rounded-2xl p-7 flex flex-col gap-5 transition-all duration-300"
-              style={{
-                background: "rgba(255,255,255,0.025)",
-                border: "1px solid rgba(255,255,255,0.07)",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = `${t.color}30`;
-                (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.04)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.07)";
-                (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.025)";
-              }}
+              className="group rounded-3xl p-8 bg-white border border-slate-200/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.04)] hover:shadow-xl hover:border-emerald-200 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between"
             >
-              {/* Stars */}
-              <div className="flex gap-0.5">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-yellow-400 text-sm">★</span>
-                ))}
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex gap-1 text-amber-400 text-sm">
+                    {"★★★★★".split("").map((star, i) => (
+                      <span key={i}>{star}</span>
+                    ))}
+                  </div>
+                  <Quote className="w-5 h-5 text-slate-200 group-hover:text-emerald-200 transition-colors" />
+                </div>
+
+                <p className="text-[#334155] text-sm sm:text-base leading-relaxed italic mb-6">
+                  "{t.quote}"
+                </p>
               </div>
 
-              {/* Quote */}
-              <p className="text-[#bbb] text-sm leading-relaxed italic flex-1">
-                "{t.quote}"
-              </p>
-
-              {/* Author */}
-              <div className="flex items-center gap-3 pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+              {/* Author Row */}
+              <div className="flex items-center gap-3.5 pt-4 border-t border-slate-100">
                 <div
-                  className="h-10 w-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
-                  style={{ background: t.color }}
+                  className={`h-10 w-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${t.bg}`}
                 >
                   {t.initials}
                 </div>
                 <div>
-                  <p className="text-white font-bold text-sm">{t.name}</p>
-                  <p className="text-[#666] text-xs">{t.role}</p>
+                  <p className="text-[#0f2820] font-bold text-sm">{t.name}</p>
+                  <p className="text-[#64748b] text-xs">{t.role}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Bottom image */}
+        {/* Bottom Banner */}
         <div
-          className="mt-14 relative rounded-2xl overflow-hidden"
-          style={{ height: "220px" }}
+          className="mt-16 relative rounded-3xl overflow-hidden bg-white border border-slate-200/80 shadow-lg min-h-[220px] flex items-center p-8 sm:p-12 group"
         >
           <img
-            src="/img-graduation.jpg"
-            alt="Glenanda Learning Centre graduate success"
-            className="w-full h-full object-cover"
-            style={{ filter: "brightness(0.45)" }}
+            src="https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=1200&h=400&fit=crop"
+            alt="Serene therapy space"
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
           />
-          <div
-            className="absolute inset-0"
-            style={{ background: "linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)" }}
-          />
-          <div className="absolute left-8 top-1/2 -translate-y-1/2">
-            <p
-              className="text-white font-bold text-2xl max-w-sm"
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-900/60 to-slate-950/20" />
+          
+          <div className="relative z-10 max-w-xl text-white">
+            <h3
+              className="text-2xl sm:text-3xl font-extrabold mb-2"
               style={{ fontFamily: "'Playfair Display', serif" }}
             >
-              Join hundreds of families who chose Glenanda.
+              You don't have to face life's challenges alone.
+            </h3>
+            <p className="text-slate-200 text-sm sm:text-base mb-6">
+              Together, we can help you heal, grow, reconnect, and thrive. In-person and telehealth sessions available.
             </p>
-            <p className="text-[#aaa] text-sm mt-2">Enrolments for 2026 are now open.</p>
+            <Link
+              to="/booking"
+              className="inline-flex items-center gap-2 px-7 py-3.5 text-white font-bold text-sm rounded-xl transition-all duration-300 shadow-md shadow-emerald-900/20 hover:shadow-lg hover:scale-105 cursor-pointer"
+              style={{
+                background: "linear-gradient(135deg, #156e52, #52b74c)",
+              }}
+            >
+              Book Your Appointment
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
-      </div>
 
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@400;500;600;700;800&display=swap');
-      `}</style>
+      </div>
     </section>
   );
 };

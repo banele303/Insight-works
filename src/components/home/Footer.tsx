@@ -1,35 +1,46 @@
-import { Twitter, Facebook, Linkedin, ArrowUp, Phone, Mail, MapPin, GraduationCap, ArrowRight } from "lucide-react";
+import { Twitter, Facebook, Linkedin, ArrowUp, Phone, Mail, MapPin, HeartPulse, ArrowRight, ShieldCheck } from "lucide-react";
 import { Link } from "react-router";
 
 const Footer = () => {
   return (
-    <footer className="pt-20 pb-10 border-t border-white/[0.06] bg-[#050a18]">
+    <footer className="pt-20 pb-12 border-t border-slate-200/80 bg-[#fafaf9] text-slate-700" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-          {/* Brand */}
-          <div className="space-y-5">
-            <div className="flex items-center gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-16">
+          
+          {/* Brand Col (4 cols) */}
+          <div className="lg:col-span-4 space-y-5">
+            <div className="flex items-center gap-4">
               <img
-                src="/logo-school.jpeg"
-                alt="Glenanda Learning Center"
-                className="h-16 w-auto rounded-xl border border-white/10 shadow-lg"
+                src="/images/logo.png"
+                alt="Insight Works Logo"
+                className="h-16 sm:h-20 w-auto max-h-[80px] object-contain drop-shadow-xs"
               />
               <div>
-                <span className="text-xl font-extrabold tracking-tight text-white font-serif">
-                  Glenanda <span className="text-sky-400">Learning Centre</span>
+                <span className="text-2xl font-black tracking-tight text-[#0f2820] font-serif block">
+                  Insight Works
                 </span>
-                <p className="text-[10px] text-gray-500 -mt-0.5 uppercase tracking-wider font-semibold">Quality Education, Real Results</p>
+                <p className="text-xs text-[#156e52] uppercase tracking-wider font-bold mt-0.5">Therapy & Coaching</p>
               </div>
             </div>
-            <p className="text-gray-400 leading-relaxed text-sm">
-              A premium home schooling academy providing CAPS-aligned education from Grade R to Matric. Live online classes, SACE-certified educators, and diagnostic learning profiles.
+            
+            <p className="text-[#475569] leading-relaxed text-sm max-w-sm">
+              You don't have to face life's challenges alone. With Maletsatsi Sibanda (Counselling Therapist & Life Coach), we offer compassionate counselling, trauma recovery, couples support, and transformational life coaching.
             </p>
-            <div className="flex space-x-3">
+
+            <div className="flex items-center gap-2 pt-1 text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200/70 px-3 py-1.5 rounded-full w-fit">
+              <ShieldCheck className="w-4 h-4 text-[#156e52]" />
+              <span>POPIA Compliant · Confidential Care</span>
+            </div>
+
+            <div className="flex space-x-2.5 pt-2">
               {[Twitter, Facebook, Linkedin].map((Icon, i) => (
                 <a
                   key={i}
-                  href="#"
-                  className="w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center hover:bg-[#5c061c] hover:text-white hover:border-[#5c061c] transition-all text-gray-400 shadow-sm"
+                  href="https://instagram.com/insightworks_therapy"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-9 h-9 rounded-xl bg-white border border-slate-200/80 flex items-center justify-center hover:bg-[#156e52] hover:text-white hover:border-[#156e52] transition-all text-slate-600 shadow-2xs cursor-pointer"
+                  aria-label="Social link"
                 >
                   <Icon className="w-4 h-4" />
                 </a>
@@ -37,31 +48,21 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* For Learners */}
-          <div>
-            <h4 className="text-white font-bold mb-5 text-sm uppercase tracking-wider font-serif">For Learners</h4>
-            <ul className="space-y-3">
-              {["Live Online Classes", "Video Library", "AI Study Buddy", "Homework Checker", "Study Groups", "Past Papers"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-gray-400 hover:text-sky-400 transition-colors text-sm">{item}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* The School */}
-          <div>
-            <h4 className="text-white font-bold mb-5 text-sm uppercase tracking-wider font-serif">The School</h4>
-            <ul className="space-y-3">
+          {/* Quick Navigation (2 cols) */}
+          <div className="lg:col-span-2 space-y-4">
+            <h4 className="text-[#0f2820] font-bold text-xs uppercase tracking-widest font-serif border-b border-slate-200 pb-2">
+              Explore
+            </h4>
+            <ul className="space-y-2.5 text-sm">
               {[
-                { label: "About Us", to: "/about" },
-                { label: "Programmes", to: "/programs" },
-                { label: "Apply for Enrolment", to: "/apply" },
-                { label: "FAQ", to: "/faq" },
-                { label: "Contact", to: "/contact" },
+                { label: "About Maletsatsi", to: "/about" },
+                { label: "Our Services", to: "/services" },
+                { label: "Wellness Insights", to: "/wellness-insights" },
+                { label: "Mental Health Blog", to: "/blog/understanding-anxiety" },
+                { label: "Frequently Asked Questions", to: "/faq" },
               ].map((item) => (
                 <li key={item.label}>
-                  <Link to={item.to} className="text-gray-400 hover:text-sky-400 transition-colors text-sm">
+                  <Link to={item.to} className="text-[#475569] hover:text-[#156e52] transition-colors font-medium cursor-pointer">
                     {item.label}
                   </Link>
                 </li>
@@ -69,46 +70,78 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact */}
-          <div>
-            <h4 className="text-white font-bold mb-5 text-sm uppercase tracking-wider font-serif">Contact Us</h4>
-            <ul className="space-y-4 text-sm">
-              <li className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 text-sky-400 mt-0.5 shrink-0" />
-                <span className="text-gray-400 leading-normal">Glenanda, Johannesburg, Gauteng</span>
+          {/* Clinical Support (3 cols) */}
+          <div className="lg:col-span-3 space-y-4">
+            <h4 className="text-[#0f2820] font-bold text-xs uppercase tracking-widest font-serif border-b border-slate-200 pb-2">
+              Services & Intake
+            </h4>
+            <ul className="space-y-2.5 text-sm">
+              {[
+                { label: "Book a Session", to: "/booking" },
+                { label: "Client Intake Form", to: "/intake" },
+                { label: "Individual Counselling", to: "/services" },
+                { label: "Couples & Relationships", to: "/services" },
+                { label: "Life Coaching", to: "/services" },
+                { label: "Privacy & POPIA Policy", to: "/privacy" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link to={item.to} className="text-[#475569] hover:text-[#156e52] transition-colors font-medium cursor-pointer">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact Details (3 cols) */}
+          <div className="lg:col-span-3 space-y-4">
+            <h4 className="text-[#0f2820] font-bold text-xs uppercase tracking-widest font-serif border-b border-slate-200 pb-2">
+              Direct Contact
+            </h4>
+            <ul className="space-y-3 text-sm">
+              <li className="flex items-start gap-2.5">
+                <MapPin className="w-4 h-4 text-[#156e52] mt-0.5 shrink-0" />
+                <span className="text-[#475569]">Johannesburg, Gauteng & Telehealth Nationwide</span>
               </li>
-              <li className="flex items-center gap-3">
-                <Phone className="w-4 h-4 text-sky-400 shrink-0" />
-                <a href="tel:+27110000000" className="text-gray-400 hover:text-sky-400 transition-colors">+27 11 000 0000</a>
+              <li className="flex items-center gap-2.5">
+                <Phone className="w-4 h-4 text-[#156e52] shrink-0" />
+                <a href="tel:+27795501557" className="text-[#475569] hover:text-[#156e52] transition-colors font-medium cursor-pointer">
+                  +27 79 550 1557
+                </a>
               </li>
-              <li className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-sky-400 shrink-0" />
-                <a href="mailto:info@glenandalearning.co.za" className="text-gray-400 hover:text-sky-400 transition-colors">info@glenandalearning.co.za</a>
+              <li className="flex items-center gap-2.5">
+                <Mail className="w-4 h-4 text-[#156e52] shrink-0" />
+                <a href="mailto:maletsatsi@insightherapyandcoaching.co.za" className="text-[#475569] hover:text-[#156e52] transition-colors font-medium text-xs break-all cursor-pointer">
+                  maletsatsi@insightherapyandcoaching.co.za
+                </a>
               </li>
               <li className="pt-2">
                 <Link
-                  to="/apply"
-                  className="inline-flex items-center gap-2 bg-[#5c061c] hover:bg-[#7e0b27] text-white text-sm font-bold px-5 py-3 rounded-xl transition-all border border-white/10"
+                  to="/booking"
+                  className="inline-flex items-center justify-center gap-2 w-full btn-dual-gradient text-white text-xs font-bold px-4 py-3 rounded-xl hover:shadow-md hover:shadow-emerald-900/20 transition-all shadow-xs cursor-pointer"
                 >
-                  <GraduationCap className="h-4 w-4 text-sky-300" /> Apply Now <ArrowRight className="h-4 w-4 text-sky-300" />
+                  Schedule Appointment <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-white/[0.06] pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-gray-500">
-            © {new Date().getFullYear()} Glenanda Learning Centre. All rights reserved.
-          </p>
-          <div className="flex items-center gap-6 text-xs text-gray-500">
-            <span>POPIA Compliant</span>
-            <span>CAPS Aligned</span>
-            <span>SACE Registered Educators</span>
+        {/* Bottom bar */}
+        <div className="border-t border-slate-200/80 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#64748b]">
+          <p>© {new Date().getFullYear()} Insight Works Therapy & Coaching. All rights reserved.</p>
+          <div className="flex flex-wrap items-center gap-6 font-medium">
+            <Link to="/login" className="text-[#156e52] font-bold hover:underline transition-colors cursor-pointer">Client &amp; Staff Portal</Link>
+            <Link to="/privacy" className="hover:text-[#156e52] transition-colors cursor-pointer">Privacy Policy</Link>
+            <Link to="/intake" className="hover:text-[#156e52] transition-colors cursor-pointer">Intake Portal</Link>
+            <Link to="/contact" className="hover:text-[#156e52] transition-colors cursor-pointer">Contact</Link>
+            <span className="text-slate-400">|</span>
+            <span>Emergency SADAG: 0800 456 789</span>
           </div>
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center hover:bg-sky-500 hover:border-sky-500 transition-all text-gray-400"
+            className="w-8 h-8 rounded-lg bg-white border border-slate-200/80 flex items-center justify-center hover:bg-slate-100 transition-all text-slate-600 shadow-2xs cursor-pointer"
+            aria-label="Scroll to top"
           >
             <ArrowUp className="w-4 h-4" />
           </button>

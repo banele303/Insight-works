@@ -235,3 +235,64 @@ export async function searchMaterials(query: string, items: any[]): Promise<stri
   const data = await res.json();
   return data.ids || [];
 }
+
+// ─── CLOUDFLARE TURN CREDENTIALS ─────────────────────────────────────────────
+// Fetches short-lived ICE server credentials (STUN + TURN) from the worker.
+// The API token never leaves the server — only the resulting credentials are returned.
+export interface IceServer {
+  urls: string | string[];
+  username?: string;
+  credential?: string;
+}
+
+export async function fetchTurnCredentials(): Promise<IceServer[]> {
+  try {
+    const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/turn/credentials`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!res.ok) throw new Error("TURN credentials fetch failed");
+    const data = (await res.json()) as { iceServers?: IceServer[] | IceServer };
+    if (!data.iceServers) {
+      return [{ urls: "stun:stun.cloudflare.com:3478" }, { urls: "stun:stun.l.google.com:19302" }];
+    }
+    const servers = Array.isArray(data.iceServers) ? data.iceServers : [data.iceServers];
+    return servers;
+  } catch {
+    // Fallback to public STUN if worker is unreachable
+    return [{ urls: "stun:stun.cloudflare.com:3478" }, { urls: "stun:stun.l.google.com:19302" }];
+  }
+}
+
+// ─── THERAPY SESSION AI NOTES ─────────────────────────────────────────────────
+// Sends a session transcript to the worker and returns structured AI-generated notes.
+export interface SessionNotes {
+  sessionSummary: string;
+  presentingConcerns: string[];
+  keyThemes: string[];
+  clientProgress: string;
+  interventionsUsed: string[];
+  actionItems: string[];
+  followUpRecommendations: string[];
+  riskFactors: string;
+  practitionerNotes: string;
+}
+
+export async function generateSessionNotes(payload: {
+  transcript: string;
+  sessionType?: string;
+  duration?: string;
+}): Promise<{ notes: SessionNotes; generatedAt: string }> {
+  const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/session/summarize`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({})) as any;
+    throw new Error(err.error || "Failed to generate session notes");
+  }
+
+  return res.json();
+}

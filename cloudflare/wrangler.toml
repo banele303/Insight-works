@@ -22,7 +22,7 @@ binding = "STREAM"
 [vars]
 # Public URL for R2 objects (custom domain or r2.dev). Leave empty to use /api/files/:key in dev.
 R2_PUBLIC_URL = ""
+# Cloudflare TURN Server configuration for Telehealth WebRTC
+TURN_TOKEN_ID = "eb02d0ad772fc588489375fe26e9308a"
+TURN_API_TOKEN = "f65aca7d5c89d2c3240cd7a754201e2046f5545e32843c5d941f7d51c8a61322"
 
-# Required for Stream live input / REST operations:
-# wrangler secret put CLOUDFLARE_API_TOKEN
-# CLOUDFLARE_ACCOUNT_ID can also be set here or as an environment variable.

@@ -272,3 +272,208 @@ export const acceptAndCreateStudent = mutation({
     return { success: true, studentId };
   },
 });
+
+// ─── SEED: Demo applications for CRM pipeline ─────────────────────────────────
+
+export const seedDemoApplications = mutation({
+  handler: async (ctx) => {
+    const existing = await ctx.db.query("applications").collect();
+    if (existing.length >= 10) {
+      return { seeded: false, count: existing.length };
+    }
+
+    const year = new Date().getFullYear();
+    const count = existing.length;
+
+    const demos = [
+      // Pending (New Leads)
+      {
+        learnerFirstName: "Amahle", learnerLastName: "Dlamini",
+        learnerDateOfBirth: "2014-03-12", learnerGender: "Female",
+        gradeApplyingFor: 4, schoolPhase: "Intermediate Phase",
+        parentFirstName: "Nomvula", parentLastName: "Dlamini",
+        parentEmail: "nomvula.dlamini@gmail.com", parentPhone: "+27 82 345 6789",
+        relationship: "Mother", currentSchool: "Thokoza Primary",
+        homeLanguage: "Zulu", howDidYouHear: "WhatsApp community",
+        motivation: "My daughter is very bright and I believe this school will help her reach her full potential.",
+        status: "pending" as const,
+      },
+      {
+        learnerFirstName: "Lethiwe", learnerLastName: "Nkosi",
+        learnerDateOfBirth: "2016-07-22", learnerGender: "Female",
+        gradeApplyingFor: 2, schoolPhase: "Foundation Phase",
+        parentFirstName: "Sipho", parentLastName: "Nkosi",
+        parentEmail: "sipho.nkosi@outlook.com", parentPhone: "+27 71 234 5678",
+        relationship: "Father", currentSchool: "Sunrise Preparatory",
+        homeLanguage: "Zulu", howDidYouHear: "Google Search",
+        motivation: "We are looking for a more personalised learning environment for our daughter.",
+        status: "pending" as const,
+      },
+      {
+        learnerFirstName: "Ethan", learnerLastName: "Van Der Berg",
+        learnerDateOfBirth: "2009-11-05", learnerGender: "Male",
+        gradeApplyingFor: 8, schoolPhase: "Senior Phase",
+        parentFirstName: "Karen", parentLastName: "Van Der Berg",
+        parentEmail: "karen.vdb@webmail.co.za", parentPhone: "+27 83 901 2345",
+        relationship: "Mother", currentSchool: "Greenfields High",
+        homeLanguage: "Afrikaans", howDidYouHear: "Friend recommendation",
+        motivation: "Ethan struggled with large class sizes. We believe smaller groups will help him thrive.",
+        status: "pending" as const,
+      },
+      {
+        learnerFirstName: "Riya", learnerLastName: "Pillay",
+        learnerDateOfBirth: "2013-04-18", learnerGender: "Female",
+        gradeApplyingFor: 5, schoolPhase: "Intermediate Phase",
+        parentFirstName: "Priya", parentLastName: "Pillay",
+        parentEmail: "priya.pillay@gmail.com", parentPhone: "+27 61 567 8901",
+        relationship: "Mother", currentSchool: "Sunridge Academy",
+        homeLanguage: "English", howDidYouHear: "Facebook Ad",
+        motivation: "Riya is a gifted learner who needs more challenge and enrichment than her current school provides.",
+        status: "pending" as const,
+      },
+      // Reviewing
+      {
+        learnerFirstName: "Lwazi", learnerLastName: "Mthembu",
+        learnerDateOfBirth: "2012-09-30", learnerGender: "Male",
+        gradeApplyingFor: 6, schoolPhase: "Intermediate Phase",
+        parentFirstName: "Nandi", parentLastName: "Mthembu",
+        parentEmail: "nandi.mthembu@gmail.com", parentPhone: "+27 73 456 7890",
+        relationship: "Mother", currentSchool: "Bhekuzulu Primary",
+        homeLanguage: "Zulu", howDidYouHear: "Word of mouth",
+        motivation: "Lwazi has a passion for mathematics and science and we want to nurture that.",
+        status: "reviewing" as const,
+        adminNotes: "School report verified. Good academic record. Schedule interview.",
+      },
+      {
+        learnerFirstName: "Jade", learnerLastName: "Botha",
+        learnerDateOfBirth: "2011-06-14", learnerGender: "Female",
+        gradeApplyingFor: 7, schoolPhase: "Intermediate Phase",
+        parentFirstName: "Riaan", parentLastName: "Botha",
+        parentEmail: "riaan.botha@mweb.co.za", parentPhone: "+27 82 678 9012",
+        relationship: "Father", currentSchool: "Laerskool Rooihuiskraal",
+        homeLanguage: "Afrikaans", howDidYouHear: "Teacher referral",
+        motivation: "Jade is artistic and analytical. We believe in a balanced holistic education.",
+        status: "reviewing" as const,
+        adminNotes: "Parents attended open day. Very engaged. Awaiting Grade 6 report.",
+      },
+      {
+        learnerFirstName: "Kabelo", learnerLastName: "Sithole",
+        learnerDateOfBirth: "2015-01-28", learnerGender: "Male",
+        gradeApplyingFor: 1, schoolPhase: "Foundation Phase",
+        parentFirstName: "Thabang", parentLastName: "Sithole",
+        parentEmail: "thabang.sithole@gmail.com", parentPhone: "+27 79 345 6789",
+        relationship: "Father", homeLanguage: "Sotho",
+        howDidYouHear: "Community notice board",
+        motivation: "Our son is ready for Grade 1 and we want the best possible start for him.",
+        status: "reviewing" as const,
+      },
+      // Accepted (Enrolled)
+      {
+        learnerFirstName: "Zanele", learnerLastName: "Khumalo",
+        learnerDateOfBirth: "2013-08-10", learnerGender: "Female",
+        gradeApplyingFor: 5, schoolPhase: "Intermediate Phase",
+        parentFirstName: "Bongiwe", parentLastName: "Khumalo",
+        parentEmail: "bongiwe.khumalo@gmail.com", parentPhone: "+27 84 567 8901",
+        relationship: "Mother", currentSchool: "Siyanda Primary",
+        homeLanguage: "Zulu", howDidYouHear: "Social media",
+        motivation: "Zanele loves reading and creative writing. We're excited for this opportunity.",
+        status: "accepted" as const,
+        adminNotes: "Accepted for Grade 5. Placed in Ms Mokoena's class. Fees confirmed.",
+      },
+      {
+        learnerFirstName: "Aiden", learnerLastName: "Pretorius",
+        learnerDateOfBirth: "2010-12-03", learnerGender: "Male",
+        gradeApplyingFor: 9, schoolPhase: "Senior Phase",
+        parentFirstName: "Louise", parentLastName: "Pretorius",
+        parentEmail: "louise.pretorius@gmail.com", parentPhone: "+27 71 890 1234",
+        relationship: "Mother", currentSchool: "Waterkloof House Prep",
+        homeLanguage: "Afrikaans", howDidYouHear: "Previous parent",
+        motivation: "We are relocating and need a school with strong academics and sport programmes.",
+        status: "accepted" as const,
+        adminNotes: "Strong academic record. Sport captain. Enrolled. Welcome pack sent.",
+      },
+      {
+        learnerFirstName: "Thandi", learnerLastName: "Molefe",
+        learnerDateOfBirth: "2016-05-19", learnerGender: "Female",
+        gradeApplyingFor: 0, schoolPhase: "Foundation Phase",
+        parentFirstName: "Palesa", parentLastName: "Molefe",
+        parentEmail: "palesa.molefe@webmail.co.za", parentPhone: "+27 65 234 5678",
+        relationship: "Mother", homeLanguage: "Sotho",
+        howDidYouHear: "Neighbour",
+        motivation: "Thandi is very curious and eager to learn. Grade R will be the perfect start.",
+        status: "accepted" as const,
+        adminNotes: "Accepted for Grade R. Registration form and deposit received.",
+      },
+      // Waitlist
+      {
+        learnerFirstName: "Siyanda", learnerLastName: "Ngcobo",
+        learnerDateOfBirth: "2012-02-14", learnerGender: "Male",
+        gradeApplyingFor: 6, schoolPhase: "Intermediate Phase",
+        parentFirstName: "Lungile", parentLastName: "Ngcobo",
+        parentEmail: "lungile.ngcobo@gmail.com", parentPhone: "+27 83 012 3456",
+        relationship: "Father", currentSchool: "Ithemba Primary",
+        homeLanguage: "Xhosa", howDidYouHear: "Church community",
+        motivation: "Siyanda shows great leadership skills and we want to develop them further.",
+        status: "waitlist" as const,
+        adminNotes: "Grade 6 class is full. On waitlist position #1. Parent notified.",
+      },
+      {
+        learnerFirstName: "Mia", learnerLastName: "Jacobs",
+        learnerDateOfBirth: "2014-10-08", learnerGender: "Female",
+        gradeApplyingFor: 4, schoolPhase: "Intermediate Phase",
+        parentFirstName: "Celeste", parentLastName: "Jacobs",
+        parentEmail: "celeste.jacobs@outlook.com", parentPhone: "+27 72 123 4567",
+        relationship: "Mother", currentSchool: "Paarl Girls Primary",
+        homeLanguage: "Afrikaans", howDidYouHear: "Instagram",
+        motivation: "Mia is bilingual and we value a school that embraces diversity.",
+        status: "waitlist" as const,
+        adminNotes: "Waitlist #2. Strong applicant. Will contact if space opens.",
+      },
+      // Rejected
+      {
+        learnerFirstName: "Jason", learnerLastName: "Williams",
+        learnerDateOfBirth: "2007-03-25", learnerGender: "Male",
+        gradeApplyingFor: 11, schoolPhase: "FET Phase",
+        parentFirstName: "Deborah", parentLastName: "Williams",
+        parentEmail: "deborah.williams@gmail.com", parentPhone: "+27 81 234 5678",
+        relationship: "Mother", currentSchool: "Athlone High",
+        homeLanguage: "English", howDidYouHear: "Website",
+        motivation: "Jason wants to change schools for his final two years of high school.",
+        status: "rejected" as const,
+        adminNotes: "Declined — we currently do not offer Grade 11. Family referred to suitable school.",
+      },
+      {
+        learnerFirstName: "Keamogetswe", learnerLastName: "Tau",
+        learnerDateOfBirth: "2008-11-17", learnerGender: "Male",
+        gradeApplyingFor: 10, schoolPhase: "FET Phase",
+        parentFirstName: "Dineo", parentLastName: "Tau",
+        parentEmail: "dineo.tau@gmail.com", parentPhone: "+27 76 789 0123",
+        relationship: "Mother", currentSchool: "Soweto High",
+        homeLanguage: "Sotho", howDidYouHear: "Google Search",
+        motivation: "We believe a change of environment will improve Keamogetswe's performance.",
+        status: "rejected" as const,
+        adminNotes: "Declined — capacity full for Grade 10 this year. Advised to re-apply next intake.",
+      },
+    ];
+
+    let inserted = 0;
+    for (const demo of demos) {
+      const seq = count + inserted + 1;
+      const appNumber = `GSLC-${year}-${String(seq).padStart(4, "0")}`;
+      const daysAgo = Math.floor(Math.random() * 30);
+      const createdAt = Date.now() - daysAgo * 86_400_000;
+
+      const { status, adminNotes, ...rest } = demo;
+      await ctx.db.insert("applications", {
+        ...rest,
+        status,
+        adminNotes,
+        applicationNumber: appNumber,
+        createdAt,
+      });
+      inserted++;
+    }
+
+    return { seeded: true, count: inserted };
+  },
+});

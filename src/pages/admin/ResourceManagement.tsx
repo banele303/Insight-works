@@ -1,662 +1,508 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const capsApi = api as any;
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  FileText, Download, Plus, Trash2, ShieldCheck, HeartPulse,
+  Sparkles, CheckCircle2, Upload, FileCheck, BookOpen, Search,
+  Lock, Eye, Filter, ArrowUpRight, Check, X, File, AlertCircle
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Upload, FileText, BookOpen, Trash2, Database, RefreshCw, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
-import { FileUpload } from "@/components/global/FileUpload";
+import type { Id } from "../../../convex/_generated/dataModel";
+
+const CATEGORIES = [
+  "CBT & Grounding",
+  "Couples Tools",
+  "Intake & Legal",
+  "Mindfulness & Worksheets",
+  "Life Coaching",
+  "Assessment Forms",
+];
 
 export default function AdminResources() {
-  const [activeTab, setActiveTab] = useState("past-papers");
-  const [selectedGrade, setSelectedGrade] = useState<number>(12);
-  const [selectedLanguage, setSelectedLanguage] = useState("en");
-  const [seeding, setSeeding] = useState(false);
-  const [seedResult, setSeedResult] = useState<string | null>(null);
+  const documents = useQuery(api.documents.getDocuments, {}) || [];
+  const generateUploadUrl = useMutation(api.documents.generateUploadUrl);
+  const createDocumentMutation = useMutation(api.documents.createDocument);
+  const deleteDocumentMutation = useMutation(api.documents.deleteDocument);
+  const incrementDownloadMutation = useMutation(api.documents.incrementDownload);
+  const seedInitialDocuments = useMutation(api.documents.seedInitialDocuments);
 
-  // Seed functions
-  const seedBasic = useMutation(api.seed.seedAll);
-  const seedCaps = useMutation(capsApi.capsSeed?.seedAll);
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleSeedBasic = async () => {
-    setSeeding(true);
-    setSeedResult(null);
+  // Form states
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState(CATEGORIES[0]);
+  const [description, setDescription] = useState("");
+  const [isPublic, setIsPublic] = useState(true);
+  const [popiaCompliant, setPopiaCompliant] = useState(true);
+
+  // File upload states
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const formatBytes = (bytes: number) => {
+    if (bytes === 0) return "0 Bytes";
+    const k = 1024;
+    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+  };
+
+  const getFormatFromType = (fileType: string, fileName: string): string => {
+    if (fileType.includes("pdf") || fileName.endsWith(".pdf")) return "PDF";
+    if (fileType.includes("word") || fileName.endsWith(".doc") || fileName.endsWith(".docx")) return "DOCX";
+    if (fileType.includes("image")) return "IMAGE";
+    if (fileType.includes("audio")) return "AUDIO";
+    return "DOC";
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      if (!title.trim()) {
+        const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
+        setTitle(cleanName);
+      }
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      if (!title.trim()) {
+        const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
+        setTitle(cleanName);
+      }
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title.trim()) {
+      toast.error("Please enter a document title.");
+      return;
+    }
+    if (!selectedFile) {
+      toast.error("Please select a document file to upload.");
+      return;
+    }
+
     try {
-      const result = await seedBasic();
-      setSeedResult(result || "Basic seed completed!");
-      toast.success("Basic data seeded successfully!");
-    } catch (e: any) {
-      toast.error(e.message || "Seed failed");
+      setIsSubmitting(true);
+      setIsUploading(true);
+
+      // 1. Get short-lived upload URL from Convex Storage
+      const postUrl = await generateUploadUrl();
+
+      // 2. Upload file binary directly to Convex
+      const result = await fetch(postUrl, {
+        method: "POST",
+        headers: { "Content-Type": selectedFile.type || "application/octet-stream" },
+        body: selectedFile,
+      });
+
+      if (!result.ok) {
+        throw new Error("File upload to Convex Storage failed.");
+      }
+
+      const { storageId } = await result.json();
+
+      // 3. Register document in Convex database
+      await createDocumentMutation({
+        title,
+        category,
+        description,
+        storageId,
+        fileName: selectedFile.name,
+        fileSize: formatBytes(selectedFile.size),
+        fileType: selectedFile.type || "application/octet-stream",
+        format: getFormatFromType(selectedFile.type, selectedFile.name),
+        isPublic,
+        popiaCompliant,
+      });
+
+      toast.success("Document uploaded and published to practice files!");
+      setIsModalOpen(false);
+      setSelectedFile(null);
+      setTitle("");
+      setDescription("");
+    } catch (err: any) {
+      console.error("Upload error:", err);
+      toast.error(err.message || "Failed to upload document.");
     } finally {
-      setSeeding(false);
+      setIsUploading(false);
+      setIsSubmitting(false);
     }
   };
 
-  const handleSeedCaps = async () => {
-    setSeeding(true);
-    setSeedResult(null);
-    try {
-      const result = await seedCaps();
-      setSeedResult(result || "CAPS data seeded!");
-      toast.success("CAPS curriculum data seeded successfully!");
-    } catch (e: any) {
-      toast.error(e.message || "CAPS seed failed. Make sure capsSeed.ts is deployed.");
-    } finally {
-      setSeeding(false);
+  const handleDelete = async (id: Id<"clinicalDocuments">, docTitle: string) => {
+    if (confirm(`Are you sure you want to delete "${docTitle}"?`)) {
+      try {
+        await deleteDocumentMutation({ id });
+        toast.success("Document removed successfully.");
+      } catch {
+        toast.error("Failed to delete document.");
+      }
     }
   };
 
-  const handleSeedAll = async () => {
-    setSeeding(true);
-    setSeedResult(null);
+  const handleDownload = (docId: Id<"clinicalDocuments">, url: string) => {
+    incrementDownloadMutation({ id: docId }).catch(() => {});
+    window.open(url, "_blank");
+  };
+
+  const handleSeed = async () => {
     try {
-      const r1 = await seedBasic();
-      const r2 = await seedCaps();
-      setSeedResult(`✓ Basic: ${r1}\n✓ CAPS: ${r2}`);
-      toast.success("All data seeded successfully!");
-    } catch (e: any) {
-      toast.error(e.message || "Seed failed");
-    } finally {
-      setSeeding(false);
+      const res = await seedInitialDocuments();
+      toast.success(res.message || `Seeded ${res.count} clinical templates!`);
+    } catch {
+      toast.error("Could not seed documents.");
     }
   };
 
-  // Past paper form
-  const [ppTitle, setPpTitle] = useState("");
-  const [ppGrade, setPpGrade] = useState("12");
-  const [ppSubject, setPpSubject] = useState("");
-  const [ppYear, setPpYear] = useState("2024");
-  const [ppTerm, setPpTerm] = useState("0");
-  const [ppType, setPpType] = useState("exam");
-  const [ppFileUrl, setPpFileUrl] = useState("");
-
-  // Study resource form
-  const [srTitle, setSrTitle] = useState("");
-  const [srDescription, setSrDescription] = useState("");
-  const [srGrade, setSrGrade] = useState("12");
-  const [srSubject, setSrSubject] = useState("");
-  const [srType, setSrType] = useState("notes");
-  const [srFileUrl, setSrFileUrl] = useState("");
-
-  // Subject form states
-  const [subName, setSubName] = useState("");
-  const [subCode, setSubCode] = useState("");
-  const [subPhase, setSubPhase] = useState("FET");
-  const [subCompulsory, setSubCompulsory] = useState(false);
-  const [subLanguage, setSubLanguage] = useState(false);
-  const [subDesc, setSubDesc] = useState("");
-  const [showAddSubject, setShowAddSubject] = useState(false);
-
-  // Syllabus topic form states
-  const [expandedSubjectId, setExpandedSubjectId] = useState<string | null>(null);
-  const [topicName, setTopicName] = useState("");
-  const [topicTerm, setTopicTerm] = useState("1");
-  const [topicSubtopics, setTopicSubtopics] = useState("");
-  const [topicOutline, setTopicOutline] = useState("");
-  const [topicHours, setTopicHours] = useState("10");
-
-  const subjects = useQuery(capsApi.capsActions?.getCapsSubjects, { grade: selectedGrade });
-  const ppSubjects = useQuery(capsApi.capsActions?.getCapsSubjects, { grade: Number(ppGrade) });
-  const srSubjects = useQuery(capsApi.capsActions?.getCapsSubjects, { grade: Number(srGrade) });
-  const pastPapers = useQuery(capsApi.capsActions?.getPastPapers, { grade: selectedGrade });
-  const studyResources = useQuery(capsApi.capsActions?.getStudyResources, { grade: selectedGrade });
-  const syllabusTopicsList = useQuery(capsApi.capsActions?.getSyllabusTopics, 
-    expandedSubjectId ? { subjectId: expandedSubjectId as any } : "skip"
-  );
-
-  const addPastPaper = useMutation(capsApi.capsActions?.addPastPaper);
-  const deletePastPaper = useMutation(capsApi.capsActions?.deletePastPaper);
-  const addStudyResource = useMutation(capsApi.capsActions?.addStudyResource);
-  const deleteStudyResource = useMutation(capsApi.capsActions?.deleteStudyResource);
-  const addCapsSubject = useMutation(capsApi.capsActions?.addCapsSubject);
-  const addSyllabusTopic = useMutation(capsApi.capsActions?.addSyllabusTopic);
-  const deleteSyllabusTopic = useMutation(capsApi.capsActions?.deleteSyllabusTopic);
-
-  const handleAddPastPaper = async () => {
-    if (!ppTitle || !ppSubject || !ppFileUrl) return toast.error("Fill all required fields");
-    try {
-      await addPastPaper({
-        title: ppTitle,
-        grade: Number(ppGrade),
-        subjectId: ppSubject as any,
-        language: selectedLanguage,
-        year: Number(ppYear),
-        term: Number(ppTerm),
-        paperType: ppType,
-        fileUrl: ppFileUrl,
-        fileType: "pdf",
-        fileSize: 0,
-        tags: [ppType, `grade-${ppGrade}`, ppYear],
-      });
-      toast.success("Past paper added!");
-      setPpTitle(""); setPpFileUrl("");
-    } catch (e: any) { toast.error(e.message); }
-  };
-
-  const handleAddResource = async () => {
-    if (!srTitle || !srSubject || !srFileUrl) return toast.error("Fill all required fields");
-    try {
-      await addStudyResource({
-        title: srTitle,
-        description: srDescription,
-        grade: Number(srGrade),
-        subjectId: srSubject as any,
-        language: selectedLanguage,
-        resourceType: srType,
-        fileUrl: srFileUrl,
-        fileType: "pdf",
-        fileSize: 0,
-        tags: [srType, `grade-${srGrade}`],
-      });
-      toast.success("Resource added!");
-      setSrTitle(""); setSrDescription(""); setSrFileUrl("");
-    } catch (e: any) { toast.error(e.message); }
-  };
-
-  const langName = (code: string) => {
-    const map: Record<string, string> = { en: "English", zu: "isiZulu", xh: "isiXhosa", af: "Afrikaans", nso: "Sepedi", tn: "Setswana", st: "Sesotho", ts: "Xitsonga", ss: "siSwati", ve: "Tshivenda", nr: "isiNdebele" };
-    return map[code] || code;
-  };
-
-  const handleAddSubject = async () => {
-    if (!subName || !subCode) return toast.error("Name and Code are required");
-    try {
-      await addCapsSubject({
-        name: subName,
-        code: subCode,
-        grade: selectedGrade,
-        phase: subPhase,
-        isCompulsory: subCompulsory,
-        isLanguage: subLanguage,
-        description: subDesc,
-      });
-      toast.success("Subject added successfully!");
-      setSubName(""); setSubCode(""); setSubDesc("");
-      setShowAddSubject(false);
-    } catch (e: any) {
-      toast.error(e.message || "Failed to add subject");
-    }
-  };
-
-  const handleAddSyllabusTopic = async () => {
-    if (!expandedSubjectId || !topicName) return toast.error("Topic name is required");
-    try {
-      await addSyllabusTopic({
-        capsSubject: expandedSubjectId as any,
-        grade: selectedGrade,
-        term: Number(topicTerm),
-        topic: topicName,
-        subTopics: topicSubtopics.split(",").map((s) => s.trim()).filter(Boolean),
-        contentOutline: topicOutline,
-        hoursPerTerm: Number(topicHours),
-        language: selectedLanguage,
-      });
-      toast.success("Syllabus topic added successfully!");
-      setTopicName(""); setTopicSubtopics(""); setTopicOutline("");
-    } catch (e: any) {
-      toast.error(e.message || "Failed to add topic");
-    }
-  };
-
-  const handleDeleteSyllabusTopic = async (id: any) => {
-    if (!confirm("Are you sure you want to delete this topic?")) return;
-    try {
-      await deleteSyllabusTopic({ id });
-      toast.success("Syllabus topic deleted successfully");
-    } catch (e: any) {
-      toast.error(e.message || "Failed to delete topic");
-    }
-  };
+  const filteredDocs = documents.filter((d) => {
+    const matchesSearch =
+      !search ||
+      d.title.toLowerCase().includes(search.toLowerCase()) ||
+      (d.description && d.description.toLowerCase().includes(search.toLowerCase())) ||
+      d.fileName.toLowerCase().includes(search.toLowerCase());
+    const matchesCat = selectedCategory === "all" || d.category === selectedCategory;
+    return matchesSearch && matchesCat;
+  });
 
   return (
-    <div className="p-6 space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Resource Management</h1>
-        <p className="text-muted-foreground">Upload and manage past papers, study materials, and syllabus content for all grades and languages.</p>
-      </div>
-
-      {/* Filters */}
-      <div className="flex gap-4 items-end flex-wrap">
-        <div>
-          <Label className="text-sm font-medium mb-1.5 block">Grade</Label>
-          <Select value={String(selectedGrade)} onValueChange={(v) => setSelectedGrade(Number(v))}>
-            <SelectTrigger className="w-32">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {[1,2,3,4,5,6,7,8,9,10,11,12].map(g => (
-                <SelectItem key={g} value={String(g)}>Grade {g}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+    <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-5 text-zinc-900 dark:text-zinc-100 bg-white dark:bg-black min-h-screen overflow-x-hidden" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      {/* ── TOP HEADER (Responsive & Clean) ── */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800/80 pb-5">
+        <div className="space-y-1 max-w-2xl min-w-0">
+          <div className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 rounded-md border border-emerald-200/60 dark:border-emerald-800/60">
+            <ShieldCheck className="w-3.5 h-3.5" /> Practice Assets &amp; Compliance
+          </div>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">
+            Clinical Document Management
+          </h1>
+          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+            Upload and distribute POPIA-compliant worksheets, intake PDFs, and therapeutic tools on Convex Cloud.
+          </p>
         </div>
-        <div>
-          <Label className="text-sm font-medium mb-1.5 block">Language</Label>
-          <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
-            <SelectTrigger className="w-44">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="en">English</SelectItem>
-              <SelectItem value="af">Afrikaans</SelectItem>
-              <SelectItem value="zu">isiZulu</SelectItem>
-              <SelectItem value="xh">isiXhosa</SelectItem>
-              <SelectItem value="nso">Sepedi</SelectItem>
-              <SelectItem value="tn">Setswana</SelectItem>
-              <SelectItem value="st">Sesotho</SelectItem>
-              <SelectItem value="ts">Xitsonga</SelectItem>
-              <SelectItem value="ss">siSwati</SelectItem>
-              <SelectItem value="ve">Tshivenda</SelectItem>
-              <SelectItem value="nr">isiNdebele</SelectItem>
-            </SelectContent>
-          </Select>
+
+        <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
+          <Button
+            onClick={() => {
+              setSelectedFile(null);
+              setTitle("");
+              setDescription("");
+              setIsModalOpen(true);
+            }}
+            className="h-9 px-4 text-xs font-bold bg-[#156e52] hover:bg-[#0f5940] text-white gap-2 shadow-xs cursor-pointer rounded-xl"
+          >
+            <Upload className="w-3.5 h-3.5" /> Upload Document
+          </Button>
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="past-papers">Past Papers</TabsTrigger>
-          <TabsTrigger value="study-resources">Study Resources</TabsTrigger>
-          <TabsTrigger value="syllabus">Syllabus</TabsTrigger>
-        </TabsList>
+      {/* ── SEARCH & CATEGORY FILTER (Full Width & Mobile Friendly) ── */}
+      <div className="space-y-3">
+        <div className="relative w-full">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+          <Input
+            placeholder="Search documents by title, keyword, or file name..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9 h-10 w-full bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800/80 rounded-xl text-xs sm:text-sm"
+          />
+        </div>
 
-        <TabsContent value="past-papers" className="space-y-4">
-          <Card>
-            <CardHeader><CardTitle className="text-base">Upload Past Paper</CardTitle></CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-sm font-medium mb-1.5 block">Title *</Label>
-                  <Input value={ppTitle} onChange={e => setPpTitle(e.target.value)} placeholder="Grade 12 Maths Paper 1 — Nov 2024" />
-                </div>
-                <div>
-                  <Label className="text-sm font-medium mb-1.5 block">Subject *</Label>
-                  <Select value={ppSubject} onValueChange={setPpSubject}>
-                    <SelectTrigger><SelectValue placeholder="Select subject" /></SelectTrigger>
-                    <SelectContent>
-                      {ppSubjects?.map((s: any) => <SelectItem key={s._id} value={s._id}>{s.name}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div className="grid grid-cols-4 gap-4">
-                <div>
-                  <Label className="text-sm font-medium mb-1.5 block">Grade</Label>
-                  <Input type="number" value={ppGrade} onChange={e => { setPpGrade(e.target.value); setPpSubject(""); }} min={1} max={12} />
-                </div>
-                <div>
-                  <Label className="text-sm font-medium mb-1.5 block">Year</Label>
-                  <Input type="number" value={ppYear} onChange={e => setPpYear(e.target.value)} min={2020} max={2030} />
-                </div>
-                <div>
-                  <Label className="text-sm font-medium mb-1.5 block">Term</Label>
-                  <Select value={ppTerm} onValueChange={setPpTerm}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="0">Full Year</SelectItem>
-                      <SelectItem value="1">Term 1</SelectItem>
-                      <SelectItem value="2">Term 2</SelectItem>
-                      <SelectItem value="3">Term 3</SelectItem>
-                      <SelectItem value="4">Term 4</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label className="text-sm font-medium mb-1.5 block">Type</Label>
-                  <Select value={ppType} onValueChange={setPpType}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="exam">Exam</SelectItem>
-                      <SelectItem value="test">Test</SelectItem>
-                      <SelectItem value="assignment">Assignment</SelectItem>
-                      <SelectItem value="memo">Memo</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div>
-                <Label className="text-sm font-medium mb-1.5 block">File Attachment *</Label>
-                {!ppFileUrl ? (
-                  <FileUpload
-                    onUploadComplete={(result) => {
-                      setPpFileUrl(result.fileUrl);
-                    }}
-                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.md,image/*"
-                  />
-                ) : (
-                  <div className="p-3 border rounded-lg bg-muted/50 flex items-center justify-between">
-                    <span className="text-xs truncate font-medium">{ppFileUrl}</span>
-                    <Button variant="ghost" size="sm" onClick={() => setPpFileUrl("")}>
-                      Remove
-                    </Button>
-                  </div>
-                )}
-              </div>
-              <Button onClick={handleAddPastPaper} className="bg-[#dc2626] text-black hover:bg-[#b91c1c]">
-                <Upload className="mr-2 h-4 w-4" /> Add Past Paper
-              </Button>
-            </CardContent>
-          </Card>
+        {/* Scrollable / Wrapping Categories */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 pt-0.5 no-scrollbar scroll-smooth">
+          <button
+            onClick={() => setSelectedCategory("all")}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
+              selectedCategory === "all"
+                ? "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-2xs"
+                : "bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+            }`}
+          >
+            All ({documents.length})
+          </button>
+          {CATEGORIES.map((cat) => {
+            const count = documents.filter((d) => d.category === cat).length;
+            return (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
+                  selectedCategory === cat
+                    ? "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-2xs"
+                    : "bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                }`}
+              >
+                {cat} {count > 0 && <span className="opacity-70 ml-1">({count})</span>}
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
-          <div className="space-y-2">
-            <h3 className="font-semibold">Existing Past Papers — Grade {selectedGrade} ({langName(selectedLanguage)})</h3>
-            {pastPapers === undefined ? <Loader2 className="h-6 w-6 animate-spin" /> : pastPapers.length === 0 ? (
-              <p className="text-muted-foreground text-sm">No past papers for this grade yet.</p>
-            ) : pastPapers.map((pp: any) => (
-              <Card key={pp._id} className="flex items-center justify-between p-4">
-                <div className="flex items-center gap-3">
-                  <FileText className="h-5 w-5 text-primary" />
-                  <div>
-                    <p className="font-medium text-sm">{pp.title}</p>
-                    <div className="flex gap-2 mt-1">
-                      <Badge variant="secondary" className="text-xs">{pp.paperType}</Badge>
-                      <Badge variant="outline" className="text-xs">{pp.year}</Badge>
-                      <Badge variant="outline" className="text-xs">{langName(pp.language)}</Badge>
-                    </div>
-                  </div>
-                </div>
-                <Button variant="ghost" size="sm" onClick={() => deletePastPaper({ id: pp._id })}>
-                  <Trash2 className="h-4 w-4 text-red-500" />
-                </Button>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        {/* STUDY RESOURCES TAB */}
-        <TabsContent value="study-resources" className="space-y-4">
-          <Card>
-            <CardHeader><CardTitle className="text-base">Upload Study Resource</CardTitle></CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-sm font-medium mb-1.5 block">Title *</Label>
-                  <Input value={srTitle} onChange={e => setSrTitle(e.target.value)} placeholder="Grade 12 Maths Formula Sheet" />
-                </div>
-                <div>
-                  <Label className="text-sm font-medium mb-1.5 block">Subject *</Label>
-                  <Select value={srSubject} onValueChange={setSrSubject}>
-                    <SelectTrigger><SelectValue placeholder="Select subject" /></SelectTrigger>
-                    <SelectContent>
-                      {srSubjects?.map((s: any) => <SelectItem key={s._id} value={s._id}>{s.name}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div>
-                <Label className="text-sm font-medium mb-1.5 block">Description</Label>
-                <Input value={srDescription} onChange={e => setSrDescription(e.target.value)} placeholder="Brief description..." />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-sm font-medium mb-1.5 block">Grade</Label>
-                  <Input type="number" value={srGrade} onChange={e => { setSrGrade(e.target.value); setSrSubject(""); }} min={1} max={12} />
-                </div>
-                <div>
-                  <Label className="text-sm font-medium mb-1.5 block">Type</Label>
-                  <Select value={srType} onValueChange={setSrType}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="notes">Notes</SelectItem>
-                      <SelectItem value="worksheet">Worksheet</SelectItem>
-                      <SelectItem value="video">Video</SelectItem>
-                      <SelectItem value="presentation">Presentation</SelectItem>
-                      <SelectItem value="textbook">Textbook</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div>
-                <Label className="text-sm font-medium mb-1.5 block">File Attachment *</Label>
-                {!srFileUrl ? (
-                  <FileUpload
-                    onUploadComplete={(result) => {
-                      setSrFileUrl(result.fileUrl);
-                    }}
-                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.md,image/*"
-                  />
-                ) : (
-                  <div className="p-3 border rounded-lg bg-muted/50 flex items-center justify-between">
-                    <span className="text-xs truncate font-medium">{srFileUrl}</span>
-                    <Button variant="ghost" size="sm" onClick={() => setSrFileUrl("")}>
-                      Remove
-                    </Button>
-                  </div>
-                )}
-              </div>
-              <Button onClick={handleAddResource} className="bg-[#dc2626] text-black hover:bg-[#b91c1c]">
-                <Upload className="mr-2 h-4 w-4" /> Add Resource
-              </Button>
-            </CardContent>
-          </Card>
-
-          <div className="space-y-2">
-            <h3 className="font-semibold">Existing Resources — Grade {selectedGrade}</h3>
-            {studyResources === undefined ? <Loader2 className="h-6 w-6 animate-spin" /> : studyResources.length === 0 ? (
-              <p className="text-muted-foreground text-sm">No resources for this grade yet.</p>
-            ) : studyResources.map((r: any) => (
-              <Card key={r._id} className="flex items-center justify-between p-4">
-                <div className="flex items-center gap-3">
-                  <BookOpen className="h-5 w-5 text-primary" />
-                  <div>
-                    <p className="font-medium text-sm">{r.title}</p>
-                    <div className="flex gap-2 mt-1">
-                      <Badge variant="secondary" className="text-xs">{r.resourceType}</Badge>
-                      <Badge variant="outline" className="text-xs">Grade {r.grade}</Badge>
-                    </div>
-                  </div>
-                </div>
-                <Button variant="ghost" size="sm" onClick={() => deleteStudyResource({ id: r._id })}>
-                  <Trash2 className="h-4 w-4 text-red-500" />
-                </Button>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        {/* SYLLABUS TAB */}
-        <TabsContent value="syllabus" className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="font-semibold text-lg">Subjects & Curriculum</h3>
+      {/* ── DOCUMENTS LIST (No horizontal scroll, fully responsive) ── */}
+      {filteredDocs.length === 0 ? (
+        <div className="text-center py-14 border border-dashed border-zinc-200 dark:border-zinc-800/80 rounded-2xl p-6 bg-zinc-50/50 dark:bg-zinc-950/40">
+          <FileText className="w-10 h-10 text-zinc-300 dark:text-zinc-700 mx-auto mb-2" />
+          <h3 className="text-sm font-bold text-zinc-800 dark:text-zinc-200">No documents found</h3>
+          <p className="text-xs text-zinc-500 mt-1 max-w-sm mx-auto">
+            Upload your therapeutic worksheet or select another category filter.
+          </p>
+          <div className="mt-4 flex flex-wrap justify-center gap-2.5">
             <Button
-              onClick={() => setShowAddSubject(!showAddSubject)}
-              className="bg-[#dc2626] text-black hover:bg-[#b91c1c]"
+              onClick={() => setIsModalOpen(true)}
+              size="sm"
+              className="bg-[#156e52] hover:bg-[#0f5940] text-white text-xs h-8"
             >
-              {showAddSubject ? "Hide Subject Form" : "+ Add Subject"}
+              Upload Real File
             </Button>
           </div>
-
-          {showAddSubject && (
-            <Card>
-              <CardHeader><CardTitle className="text-base">Create New Subject</CardTitle></CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-sm font-medium mb-1.5 block">Subject Name *</Label>
-                    <Input value={subName} onChange={e => setSubName(e.target.value)} placeholder="e.g. Mathematical Literacy" />
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 overflow-hidden shadow-2xs">
+          <div className="divide-y divide-zinc-200/80 dark:divide-zinc-800/80">
+            {filteredDocs.map((doc) => (
+              <div
+                key={doc._id}
+                className="p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-3.5 hover:bg-zinc-50/80 dark:hover:bg-zinc-900/40 transition-colors group"
+              >
+                {/* Left: Icon & Details */}
+                <div className="flex items-start gap-3 min-w-0 flex-1">
+                  <div className="h-10 w-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200/80 dark:border-emerald-800/60 flex items-center justify-center text-[#156e52] dark:text-emerald-400 shrink-0 mt-0.5">
+                    <FileText className="w-5 h-5" />
                   </div>
-                  <div>
-                    <Label className="text-sm font-medium mb-1.5 block">Subject Code *</Label>
-                    <Input value={subCode} onChange={e => setSubCode(e.target.value)} placeholder="e.g. MATHLIT101" />
+
+                  <div className="space-y-1.5 min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                      <h4 className="font-bold text-xs sm:text-sm text-zinc-900 dark:text-zinc-100 group-hover:text-[#156e52] dark:group-hover:text-emerald-400 transition-colors leading-snug break-words">
+                        {doc.title}
+                      </h4>
+                      <Badge className="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-[9px] sm:text-[10px] font-bold border-zinc-200 dark:border-zinc-700 py-0 px-1.5">
+                        {doc.format}
+                      </Badge>
+                      {doc.popiaCompliant && (
+                        <Badge className="bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 text-[9px] sm:text-[10px] font-bold border-emerald-200 dark:border-emerald-800 py-0 px-1.5">
+                          POPIA Verified
+                        </Badge>
+                      )}
+                      {!doc.isPublic && (
+                        <Badge variant="outline" className="text-[9px] sm:text-[10px] text-zinc-400 gap-1 border-zinc-300 dark:border-zinc-800 py-0 px-1.5">
+                          <Lock className="w-2.5 h-2.5" /> Staff Only
+                        </Badge>
+                      )}
+                    </div>
+
+                    {doc.description && (
+                      <p className="text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400 line-clamp-2 leading-relaxed break-words">
+                        {doc.description}
+                      </p>
+                    )}
+
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] sm:text-[11px] text-zinc-400 dark:text-zinc-500 font-mono">
+                      <span className="truncate max-w-[140px] sm:max-w-xs">{doc.fileName}</span>
+                      <span>·</span>
+                      <span>{doc.fileSize}</span>
+                      <span>·</span>
+                      <span>{doc.category}</span>
+                      {doc.downloads !== undefined && (
+                        <>
+                          <span>·</span>
+                          <span>{doc.downloads} downloads</span>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <Label className="text-sm font-medium mb-1.5 block">Phase</Label>
-                    <Select value={subPhase} onValueChange={setSubPhase}>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="FET">FET Phase (Gr 10-12)</SelectItem>
-                        <SelectItem value="Senior">Senior Phase (Gr 7-9)</SelectItem>
-                        <SelectItem value="Intermediate">Intermediate Phase (Gr 4-6)</SelectItem>
-                        <SelectItem value="Foundation">Foundation Phase (Gr 1-3)</SelectItem>
-                      </SelectContent>
-                    </Select>
+                {/* Right: Actions (Full-width on mobile row, compact on desktop) */}
+                <div className="flex items-center gap-2 pt-2 md:pt-0 border-t md:border-t-0 border-zinc-100 dark:border-zinc-900 shrink-0 self-stretch md:self-center justify-end">
+                  <Button
+                    onClick={() => handleDownload(doc._id, doc.downloadUrl)}
+                    variant="outline"
+                    size="sm"
+                    className="h-8 flex-1 md:flex-initial rounded-xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs font-bold gap-1.5 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-600 dark:hover:text-emerald-400 cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5" /> Download
+                  </Button>
+
+                  <Button
+                    onClick={() => handleDelete(doc._id, doc.title)}
+                    variant="ghost"
+                    size="icon-sm"
+                    className="h-8 w-8 text-zinc-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 shrink-0"
+                    title="Delete document"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── UPLOAD MODAL (Mobile Responsive Modal) ── */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl p-5 sm:p-6 space-y-4 my-auto animate-in fade-in zoom-in-95 max-h-[92vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-zinc-100 dark:border-zinc-800 pb-3">
+              <div>
+                <h3 className="text-base sm:text-lg font-bold text-zinc-900 dark:text-white">
+                  Upload Clinical Document
+                </h3>
+                <p className="text-[11px] sm:text-xs text-zinc-500">
+                  Select a document file to store in Convex Cloud Storage.
+                </p>
+              </div>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-3.5">
+              {/* Dropzone */}
+              <div
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
+                className="border-2 border-dashed border-zinc-300 dark:border-zinc-800 rounded-xl p-4 sm:p-5 text-center hover:border-emerald-500/50 dark:hover:border-zinc-700 bg-zinc-50/50 dark:bg-zinc-900/30 cursor-pointer transition-all space-y-2"
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  onChange={handleFileChange}
+                  accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.mp3"
+                  className="hidden"
+                />
+
+                <div className="w-9 h-9 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center mx-auto text-[#156e52] dark:text-emerald-400">
+                  <Upload className="w-4 h-4" />
+                </div>
+
+                {selectedFile ? (
+                  <div className="space-y-0.5">
+                    <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center justify-center gap-1.5 truncate px-2">
+                      <CheckCircle2 className="w-3.5 h-3.5 shrink-0" /> <span className="truncate">{selectedFile.name}</span>
+                    </p>
+                    <p className="text-[10px] text-zinc-400 font-mono">
+                      {formatBytes(selectedFile.size)} · {selectedFile.type || "Document"}
+                    </p>
                   </div>
-                  <div>
-                    <Label className="text-sm font-medium mb-1.5 block">Is Compulsory?</Label>
-                    <Select value={subCompulsory ? "true" : "false"} onValueChange={(v) => setSubCompulsory(v === "true")}>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="false">No (Elective)</SelectItem>
-                        <SelectItem value="true">Yes (Compulsory)</SelectItem>
-                      </SelectContent>
-                    </Select>
+                ) : (
+                  <div className="space-y-0.5">
+                    <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300">
+                      Click to choose or drag &amp; drop file
+                    </p>
+                    <p className="text-[10px] text-zinc-400">
+                      Supports PDF, DOCX, Assessment Forms &amp; Worksheets
+                    </p>
                   </div>
-                  <div>
-                    <Label className="text-sm font-medium mb-1.5 block">Is Language Subject?</Label>
-                    <Select value={subLanguage ? "true" : "false"} onValueChange={(v) => setSubLanguage(v === "true")}>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="false">No (Content Subject)</SelectItem>
-                        <SelectItem value="true">Yes (Language Subject)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                )}
+              </div>
+
+              {/* Title & Category */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-[11px] font-bold text-zinc-700 dark:text-zinc-300">Document Title *</label>
+                  <Input
+                    required
+                    placeholder="e.g. CBT Thought Record"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="rounded-xl h-9 text-xs"
+                  />
                 </div>
 
-                <div>
-                  <Label className="text-sm font-medium mb-1.5 block">Description</Label>
-                  <Input value={subDesc} onChange={e => setSubDesc(e.target.value)} placeholder="Brief description of the subject..." />
+                <div className="space-y-1">
+                  <label className="text-[11px] font-bold text-zinc-700 dark:text-zinc-300">Category *</label>
+                  <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="w-full h-9 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs px-3 text-zinc-900 dark:text-white"
+                  >
+                    {CATEGORIES.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
                 </div>
+              </div>
 
-                <div className="flex gap-2">
-                  <Button onClick={handleAddSubject} className="bg-[#dc2626] text-black hover:bg-[#b91c1c]">Save Subject</Button>
-                  <Button variant="outline" onClick={() => setShowAddSubject(false)}>Cancel</Button>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+              {/* Description */}
+              <div className="space-y-1">
+                <label className="text-[11px] font-bold text-zinc-700 dark:text-zinc-300">Description / Clinical Purpose</label>
+                <Textarea
+                  rows={2}
+                  placeholder="Clinical guidelines or usage context..."
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="rounded-xl text-xs resize-none"
+                />
+              </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Syllabus Overview — Grade {selectedGrade} ({langName(selectedLanguage)})</CardTitle>
-              <p className="text-xs text-muted-foreground mt-1">Click on a subject below to expand and manage its syllabus topics.</p>
-            </CardHeader>
-            <CardContent>
-              {subjects === undefined ? <Loader2 className="h-6 w-6 animate-spin" /> : subjects.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No subjects found for Grade {selectedGrade}.</p>
-              ) : (
-                <div className="space-y-4">
-                  {subjects.map((s: any) => {
-                    const isExpanded = expandedSubjectId === s._id;
-                    return (
-                      <div key={s._id} className="border rounded-lg p-4 transition-all">
-                        <button
-                          type="button"
-                          onClick={() => setExpandedSubjectId(isExpanded ? null : s._id)}
-                          className="w-full text-left"
-                        >
-                          <div className="flex items-center justify-between">
-                            <h4 className="font-semibold hover:text-primary transition-colors">{s.name}</h4>
-                            <div className="flex gap-2 items-center">
-                              <Badge variant={s.isCompulsory ? "default" : "outline"} className="text-xs">
-                                {s.isCompulsory ? "Compulsory" : "Elective"}
-                              </Badge>
-                              <Badge variant="secondary" className="text-xs">{s.phase}</Badge>
-                              <span className="text-xs text-muted-foreground">{isExpanded ? "▲ Hide Topics" : "▼ Show Topics"}</span>
-                            </div>
-                          </div>
-                          <p className="text-xs text-muted-foreground mt-1">{s.description || "No description provided."}</p>
-                        </button>
+              {/* Checkboxes */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-6 pt-1">
+                <label className="flex items-center gap-2 text-xs font-bold text-zinc-700 dark:text-zinc-300 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={isPublic}
+                    onChange={(e) => setIsPublic(e.target.checked)}
+                    className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
+                  />
+                  Visible to Patients / Clients
+                </label>
 
-                        {isExpanded && (
-                          <div className="mt-4 pt-4 border-t space-y-4">
-                            <div className="space-y-3">
-                              <h5 className="font-semibold text-sm">Syllabus Topics</h5>
-                              {syllabusTopicsList === undefined ? (
-                                <Loader2 className="h-5 w-5 animate-spin" />
-                              ) : syllabusTopicsList.length === 0 ? (
-                                <p className="text-xs text-muted-foreground">No syllabus topics added yet.</p>
-                              ) : (
-                                <div className="space-y-2">
-                                  {syllabusTopicsList.map((st: any) => (
-                                    <div key={st._id} className="p-3 border rounded bg-muted/20 flex justify-between items-start">
-                                      <div className="space-y-1.5 flex-1 pr-4">
-                                        <div className="flex items-center gap-2">
-                                          <Badge className="text-[10px]">Term {st.term}</Badge>
-                                          <h6 className="font-medium text-sm">{st.topic}</h6>
-                                          <span className="text-[10px] text-muted-foreground">{st.hoursPerTerm} hours</span>
-                                        </div>
-                                        <p className="text-xs text-muted-foreground">{st.contentOutline}</p>
-                                        {st.subTopics && st.subTopics.length > 0 && (
-                                          <div className="flex flex-wrap gap-1.5 mt-1.5">
-                                            {st.subTopics.map((sub: string, idx: number) => (
-                                              <Badge key={idx} variant="outline" className="text-[9px] px-1 py-0">{sub}</Badge>
-                                            ))}
-                                          </div>
-                                        )}
-                                      </div>
-                                      <Button variant="ghost" size="sm" className="h-7 w-7 text-red-500 hover:text-red-700" onClick={() => handleDeleteSyllabusTopic(st._id)}>
-                                        <Trash2 className="h-3.5 w-3.5" />
-                                      </Button>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
+                <label className="flex items-center gap-2 text-xs font-bold text-zinc-700 dark:text-zinc-300 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={popiaCompliant}
+                    onChange={(e) => setPopiaCompliant(e.target.checked)}
+                    className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
+                  />
+                  POPIA &amp; HPCSA Compliant
+                </label>
+              </div>
 
-                            {/* Add Syllabus Topic Form */}
-                            <div className="p-4 border rounded bg-muted/10 space-y-3">
-                              <h6 className="font-medium text-sm">Add Syllabus Topic</h6>
-                              <div className="grid grid-cols-3 gap-3">
-                                <div className="col-span-2">
-                                  <Label className="text-xs font-medium mb-1 block">Topic Title *</Label>
-                                  <Input value={topicName} onChange={e => setTopicName(e.target.value)} placeholder="e.g. Finance & Taxation" className="h-8 text-sm" />
-                                </div>
-                                <div>
-                                  <Label className="text-xs font-medium mb-1 block">Term *</Label>
-                                  <Select value={topicTerm} onValueChange={setTopicTerm}>
-                                    <SelectTrigger className="h-8 text-sm"><SelectValue /></SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="1">Term 1</SelectItem>
-                                      <SelectItem value="2">Term 2</SelectItem>
-                                      <SelectItem value="3">Term 3</SelectItem>
-                                      <SelectItem value="4">Term 4</SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                </div>
-                              </div>
-
-                              <div className="grid grid-cols-3 gap-3">
-                                <div className="col-span-2">
-                                  <Label className="text-xs font-medium mb-1 block">Sub-topics (comma-separated)</Label>
-                                  <Input value={topicSubtopics} onChange={e => setTopicSubtopics(e.target.value)} placeholder="e.g. VAT, Interest, Inflation" className="h-8 text-sm" />
-                                </div>
-                                <div>
-                                  <Label className="text-xs font-medium mb-1 block">Suggested Hours</Label>
-                                  <Input type="number" value={topicHours} onChange={e => setTopicHours(e.target.value)} min={1} max={50} className="h-8 text-sm" />
-                                </div>
-                              </div>
-
-                              <div>
-                                <Label className="text-xs font-medium mb-1 block">Content Description</Label>
-                                <Input value={topicOutline} onChange={e => setTopicOutline(e.target.value)} placeholder="Detailed CAPS outline description..." className="h-8 text-sm" />
-                              </div>
-
-                              <Button onClick={handleAddSyllabusTopic} size="sm" className="bg-[#dc2626] text-black hover:bg-[#b91c1c]">
-                                Save Topic
-                              </Button>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+              {/* Buttons */}
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-zinc-100 dark:border-zinc-800">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsModalOpen(false)}
+                  className="h-9 px-3 text-xs"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting || !selectedFile}
+                  size="sm"
+                  className="h-9 px-4 text-xs font-bold bg-[#156e52] hover:bg-[#0f5940] text-white shadow-xs"
+                >
+                  {isSubmitting ? "Uploading..." : "Save & Upload File"}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

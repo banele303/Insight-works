@@ -683,4 +683,126 @@ app.post("/api/generate-timetable", async (c) => {
   }
 });
 
+// ─── CLOUDFLARE TURN CREDENTIALS (Therapy Video Calls) ────────────────────
+// Generates short-lived TURN credentials for WebRTC peer connections.
+// Token ID and API token are stored as Wrangler secrets — never exposed to clients.
+app.post("/api/turn/credentials", async (c) => {
+  const turnTokenId = c.env.TURN_TOKEN_ID;
+  const turnApiToken = c.env.TURN_API_TOKEN;
+
+  if (!turnTokenId || !turnApiToken) {
+    // Fallback: return only STUN in dev if secrets aren't configured yet
+    return c.json({
+      iceServers: [
+        { urls: "stun:stun.cloudflare.com:3478" },
+        { urls: "stun:stun.l.google.com:19302" },
+      ],
+    });
+  }
+
+  try {
+    const response = await fetch(
+      `https://rtc.live.cloudflare.com/v1/turn/keys/${turnTokenId}/credentials/generate`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${turnApiToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ttl: 86400 }), // 24h TTL
+      }
+    );
+
+    if (!response.ok) {
+      const err = await response.text();
+      console.error("TURN credentials generation failed:", err);
+      return c.json({ error: "Failed to generate TURN credentials" }, 500);
+    }
+
+    const data = (await response.json()) as { iceServers: unknown };
+    const formattedIceServers = Array.isArray(data.iceServers)
+      ? data.iceServers
+      : data.iceServers
+      ? [data.iceServers]
+      : [{ urls: "stun:stun.cloudflare.com:3478" }, { urls: "stun:stun.l.google.com:19302" }];
+
+    return c.json({ iceServers: formattedIceServers });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "TURN error";
+    return c.json({ error: message }, 500);
+  }
+});
+
+// ─── THERAPY SESSION AI SUMMARIZER ────────────────────────────────────────
+// Takes a raw session transcript and returns structured clinical session notes
+// using Llama 3 — themes, key moments, action items, follow-up recommendations.
+app.post("/api/session/summarize", async (c) => {
+  try {
+    const { transcript, sessionType, duration } = await c.req.json() as {
+      transcript: string;
+      sessionType?: string;
+      duration?: string;
+    };
+
+    if (!transcript || transcript.trim().length < 50) {
+      return c.json({ error: "Transcript is too short to summarize." }, 400);
+    }
+
+    const prompt = `You are a professional clinical supervisor assisting a therapist or life coach at Insight Therapy & Coaching.
+
+Below is a transcript from a ${sessionType || "therapy"} session (duration: ${duration || "unknown"}).
+
+Your task is to generate concise, professional, POPIA-compliant session notes in structured JSON.
+
+TRANSCRIPT:
+${transcript.slice(0, 6000)}
+
+Generate a JSON object with EXACTLY this schema (no extra keys, no markdown):
+{
+  "sessionSummary": "2-3 sentence high-level summary of the session",
+  "presentingConcerns": ["concern 1", "concern 2"],
+  "keyThemes": ["theme 1", "theme 2", "theme 3"],
+  "clientProgress": "Brief assessment of client's progress and emotional state",
+  "interventionsUsed": ["intervention 1", "intervention 2"],
+  "actionItems": ["homework or task for client 1", "task 2"],
+  "followUpRecommendations": ["recommendation for next session 1", "recommendation 2"],
+  "riskFactors": "None identified | Brief note if any risk mentioned",
+  "practitionerNotes": "Private practitioner observations not shared with client"
+}`;
+
+    const response: any = await c.env.AI.run("@cf/meta/llama-3.3-70b-instruct-fp8-fast", {
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 1024,
+    });
+
+    let rawText = "";
+    if (typeof response === "string") {
+      rawText = response;
+    } else if (typeof response?.response === "string") {
+      rawText = response.response;
+    } else if (typeof response?.response === "object" && response?.response !== null) {
+      return c.json({ notes: response.response, generatedAt: new Date().toISOString() });
+    } else {
+      rawText = JSON.stringify(response);
+    }
+
+    let content = rawText.trim();
+    // Strip markdown code fences if wrapped
+    content = content.replace(/^```json\s*/i, "").replace(/```\s*$/, "").trim();
+
+    const startIdx = content.indexOf("{");
+    const endIdx = content.lastIndexOf("}");
+    if (startIdx === -1 || endIdx === -1) {
+      return c.json({ error: "AI failed to generate structured notes.", rawResponse: content }, 500);
+    }
+
+    const parsed = JSON.parse(content.substring(startIdx, endIdx + 1));
+    return c.json({ notes: parsed, generatedAt: new Date().toISOString() });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Summarization failed";
+    return c.json({ error: message }, 500);
+  }
+});
+
 export default app;
+

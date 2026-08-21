@@ -1,6 +1,5 @@
 import { convexAuth } from "@convex-dev/auth/server";
 import { Password } from "@convex-dev/auth/providers/Password";
-import Google from "@auth/core/providers/google";
 
 const ADMIN_EMAILS = [
   "alexsouthflow@gmail.com",
@@ -26,36 +25,23 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
           ? params.teacherSubject.filter(isConvexIdLike)
           : undefined;
 
+        // Default role is always "student" (Patient/Client) for all public signups
+        const assignedRole = isAdminEmail ? "admin" : (params.role || "student");
+
         return {
           email,
           ...(params.name ? { name: params.name } : {}),
-          ...(isAdminEmail
-            ? { role: "admin", isApproved: true, isActive: true }
-            : params.role
-            ? { role: params.role, isApproved: params.role === "admin" || params.role === "parent", isActive: true }
-            : {}),
+          role: assignedRole,
+          isApproved: true, // Instantly active & live for all users
+          isActive: true,
+          onboardingCompleted: true,
           ...(studentClass ? { studentClass: studentClass as any } : {}),
           ...(teacherSubject && teacherSubject.length > 0
             ? { teacherSubject: teacherSubject as any }
             : {}),
-          onboardingCompleted: true,
-        };
-      },
-    }),
-    Google({
-      profile(googleProfile) {
-        const email = String(googleProfile.email || "").trim().toLowerCase();
-        const isAdminEmail = ADMIN_EMAILS.includes(email);
-        return {
-          id: googleProfile.sub,
-          email,
-          name: googleProfile.name,
-          image: googleProfile.picture,
-          ...(isAdminEmail 
-            ? { role: "admin", isApproved: true, isActive: true, onboardingCompleted: true } 
-            : { role: "student", isApproved: false, isActive: true, onboardingCompleted: false }),
         };
       },
     }),
   ],
 });
+

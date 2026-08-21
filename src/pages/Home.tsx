@@ -10,27 +10,45 @@ import Newsletter from "@/components/home/Newsletter";
 import FAQPreview from "@/components/home/FAQPreview";
 import Footer from "@/components/home/Footer";
 import { Link } from "react-router";
-import { ArrowRight, GraduationCap, CalendarCheck, FileCheck2 } from "lucide-react";
+import { ArrowRight, HeartPulse, CalendarCheck, ClipboardType, ShieldCheck, Award, Lock, Sparkles } from "lucide-react";
 
 const Home = () => {
   return (
-    <div className="bg-[#030712] min-h-screen">
+    <div className="bg-white min-h-screen text-[#0f172a] selection:bg-rose-100 selection:text-rose-900" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       <Navbar />
+      
       <main className="flex flex-col">
         <Hero />
 
-        {/* Accreditation / partners strip */}
-        <section className="py-12 border-y border-white/[0.06] bg-[#050a18]">
+        {/* ── HPCSA ACCREDITATION & TRUST STRIP ── */}
+        <section className="py-10 border-y border-slate-200/80 bg-[#f8fafc] relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <p className="text-center text-gray-500 text-sm font-bold uppercase tracking-widest mb-8">
-              Aligned with South Africa's Education Framework
+            <p className="text-center text-[#64748b] text-xs font-bold uppercase tracking-[0.25em] mb-7">
+              Trusted, Compliant & HPCSA-Registered Therapy Practice
             </p>
-            <div className="flex flex-wrap justify-center items-center gap-12 opacity-50 hover:opacity-100 transition-all duration-500">
-              <span className="text-2xl font-black text-white">DBE</span>
-              <span className="text-2xl font-black text-white">UMALUSI</span>
-              <span className="text-2xl font-black text-white">SACE</span>
-              <span className="text-2xl font-black text-white">CAPS</span>
-              <span className="text-2xl font-black text-white">NSC</span>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 items-center">
+              {[
+                { icon: Award, title: "HPCSA Registered", sub: "Clinical Psychologists & Counselors" },
+                { icon: Lock, title: "POPIA Compliant", sub: "100% Confidential Data Protection" },
+                { icon: ShieldCheck, title: "Medical Aid Accepted", sub: "Discovery, Momentum, Bonitas & more" },
+                { icon: Sparkles, title: "Evidence-Based", sub: "CBT, ACT, Psychodynamic & EMDR" },
+              ].map((badge, idx) => {
+                const Icon = badge.icon;
+                return (
+                  <div
+                    key={idx}
+                    className="flex items-center gap-3.5 p-3 rounded-2xl bg-white border border-slate-200/70 shadow-2xs hover:border-rose-200 hover:shadow-sm transition-all"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center text-[#9f1239] shrink-0">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-black text-[#0f172a] tracking-tight">{badge.title}</p>
+                      <p className="text-[11px] text-[#64748b] leading-tight">{badge.sub}</p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -44,68 +62,108 @@ const Home = () => {
         <Blog />
         <Newsletter />
 
-        {/* Enrolment CTA */}
-        <section className="py-28 relative overflow-hidden bg-[#030712]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="relative overflow-hidden rounded-3xl border border-[#5c061c]/30">
-              {/* Gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#5c061c] via-[#860d29] to-sky-950" />
-              <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2" />
-              <div className="absolute bottom-0 right-0 w-96 h-96 bg-black/10 rounded-full blur-[100px] translate-x-1/2 translate-y-1/2" />
+        {/* ── LUXURY BOTTOM CTA BANNER ── */}
+        <section className="py-24 lg:py-32 relative overflow-hidden bg-white">
+          {/* Ambient Glows */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-gradient-to-r from-rose-100/40 via-sky-100/30 to-rose-100/40 rounded-full blur-3xl pointer-events-none" />
 
-              <div className="relative z-10 p-12 md:p-20 text-center">
-                <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur px-4 py-1.5 rounded-full text-white text-sm font-semibold mb-8">
-                  <GraduationCap className="h-4 w-4 text-sky-300" />
-                  Enrolment for 2026 is now open
-                </div>
-                <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-6 font-serif">
-                  Give Your Child the Gift of
-                  <br className="hidden md:block" /> Quality Education
-                </h2>
-                <p className="text-xl text-white/85 mb-10 max-w-2xl mx-auto">
-                  Join Glenanda Learning Centre — a caring home schooling community with
-                  certified educators, a full CAPS curriculum, and real assessments that track your
-                  child's true progress.
-                </p>
-
-                {/* 3-step enrolment mini strip */}
-                <div className="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto mb-10">
-                  {[
-                    { icon: FileCheck2, title: "1. Submit Application", desc: "Fill in the online form" },
-                    { icon: CalendarCheck, title: "2. Assessment Interview", desc: "We meet your learner" },
-                    { icon: GraduationCap, title: "3. Welcome Aboard", desc: "Start learning immediately" },
-                  ].map(({ icon: Icon, title, desc }) => (
-                    <div key={title} className="bg-black/20 backdrop-blur rounded-2xl p-4 border border-white/10">
-                      <Icon className="h-6 w-6 text-sky-300 mb-2 mx-auto" />
-                      <p className="text-white font-bold text-sm font-serif">{title}</p>
-                      <p className="text-white/70 text-xs mt-1">{desc}</p>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex flex-col sm:flex-row justify-center gap-4">
-                  <Link
-                    to="/apply"
-                    className="bg-white text-[#5c061c] px-10 py-5 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all transform hover:scale-[1.02] shadow-xl flex items-center justify-center gap-2"
-                  >
-                    Start Your Application <ArrowRight className="h-5 w-5 text-sky-400" />
-                  </Link>
-                  <Link
-                    to="/contact"
-                    className="bg-transparent border-2 border-white/30 text-white px-10 py-5 rounded-xl font-bold text-lg hover:bg-white/10 transition-all flex items-center justify-center"
-                  >
-                    Talk to Our Team
-                  </Link>
-                </div>
-                <p className="text-sm text-white/60 mt-6 font-medium">
-                  No application fees • Response within 48 hours • Limited seats per grade
-                </p>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="relative overflow-hidden rounded-3xl border border-rose-100 bg-gradient-to-br from-[#fff7f8] via-white to-[#f0f9ff] p-8 sm:p-14 lg:p-20 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.06),0_10px_30px_-5px_rgba(159,18,57,0.04)] text-center">
+              
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 bg-white border border-rose-200/80 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-[#9f1239] shadow-2xs mb-8">
+                <HeartPulse className="h-4 w-4 text-[#be123c]" />
+                Your First Session Awaits
               </div>
+
+              {/* Title */}
+              <h2
+                className="text-3xl sm:text-4xl md:text-6xl font-black text-[#0f172a] mb-6 leading-tight"
+                style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              >
+                Begin Your Healing Journey with{" "}
+                <span
+                  className="italic"
+                  style={{
+                    background: "linear-gradient(135deg, #881337 0%, #be123c 50%, #0284c7 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}
+                >
+                  Compassionate Support
+                </span>
+              </h2>
+
+              <p className="text-base sm:text-lg text-[#475569] mb-12 max-w-2xl mx-auto leading-relaxed">
+                Take the courageous first step toward clarity, resilience, and emotional peace. Our registered practitioners provide a safe, non-judgmental space to help you heal, grow, and thrive.
+              </p>
+
+              {/* 3-step mini strip in crisp white cards */}
+              <div className="grid md:grid-cols-3 gap-5 max-w-3xl mx-auto mb-12 text-left">
+                {[
+                  {
+                    icon: CalendarCheck,
+                    step: "01",
+                    title: "Book Online",
+                    desc: "Choose an in-person or telehealth time slot that suits you.",
+                  },
+                  {
+                    icon: ClipboardType,
+                    step: "02",
+                    title: "Digital Intake",
+                    desc: "Share your background securely via our POPIA form.",
+                  },
+                  {
+                    icon: HeartPulse,
+                    step: "03",
+                    title: "Meet Your Therapist",
+                    desc: "Connect with your practitioner and begin your care plan.",
+                  },
+                ].map(({ icon: Icon, step, title, desc }) => (
+                  <div
+                    key={title}
+                    className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/80 shadow-xs hover:border-rose-200 transition-all group"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center text-[#9f1239] group-hover:scale-105 transition-transform">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <span className="text-xs font-bold text-slate-400 font-serif">{step}</span>
+                    </div>
+                    <p className="text-[#0f172a] font-bold text-base font-serif mb-1">{title}</p>
+                    <p className="text-[#64748b] text-xs leading-relaxed">{desc}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* CTAs */}
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <Link
+                  to="/booking"
+                  className="w-full sm:w-auto bg-gradient-to-r from-[#881337] to-[#be123c] text-white px-9 py-4 rounded-xl font-bold text-base hover:shadow-xl hover:shadow-rose-900/25 transition-all transform hover:scale-[1.02] shadow-md flex items-center justify-center gap-2"
+                >
+                  Book a Session <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  to="/about"
+                  className="w-full sm:w-auto bg-white border border-slate-200 text-[#0f172a] px-8 py-4 rounded-xl font-bold text-base hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center justify-center shadow-2xs"
+                >
+                  Learn About Our Team
+                </Link>
+              </div>
+
+              {/* Trust Subtext */}
+              <p className="text-xs text-[#64748b] mt-8 font-medium">
+                Strictly Confidential · HPCSA Registered Professionals · Medical Aid Claim Statements Provided
+              </p>
             </div>
           </div>
         </section>
       </main>
+
       <Footer />
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@400;500;600;700;800&display=swap');`}</style>
     </div>
   );
 };

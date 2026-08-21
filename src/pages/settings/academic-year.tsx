@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Plus } from "lucide-react";
+import { Plus, Calendar, ShieldCheck, Clock } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 
@@ -68,7 +68,7 @@ const AcademicYear = () => {
     if (!deletingId) return;
     try {
       await deleteYearMutation({ id: deletingId as any });
-      toast.success("Academic year deleted");
+      toast.success("Practice cycle period removed");
     } catch (error: any) {
       toast.error(error.message || "Failed to delete");
     } finally {
@@ -78,42 +78,57 @@ const AcademicYear = () => {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-8 space-y-6 bg-[#fbfdfc] dark:bg-slate-950 min-h-screen text-[#0f2820] dark:text-slate-100" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       {/* header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 border-b border-slate-200/80 dark:border-slate-800 pb-5">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Academic Years</h1>
-          <p className="text-muted-foreground">Manage school sessions.</p>
+          <div className="inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-[#156e52] dark:text-emerald-400 mb-2">
+            <Clock className="w-3.5 h-3.5" />
+            Practice Calendar &amp; Retention
+          </div>
+          <h1 className="text-3xl font-black font-serif tracking-tight text-[#0f2820] dark:text-white">
+            Clinical Practice Cycles &amp; Retention Windows
+          </h1>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
+            Manage practice operating periods, clinical audit cycles, and POPIA 5-year data retention timelines.
+          </p>
         </div>
-        <div className="flex gap-3">
-          <Search search={search} setSearch={setSearch} title="Academic Year" />
-          <Button onClick={handleCreate}>
-            <Plus className="mr-2 h-4 w-4" /> Add New Year
+        <div className="flex items-center gap-3">
+          <Search search={search} setSearch={setSearch} title="Search practice cycles..." />
+          <Button onClick={handleCreate} className="bg-[#156e52] hover:bg-[#0f5940] text-white font-bold text-xs gap-1.5 shadow-2xs cursor-pointer">
+            <Plus className="h-4 w-4" /> Add Practice Cycle
           </Button>
         </div>
       </div>
+
       {/* Table Component */}
-      <AcademicYearTable
-        data={currentYears as any}
-        loading={convexYears === undefined}
-        onEdit={handleEdit}
-        onDelete={handleDeleteClick}
-        pageNum={pageNum}
-        setPageNum={setPageNum}
-        totalPages={totalPages}
-      />
+      <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-2xs overflow-hidden">
+        <AcademicYearTable
+          data={currentYears as any}
+          loading={convexYears === undefined}
+          onEdit={handleEdit}
+          onDelete={handleDeleteClick}
+          pageNum={pageNum}
+          setPageNum={setPageNum}
+          totalPages={totalPages}
+        />
+      </div>
+
+      {/* Form Dialog */}
       <AcademicYearForm
-        open={isFormOpen}
-        onOpenChange={setIsFormOpen}
-        initialData={editingYear}
+        isOpen={isFormOpen}
+        setIsOpen={setIsFormOpen}
+        editingYear={editingYear}
         onSuccess={() => {}}
       />
+
+      {/* Delete Alert */}
       <CustomAlert
-        handleDelete={confirmDelete}
         isOpen={isAlertOpen}
         setIsOpen={setIsAlertOpen}
-        title="Delete Academic Year"
-        description="Are you sure you want to delete this Academic Year? This action cannot be undone."
+        handleDelete={confirmDelete}
+        title="Remove Practice Cycle?"
+        description="This will remove the selected practice operating period from your historical calendar."
       />
     </div>
   );

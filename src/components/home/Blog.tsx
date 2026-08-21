@@ -1,195 +1,192 @@
-import { ArrowRight, Clock, User, Tag } from "lucide-react";
+import { ArrowRight, Clock, User, Mail, Sparkles } from "lucide-react";
 import { Link } from "react-router";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
-const posts = [
+const FALLBACK_POSTS = [
   {
-    slug: "caps-alignment-2025",
-    category: "Curriculum",
-    categoryColor: "bg-[#f97316]/10 text-[#f97316] border-[#f97316]/20",
-    title: "What CAPS 2025 Changes Mean for Your School",
+    slug: "understanding-anxiety",
+    category: "Emotional Healing",
+    categoryColor: "bg-emerald-50 text-[#156e52] border-emerald-200/80",
+    title: "Understanding Anxiety: Signs & When to Seek Professional Guidance",
     excerpt:
-      "The DBE released updated CAPS guidelines for 2025. We break down the key curriculum shifts and how Glenanda Shopping Learning Center automatically adapts your assessment schedules and timetables.",
-    image: "/blog_caps_2025.png",
-    author: "Glenanda Shopping Learning Center Editorial",
-    authorAvatar: "https://i.pravatar.cc/40?img=10",
-    date: "15 May 2025",
+      "Anxiety is more than everyday stress. Learn to recognize the subtle physical and emotional indicators of anxiety and explore how compassionate therapeutic strategies can restore peace of mind.",
+    imageUrl: "https://images.unsplash.com/photo-1579208575657-c595a05383b7?w=700&h=450&fit=crop",
+    author: "Maletsatsi Sibanda",
+    authorAvatar: "/images/therapist-portrait.jpg",
+    date: "15 Aug 2026",
     readTime: "5 min read",
-    featured: true,
   },
   {
-    slug: "ai-tutoring-matric",
-    category: "AI & Learning",
-    categoryColor: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-    title: "How AI Tutoring is Helping Grade 12 Learners Ace Matric",
+    slug: "grounding-techniques",
+    category: "Coping Skills",
+    categoryColor: "bg-amber-50 text-[#ea7627] border-amber-200/80",
+    title: "5 Evidence-Based Grounding Techniques for Panic and Acute Stress",
     excerpt:
-      "Schools using Glenanda Shopping Learning Center's AI Study Buddy saw an average 22% improvement in NSC trial exam scores. Here's the data — and the method behind the results.",
-    image: "/blog_ai_tutoring.png",
-    author: "Dr. Amahle Zulu",
-    authorAvatar: "https://i.pravatar.cc/40?img=45",
-    date: "10 May 2025",
-    readTime: "7 min read",
-    featured: false,
-  },
-  {
-    slug: "popia-school-compliance",
-    category: "Compliance",
-    categoryColor: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
-    title: "POPIA & School Data: What Every Principal Must Know",
-    excerpt:
-      "With POPIA enforcement now fully active, schools face real liability for data misuse. We outline the key obligations and how Glenanda Shopping Learning Center keeps you compliant automatically.",
-    image: "/blog_popia_compliance.png",
-    author: "Legal Desk",
-    authorAvatar: "https://i.pravatar.cc/40?img=15",
-    date: "5 May 2025",
-    readTime: "6 min read",
-    featured: false,
-  },
-  {
-    slug: "timetable-productivity",
-    category: "Administration",
-    categoryColor: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    title: "Smart Timetabling: Saving Schools 40 Hours Per Term",
-    excerpt:
-      "Manual timetabling is one of the most time-consuming tasks in school admin. Discover how our AI-driven timetabling engine eliminates conflicts and cuts planning time dramatically.",
-    image: "/blog_smart_timetabling.png",
-    author: "Product Team",
-    authorAvatar: "https://i.pravatar.cc/40?img=33",
-    date: "28 Apr 2025",
+      "When sensory overload strikes, these five somatic and cognitive grounding exercises help anchor your nervous system back to safety.",
+    imageUrl: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=500&h=350&fit=crop",
+    author: "Maletsatsi Sibanda",
+    authorAvatar: "/images/therapist-portrait.jpg",
+    date: "10 Aug 2026",
     readTime: "4 min read",
-    featured: false,
+  },
+  {
+    slug: "couples-therapy-first-session",
+    category: "Relationships",
+    categoryColor: "bg-emerald-50 text-[#156e52] border-emerald-200/80",
+    title: "Couples Counselling: What Really Happens in Your First Consultation?",
+    excerpt:
+      "Nervous about relationship counselling? Here is an open look at the intake framework, ground rules, and how we facilitate productive dialogue.",
+    imageUrl: "https://images.unsplash.com/photo-1527628173875-3c7bfd28ad78?w=500&h=350&fit=crop",
+    author: "Maletsatsi Sibanda",
+    authorAvatar: "/images/therapist-portrait.jpg",
+    date: "5 Aug 2026",
+    readTime: "6 min read",
   },
 ];
 
 const Blog = () => {
-  const [featured, ...rest] = posts;
+  const convexBlogs = useQuery(api.blogs.getBlogs, {});
+  const displayPosts = (convexBlogs && convexBlogs.length > 0) ? convexBlogs : FALLBACK_POSTS;
+  const [featured, ...rest] = displayPosts;
+
+  if (!featured) return null;
 
   return (
-    <section id="blog" className="py-28 bg-[#050a18] relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+    <section
+      id="blog"
+      className="py-24 lg:py-32 bg-white dark:bg-black relative overflow-hidden"
+      style={{ fontFamily: "'DM Sans', sans-serif" }}
+    >
+      {/* Decorative background glows */}
+      <div className="absolute top-1/3 left-0 w-[500px] h-[500px] bg-emerald-50/60 dark:bg-emerald-950/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[450px] h-[450px] bg-amber-50/60 dark:bg-amber-950/20 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+        {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-          <div className="space-y-4">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-[#f97316]/10 border border-[#f97316]/20 text-[#f97316] text-xs font-bold uppercase tracking-widest">
-              Latest from Glenanda Shopping Learning Center
-            </span>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-white">
-              Insights &{" "}
-              <span className="text-[#f97316]">Education News</span>
+          <div>
+            <div className="inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800 px-3.5 py-1 rounded-full mb-4">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#156e52]" />
+              <span className="text-xs font-bold tracking-[0.2em] uppercase text-[#156e52] dark:text-emerald-400">
+                Resources &amp; Psychoeducation
+              </span>
+            </div>
+            <h2
+              className="leading-[1.08] tracking-tight text-[#0f2820] dark:text-white"
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontSize: "clamp(2.25rem, 4vw, 3.5rem)",
+                fontWeight: 900,
+              }}
+            >
+              Mental Wellness{" "}
+              <span
+                className="italic"
+                style={{
+                  background: "linear-gradient(135deg, #156e52 0%, #52b74c 50%, #ea7627 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                Articles &amp; Guides
+              </span>
             </h2>
           </div>
           <Link
             to="/blog"
-            className="inline-flex items-center gap-2 text-[#f97316] font-bold hover:underline text-sm shrink-0"
+            className="inline-flex items-center gap-2 text-sm font-bold text-[#156e52] dark:text-emerald-400 hover:text-[#52b74c] hover:translate-x-0.5 transition-all shrink-0 cursor-pointer"
           >
-            View all articles <ArrowRight className="w-4 h-4" />
+            Browse all articles <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
-        {/* Featured + grid layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          {/* Featured post (large) */}
-          <div className="lg:col-span-3 group cursor-pointer">
-            <div className="relative rounded-2xl overflow-hidden h-72 md:h-96 mb-6">
+        {/* Featured + Grid Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          {/* Featured Post Card (Col 1-7) */}
+          <Link
+            to={`/blog/${featured.slug}`}
+            className="lg:col-span-7 group rounded-3xl bg-white dark:bg-zinc-950 border border-slate-200/80 dark:border-zinc-800 overflow-hidden shadow-xs hover:shadow-xl hover:border-emerald-300 hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
+          >
+            <div className="relative h-64 sm:h-80 w-full overflow-hidden bg-slate-100 dark:bg-zinc-900">
               <img
-                src={featured.image}
+                src={featured.imageUrl || (featured as any).image}
                 alt={featured.title}
-                className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-              <span
-                className={`absolute top-4 left-4 text-xs font-bold px-3 py-1.5 rounded-full border ${featured.categoryColor} backdrop-blur-md`}
-              >
-                {featured.category}
-              </span>
-              <div className="absolute bottom-6 left-6 right-6">
-                <h3 className="text-2xl md:text-3xl font-extrabold text-white leading-tight mb-2">
+              <div className="absolute top-4 left-4">
+                <span className="bg-white/95 dark:bg-black/90 text-[#156e52] dark:text-emerald-400 px-3.5 py-1 rounded-full text-xs font-bold shadow-xs border border-emerald-200/60 dark:border-emerald-800">
+                  {featured.category}
+                </span>
+              </div>
+            </div>
+
+            <div className="p-6 sm:p-8 flex flex-col justify-between space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 text-xs text-slate-400 dark:text-zinc-500">
+                  <span>{featured.date}</span>
+                  <span>·</span>
+                  <span>{featured.readTime}</span>
+                </div>
+                <h3
+                  className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white group-hover:text-[#156e52] dark:group-hover:text-emerald-400 transition-colors leading-tight"
+                  style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                >
                   {featured.title}
                 </h3>
-                <p className="text-gray-200 text-sm line-clamp-2">{featured.excerpt}</p>
+                <p className="text-sm text-slate-600 dark:text-zinc-400 leading-relaxed line-clamp-2">
+                  {featured.excerpt}
+                </p>
+              </div>
+
+              <div className="pt-4 border-t border-slate-100 dark:border-zinc-900 flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-700 dark:text-zinc-300">{featured.author}</span>
+                <span className="text-xs font-bold text-[#156e52] dark:text-emerald-400 flex items-center gap-1">
+                  Read Full Article <ArrowRight className="w-3.5 h-3.5" />
+                </span>
               </div>
             </div>
+          </Link>
 
-            <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-              <div className="flex items-center gap-2">
-                <img
-                  src={featured.authorAvatar}
-                  alt={featured.author}
-                  className="w-7 h-7 rounded-full"
-                />
-                <span className="font-medium text-gray-300">{featured.author}</span>
-              </div>
-              <span className="flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5" />
-                {featured.readTime}
-              </span>
-              <span>{featured.date}</span>
-            </div>
-          </div>
-
-          {/* Side posts */}
-          <div className="lg:col-span-2 flex flex-col gap-6">
-            {rest.map((post, idx) => (
-              <div
-                key={idx}
-                className="group flex gap-4 bg-white/[0.03] border border-white/[0.08] rounded-2xl p-5 hover:border-[#f97316]/30 hover:shadow-lg transition-all duration-300 cursor-pointer"
+          {/* Remaining Posts Grid (Col 8-12) */}
+          <div className="lg:col-span-5 space-y-4">
+            {rest.slice(0, 3).map((post: any) => (
+              <Link
+                key={post._id || post.slug}
+                to={`/blog/${post.slug}`}
+                className="group flex gap-4 p-4 rounded-2xl bg-white dark:bg-zinc-950 border border-slate-200/80 dark:border-zinc-800/80 hover:border-emerald-300 dark:hover:border-zinc-700 hover:shadow-md transition-all cursor-pointer"
               >
-                {/* Thumbnail */}
-                <div className="w-24 h-24 rounded-xl overflow-hidden shrink-0">
+                <div className="h-24 w-28 rounded-xl overflow-hidden shrink-0 bg-slate-100 dark:bg-zinc-900">
                   <img
-                    src={post.image}
+                    src={post.imageUrl || post.image}
                     alt={post.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
-
-                {/* Content */}
-                <div className="flex flex-col justify-between min-w-0">
-                  <div>
-                    <span
-                      className={`text-xs font-bold px-2 py-0.5 rounded-full border ${post.categoryColor}`}
-                    >
+                <div className="flex-1 flex flex-col justify-between">
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold text-[#156e52] dark:text-emerald-400 uppercase tracking-wider">
                       {post.category}
                     </span>
-                    <h4 className="text-sm font-bold text-white mt-2 leading-snug line-clamp-2 group-hover:text-[#f97316] transition-colors">
+                    <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-zinc-100 group-hover:text-[#156e52] dark:group-hover:text-emerald-400 line-clamp-2 leading-snug">
                       {post.title}
                     </h4>
                   </div>
-                  <div className="flex items-center gap-3 text-xs text-gray-400 mt-2">
-                    <span className="flex items-center gap-1">
-                      <User className="w-3 h-3" />
-                      {post.author}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      {post.readTime}
-                    </span>
+                  <div className="flex items-center gap-2 text-[10px] text-slate-400 dark:text-zinc-500 pt-1">
+                    <span>{post.date}</span>
+                    <span>·</span>
+                    <span>{post.readTime}</span>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
-
-            {/* Newsletter mini-card */}
-            <div className="bg-gradient-to-br from-[#f97316]/10 to-[#f97316]/5 border border-[#f97316]/20 rounded-2xl p-6">
-              <Tag className="w-6 h-6 text-[#f97316] mb-3" />
-              <h4 className="font-bold text-white mb-1 text-sm">
-                Education Digest
-              </h4>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mb-4 leading-relaxed">
-                Get weekly curriculum updates, EdTech tips and Glenanda Shopping Learning Center news delivered to your inbox.
-              </p>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  placeholder="Your email"
-                  className="flex-1 bg-white/[0.03] border border-white/[0.08] rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#f97316] min-w-0"
-                />
-                <button className="bg-[#f97316] text-black px-3 py-2 rounded-lg text-xs font-bold hover:bg-[#ea580c] transition-colors shrink-0">
-                  Subscribe
-                </button>
-              </div>
-            </div>
           </div>
+
         </div>
+
       </div>
     </section>
   );

@@ -8,6 +8,22 @@ import Apply from "@/pages/Apply";
 import ProgramsPage from "@/pages/Programs";
 import FAQ from "@/pages/FAQ";
 import PrivateRoutes from "@/pages/routes/PrivateRoutes";
+// Therapy practice pages
+import ServicesPage from "@/pages/Services";
+import IndividualCounsellingPage from "@/pages/services/IndividualCounsellingPage";
+import CouplesCounsellingPage from "@/pages/services/CouplesCounsellingPage";
+import LifeCoachingPage from "@/pages/services/LifeCoachingPage";
+import TraumaRecoveryPage from "@/pages/services/TraumaRecoveryPage";
+import YouthSupportPage from "@/pages/services/YouthSupportPage";
+import SubstanceSupportPage from "@/pages/services/SubstanceSupportPage";
+import BookingPage from "@/pages/Booking";
+import IntakePage from "@/pages/Intake";
+import PrivacyPage from "@/pages/Privacy";
+import BlogPage from "@/pages/Blog";
+import BlogPostPage from "@/pages/BlogPost";
+import BlogManagement from "@/pages/admin/BlogManagement";
+import WellnessDashboard from "@/pages/WellnessDashboard";
+import ChatPage from "@/pages/Chat";
 import Dashboard from "@/pages/Dashboard";
 import AcademicYear from "@/pages/settings/academic-year";
 import UserManagementPage from "@/pages/users";
@@ -51,23 +67,47 @@ import StudyGroupsPage from "@/pages/groups/StudyGroups";
 import PeerTutoringPage from "@/pages/tutoring/PeerTutoring";
 import SchoolOnboarding from "@/pages/admin/SchoolOnboarding";
 import ApplicationsAdmin from "@/pages/admin/ApplicationsAdmin";
+import CRMPipeline from "@/pages/admin/CRMPipeline";
 import PremiumSuite from "@/pages/premium/PremiumSuite";
 import WhiteboardList from "@/pages/whiteboard/WhiteboardList";
 import WhiteboardPage from "@/pages/whiteboard/WhiteboardPage";
+// Therapy & Coaching Video Call
+import TherapyLobby from "@/pages/therapy/TherapyLobby";
+import TherapyRoom from "@/pages/therapy/TherapyRoom";
+import AppointmentsCRM from "@/pages/AppointmentsCRM";
 
 export const router = createBrowserRouter([
   { path: "/", element: <Home />, errorElement: <RouteErrorBoundary /> },
   { path: "login", element: <Login />, errorElement: <RouteErrorBoundary /> },
   { path: "about", element: <About />, errorElement: <RouteErrorBoundary /> },
   { path: "contact", element: <Contact />, errorElement: <RouteErrorBoundary /> },
-  { path: "apply", element: <Apply />, errorElement: <RouteErrorBoundary /> },
-  { path: "programs", element: <ProgramsPage />, errorElement: <RouteErrorBoundary /> },
+  { path: "apply", element: <IntakePage />, errorElement: <RouteErrorBoundary /> },
+  { path: "programs", element: <ServicesPage />, errorElement: <RouteErrorBoundary /> },
   { path: "faq", element: <FAQ />, errorElement: <RouteErrorBoundary /> },
+  // Therapy practice routes
+  { path: "services", element: <ServicesPage />, errorElement: <RouteErrorBoundary /> },
+  { path: "services/individual-counselling", element: <IndividualCounsellingPage />, errorElement: <RouteErrorBoundary /> },
+  { path: "services/couples-counselling", element: <CouplesCounsellingPage />, errorElement: <RouteErrorBoundary /> },
+  { path: "services/life-coaching", element: <LifeCoachingPage />, errorElement: <RouteErrorBoundary /> },
+  { path: "services/trauma-recovery", element: <TraumaRecoveryPage />, errorElement: <RouteErrorBoundary /> },
+  { path: "services/youth-support", element: <YouthSupportPage />, errorElement: <RouteErrorBoundary /> },
+  { path: "services/substance-support", element: <SubstanceSupportPage />, errorElement: <RouteErrorBoundary /> },
+  { path: "booking", element: <BookingPage />, errorElement: <RouteErrorBoundary /> },
+  { path: "intake", element: <IntakePage />, errorElement: <RouteErrorBoundary /> },
+  { path: "chat", element: <ChatPage />, errorElement: <RouteErrorBoundary /> },
+  { path: "privacy", element: <PrivacyPage />, errorElement: <RouteErrorBoundary /> },
+  { path: "blog", element: <BlogPage />, errorElement: <RouteErrorBoundary /> },
+  { path: "blog/:slug", element: <BlogPostPage />, errorElement: <RouteErrorBoundary /> },
+  { path: "wellness-insights", element: <WellnessDashboard />, errorElement: <RouteErrorBoundary /> },
+  // ─── THERAPY VIDEO CALL (public lobby, clients join without auth) ─────────
+  { path: "therapy-lobby/:roomId", element: <TherapyLobby />, errorElement: <RouteErrorBoundary /> },
   {
+
     element: <PrivateRoutes />,
     errorElement: <RouteErrorBoundary />,
     children: [
       { path: "dashboard", element: <Dashboard /> },
+      { path: "appointments", element: <AppointmentsCRM /> },
       { path: "activities-log", element: <Dashboard /> },
       { path: "analytics", element: <AnalyticsPage /> },
       { path: "parent-portal", element: <ParentPortal /> },
@@ -77,11 +117,16 @@ export const router = createBrowserRouter([
       { path: "resources", element: <ResourceLibrary /> },
       { path: "admin/resources", element: <AdminResources /> },
       { path: "admin/applications", element: <ApplicationsAdmin /> },
+      { path: "admin/pipeline", element: <CRMPipeline /> },
+      { path: "admin/blogs", element: <BlogManagement /> },
 
       // Live Classes
       { path: "lives", element: <LiveClassesPage /> },
       { path: "lives/room/:id", element: <LiveRoomPage /> },
       { path: "videos", element: <VideoLibraryPage /> },
+
+      // Therapy & Coaching Video Sessions
+      { path: "therapy-room/:roomId", element: <TherapyRoom /> },
 
       // Communication
       { path: "announcements", element: <AnnouncementsPage /> },
@@ -93,11 +138,12 @@ export const router = createBrowserRouter([
       { path: "settings/general", element: <GeneralSettings /> },
       { path: "settings/roles", element: <RolesPermissions /> },
 
-      // People
-      { path: "users/students", element: <UserManagementPage role="student" title="Students" description="Manage student directory and class assignments." /> },
-      { path: "users/teachers", element: <UserManagementPage role="teacher" title="Teachers" description="Manage teaching staff." /> },
-      { path: "users/parents", element: <UserManagementPage role="parent" title="Parents" description="Manage Parents." /> },
-      { path: "users/admins", element: <UserManagementPage role="admin" title="Admins" description="Manage Admins." /> },
+      // People & Caseload
+      { path: "users", element: <UserManagementPage role="student" title="Client Caseload Directory" description="Manage active clinical caseload, therapy disciplines, session modalities, and POPIA consent records." /> },
+      { path: "users/students", element: <UserManagementPage role="student" title="Client Caseload Directory" description="Manage active clinical caseload, therapy disciplines, session modalities, and POPIA consent records." /> },
+      { path: "users/teachers", element: <UserManagementPage role="teacher" title="Practitioners & Coaches" description="Manage counselling therapists, psychologists, and life coaches." /> },
+      { path: "users/parents", element: <UserManagementPage role="parent" title="Partners & Family" description="Manage partner, guardian, and family contacts." /> },
+      { path: "users/admins", element: <UserManagementPage role="admin" title="Practice Administrators" description="Manage practice administrative access." /> },
       { path: "badges", element: <BadgesPage /> },
 
       // Academics

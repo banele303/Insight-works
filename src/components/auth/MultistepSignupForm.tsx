@@ -4,24 +4,19 @@ import * as z from "zod";
 import { toast } from "sonner";
 import { useState } from "react";
 import { useAuthActions } from "@convex-dev/auth/react";
-import { useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
-import { FieldGroup } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { CustomInput } from "@/components/global/CustomInput";
 import { CustomSelect } from "@/components/global/CustomSelect";
-import { CustomMultiSelect } from "@/components/global/CustomMultiSelect";
-import GoogleSignInButton from "@/components/auth/GoogleSignInButton";
-import { UserRole } from "@/types";
+import { ArrowRight, ArrowLeft, CheckCircle2, ShieldCheck, Heart } from "lucide-react";
 
 const createSchema = () => {
   return z
     .object({
-      role: z.enum(["student", "teacher", "parent"], { required_error: "Role is required" }),
-      classId: z.string().optional(),
-      subjectIds: z.array(z.string()).optional(),
-      name: z.string().min(2, "Name is required"),
+      therapyFocus: z.string().optional(),
+      sessionPreference: z.string().optional(),
+      name: z.string().min(2, "Full name is required"),
       email: z.string().email("Invalid email address"),
+      phone: z.string().min(8, "Phone / WhatsApp number is required"),
       password: z.string().min(6, "Password must be at least 6 characters"),
       confirmPassword: z.string().min(6, "Password must be at least 6 characters"),
     })
@@ -38,223 +33,195 @@ const createSchema = () => {
 
 type FormValues = z.infer<ReturnType<typeof createSchema>>;
 
+const THERAPY_DISCIPLINES = [
+  { label: "Individual Counselling (60 min)", value: "Individual Counselling" },
+  { label: "Couples & Relationship Counselling (75 min)", value: "Couples & Relationships" },
+  { label: "Life Coaching & Self-Mastery (50 min)", value: "Life Coaching" },
+  { label: "Trauma Recovery & EMDR (60 min)", value: "Trauma Recovery" },
+  { label: "Youth & Young Adult Support (50 min)", value: "Youth Support" },
+  { label: "Substance Use Support (60 min)", value: "Substance Recovery" },
+  { label: "Free Initial Consultation (15 min)", value: "Free Consultation" },
+];
+
+const MODALITY_OPTIONS = [
+  { label: "Secure Telehealth Video (South Africa)", value: "Telehealth Video" },
+  { label: "In-Person Consulting Room (Johannesburg)", value: "In-Person Room" },
+];
+
 export default function MultistepSignupForm() {
   const [step, setStep] = useState(1);
   const { signIn } = useAuthActions();
-  const convexClasses = useQuery(api.classes.getClasses, { academicYear: undefined });
-  const convexSubjects = useQuery(api.subjects.getSubjects);
-
-  const classes = Array.isArray(convexClasses) ? convexClasses : [];
-  const subjects = Array.isArray(convexSubjects) ? convexSubjects : [];
 
   const form = useForm<FormValues>({
     resolver: zodResolver(createSchema()),
     defaultValues: {
-      role: undefined,
-      classId: "",
-      subjectIds: [],
+      therapyFocus: "Individual Counselling",
+      sessionPreference: "Telehealth Video",
       name: "",
       email: "",
+      phone: "",
       password: "",
       confirmPassword: "",
     },
   });
 
-  const currentRole = form.watch("role");
-
-  const handleNextStep1 = async () => {
-    form.clearErrors("role");
-    if (!currentRole) {
-      form.setError("role", { type: "manual", message: "Role is required" });
-      return;
-    }
+  const handleNextStep = async () => {
     setStep(2);
   };
 
-  const handleNextStep2 = async () => {
-    if (currentRole === "student" && !form.getValues("classId")) {
-      form.setError("classId", { type: "manual", message: "Class is required for students" });
-      return;
-    }
-    if (currentRole === "teacher" && (!form.getValues("subjectIds") || form.getValues("subjectIds")?.length === 0)) {
-      form.setError("subjectIds", { type: "manual", message: "Please select at least one subject" });
-      return;
-    }
-    setStep(3);
-  };
-
-  const handleGoogleSignup = () => {
-    const data = form.getValues();
-    
-    // Save onboarding info to localStorage
-    const onboardingData = {
-      role: data.role,
-      classId: data.classId,
-      subjectIds: data.subjectIds,
-    };
-    localStorage.setItem("pendingSignUpData", JSON.stringify(onboardingData));
-    
-    // Perform Google Sign In
-    // Note: GoogleSignInButton internally handles this, but since we're overriding it:
-    signIn("google", { redirectTo: "/dashboard" }).catch((error) => {
-      toast.error(error.message || "Google sign in failed");
-    });
-  };
-
-  const onSubmitStep3 = async () => {
-    const valid = await form.trigger(["name", "email", "password", "confirmPassword"]);
-    if (!valid) return;
-    
-    const data = form.getValues();
+  const onSubmit = async (data: FormValues) => {
     try {
-      const cleanClassId = data.classId && data.classId.trim() !== "" ? data.classId : undefined;
-      const cleanSubjectIds = data.subjectIds && data.subjectIds.length > 0 ? data.subjectIds : undefined;
-
       const result = await signIn("password", {
-        email: data.email!,
-        password: data.password!,
+        email: data.email,
+        password: data.password,
         flow: "signUp",
-        name: data.name!,
-        role: data.role!,
-        studentClass: cleanClassId as any,
-        teacherSubject: currentRole === "teacher" ? (cleanSubjectIds as any) : undefined,
-        studentSubjects: currentRole === "student" ? (cleanSubjectIds as any) : undefined,
+        name: data.name,
+        role: "student", // All new signups default to patient/client account
       });
 
       if (result?.signingIn) {
-        toast.success("Account created successfully!");
+        toast.success("Account created successfully! Welcome to Insight Works.");
         window.location.href = "/dashboard";
       }
     } catch (error: any) {
       console.error(error);
-      toast.error(error.message || "An error occurred during sign up");
+      let friendly = error.message || "Signup failed. Please try again.";
+      if (friendly.includes("AccountAlreadyExists")) {
+        friendly = "An account with this email already exists. Please sign in instead.";
+      }
+      toast.error(friendly);
     }
   };
 
-  const classOptions = classes.map((c: any) => ({ label: c.name, value: c._id }));
-  const subjectOptions = subjects.map((s: any) => ({
-    label: s.grade ? `${s.name} (Grade ${s.grade})` : s.name,
-    value: s._id,
-  }));
-
-  const roleOptions = [
-    { label: "Student", value: "student" },
-    { label: "Teacher", value: "teacher" },
-    { label: "Parent", value: "parent" },
-  ];
-
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between mb-8">
-        {[1, 2, 3].map((num) => (
-          <div key={num} className={`flex items-center ${num < 3 ? "flex-1" : ""}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
-              step >= num ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
-            }`}>
-              {num}
+    <div className="space-y-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      {/* Progress Indicators */}
+      <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-4">
+        {[
+          { num: 1, label: "Care Preferences" },
+          { num: 2, label: "Patient Account Details" },
+        ].map((s) => (
+          <div key={s.num} className="flex items-center gap-2 flex-1">
+            <div
+              className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                step === s.num
+                  ? "bg-[#156e52] text-white shadow-2xs"
+                  : step > s.num
+                  ? "bg-emerald-100 text-[#156e52]"
+                  : "bg-slate-100 text-slate-400"
+              }`}
+            >
+              {step > s.num ? <CheckCircle2 className="w-4 h-4" /> : s.num}
             </div>
-            {num < 3 && (
-              <div className={`h-1 flex-1 mx-2 ${step > num ? "bg-primary" : "bg-muted"}`} />
-            )}
+            <span className="text-xs font-semibold text-slate-600 hidden sm:inline">{s.label}</span>
           </div>
         ))}
       </div>
 
-      <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        {/* STEP 1: Care Focus & Modality */}
         {step === 1 && (
-          <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4">
-            <h2 className="text-lg font-semibold">I am joining as a...</h2>
+          <div className="space-y-4 animate-in fade-in-50">
+            <div className="text-center space-y-1 mb-2">
+              <h3 className="text-lg font-bold text-[#0f2820] font-serif">Care Focus &amp; Modality</h3>
+              <p className="text-xs text-slate-500">Personalize your care portal and wellness records</p>
+            </div>
+
             <CustomSelect
               control={form.control}
-              name="role"
-              label="Select your role"
-              options={roleOptions}
-              placeholder="Choose a role"
+              name="therapyFocus"
+              label="Primary Discipline / Care Focus"
+              placeholder="Select Discipline"
+              options={THERAPY_DISCIPLINES}
             />
-            <Button className="w-full mt-4" onClick={handleNextStep1}>Continue</Button>
+
+            <CustomSelect
+              control={form.control}
+              name="sessionPreference"
+              label="Preferred Session Modality"
+              placeholder="Select Modality"
+              options={MODALITY_OPTIONS}
+            />
+
+            <div className="p-3.5 rounded-2xl bg-emerald-50/60 border border-emerald-200/60 flex items-start gap-2.5">
+              <ShieldCheck className="h-4 w-4 text-[#156e52] shrink-0 mt-0.5" />
+              <p className="text-xs text-[#0f2820] leading-relaxed">
+                Your patient account provides direct access to private therapy notes, encrypted video rooms, appointment scheduling, and intake history.
+              </p>
+            </div>
+
+            <Button
+              type="button"
+              onClick={handleNextStep}
+              className="w-full bg-[#156e52] hover:bg-[#0f5940] text-white font-bold text-xs py-3 rounded-xl gap-2 mt-4 cursor-pointer"
+            >
+              Continue to Account Details <ArrowRight className="w-4 h-4" />
+            </Button>
           </div>
         )}
 
+        {/* STEP 2: Personal & Login Credentials */}
         {step === 2 && (
-          <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4">
-            <h2 className="text-lg font-semibold">Let's get some details</h2>
-            {currentRole === "student" && (
-              <>
-                <CustomSelect
-                  control={form.control}
-                  name="classId"
-                  label="Which grade/class are you in?"
-                  options={classOptions}
-                  placeholder="Select class"
-                />
-                <CustomMultiSelect
-                  control={form.control}
-                  name="subjectIds"
-                  label="Select your subjects (optional)"
-                  options={subjectOptions}
-                  placeholder="Choose subjects"
-                />
-              </>
-            )}
-            
-            {currentRole === "teacher" && (
-              <CustomMultiSelect
+          <div className="space-y-3 animate-in fade-in-50">
+            <div className="text-center space-y-1 mb-2">
+              <h3 className="text-lg font-bold text-[#0f2820] font-serif">Create Your Patient Account</h3>
+              <p className="text-xs text-slate-500">Protected under strict POPIA compliance</p>
+            </div>
+
+            <CustomInput
+              control={form.control}
+              name="name"
+              label="Full Name"
+              placeholder="e.g. Sipho Ndlovu"
+            />
+
+            <CustomInput
+              control={form.control}
+              name="email"
+              label="Email Address"
+              type="email"
+              placeholder="sipho@example.co.za"
+            />
+
+            <CustomInput
+              control={form.control}
+              name="phone"
+              label="WhatsApp / Mobile Number"
+              placeholder="+27 79 550 1557"
+            />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <CustomInput
                 control={form.control}
-                name="subjectIds"
-                label="Which subjects do you teach?"
-                options={subjectOptions}
-                placeholder="Select subjects"
+                name="password"
+                label="Password"
+                type="password"
+                placeholder="••••••••"
               />
-            )}
-
-            {currentRole === "parent" && (
-              <div className="text-sm text-muted-foreground py-4">
-                No additional details required right now. You can link to your child's account later.
-              </div>
-            )}
-
-            <div className="flex gap-4 mt-4">
-              <Button variant="outline" className="flex-1" onClick={() => setStep(1)}>Back</Button>
-              <Button className="flex-1" onClick={handleNextStep2}>Continue</Button>
-            </div>
-          </div>
-        )}
-
-        {step === 3 && (
-          <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4">
-            <h2 className="text-lg font-semibold">Create your account</h2>
-            
-            <div className="space-y-4">
-              <div onClick={handleGoogleSignup} className="cursor-pointer">
-                {/* Visual only since we handle click */}
-                <div className="pointer-events-none">
-                  <GoogleSignInButton role={currentRole as UserRole} />
-                </div>
-              </div>
-              
-              <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-border" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">
-                    Or sign up with email
-                  </span>
-                </div>
-              </div>
+              <CustomInput
+                control={form.control}
+                name="confirmPassword"
+                label="Confirm Password"
+                type="password"
+                placeholder="••••••••"
+              />
             </div>
 
-            <FieldGroup>
-              <CustomInput control={form.control} name="name" label="Full Name" placeholder="Jane Doe" />
-              <CustomInput control={form.control} name="email" label="Email Address" type="email" placeholder="jane@example.com" />
-              <CustomInput control={form.control} name="password" label="Password" type="password" placeholder="Create a strong password" />
-              <CustomInput control={form.control} name="confirmPassword" label="Confirm Password" type="password" placeholder="Confirm your password" />
-            </FieldGroup>
-            
-            <div className="flex gap-4 mt-6">
-              <Button variant="outline" className="flex-1" onClick={() => setStep(2)}>Back</Button>
-              <Button className="flex-1" onClick={onSubmitStep3} disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? "Creating..." : "Create Account"}
+            <div className="flex gap-2 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setStep(1)}
+                className="w-1/3 text-xs font-bold rounded-xl cursor-pointer"
+              >
+                <ArrowLeft className="w-4 h-4 mr-1" /> Back
+              </Button>
+              <Button
+                type="submit"
+                disabled={form.formState.isSubmitting}
+                className="w-2/3 bg-[#156e52] hover:bg-[#0f5940] text-white font-bold text-xs rounded-xl cursor-pointer"
+              >
+                {form.formState.isSubmitting ? "Creating Patient Account..." : "Complete Registration"}
               </Button>
             </div>
           </div>
@@ -263,3 +230,4 @@ export default function MultistepSignupForm() {
     </div>
   );
 }
+

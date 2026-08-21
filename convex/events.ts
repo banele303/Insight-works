@@ -40,6 +40,11 @@ export const createEvent = mutation({
     date: v.string(),
     endDate: v.optional(v.string()),
     type: v.union(
+      v.literal("session"),
+      v.literal("counselling"),
+      v.literal("coaching"),
+      v.literal("workshop"),
+      v.literal("supervision"),
       v.literal("exam"),
       v.literal("sports"),
       v.literal("holiday"),

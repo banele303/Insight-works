@@ -1,37 +1,42 @@
 import { Link } from "react-router";
+import { ArrowRight, Calendar, Video, FileCheck, Brain } from "lucide-react";
 
 const features = [
   {
-    label: "Live Classes",
-    title: "Daily Interactive Lessons",
-    desc: "Every learner attends structured live sessions with SACE-registered educators. Classes are recorded so nothing is ever missed.",
-    img: "/img-online-class.jpg",
-    stat: "Daily",
-    statLabel: "Live sessions",
+    icon: Calendar,
+    label: "Online Booking",
+    title: "Schedule in Seconds, 24/7",
+    desc: "Book, reschedule, or manage your appointments anytime via our intuitive digital portal with instant confirmation and automated calendar invites.",
+    img: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=700&h=450&fit=crop",
+    stat: "24/7",
+    statLabel: "Live Booking Access",
   },
   {
-    label: "Expert Teachers",
-    title: "SACE-Registered Educators",
-    desc: "All our teachers are certified and subject-specialist — passionate about helping South African learners achieve their best results.",
-    img: "/img-teacher.jpg",
+    icon: Video,
+    label: "Telehealth Care",
+    title: "Secure Therapy From Anywhere",
+    desc: "Encrypted, POPIA-compliant video sessions accessible anywhere in South Africa. Enjoy the same depth of clinical care from your own private space.",
+    img: "https://images.unsplash.com/photo-1587614382346-4ec70e388b28?w=700&h=450&fit=crop",
     stat: "100%",
-    statLabel: "SACE certified",
+    statLabel: "Encrypted & Confidential",
   },
   {
-    label: "CAPS Curriculum",
-    title: "Full National Curriculum",
-    desc: "Every subject, every grade — Grade R to Matric — covered in full alignment with South Africa's CAPS framework.",
-    img: "/img-books.jpg",
-    stat: "R–12",
-    statLabel: "All grades",
+    icon: FileCheck,
+    label: "Digital Intake",
+    title: "Private Paperless Onboarding",
+    desc: "Quick, confidential digital intake questionnaires for medical history and personal goals, completed securely prior to your first session.",
+    img: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=700&h=450&fit=crop",
+    stat: "POPIA",
+    statLabel: "Compliant & Protected",
   },
   {
-    label: "Results",
-    title: "Proven Academic Results",
-    desc: "Our learners consistently achieve distinction-level results. Join a community where excellence is the standard.",
-    img: "/img-graduation.jpg",
-    stat: "94%",
-    statLabel: "Matric pass rate",
+    icon: Brain,
+    label: "AI Wellness Support",
+    title: "Between-Session Reflection Tools",
+    desc: "Support your therapeutic work with between-session mood check-ins, guided mindfulness exercises, and personalized clinical resources.",
+    img: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=700&h=450&fit=crop",
+    stat: "AI+",
+    statLabel: "Evidence-Based Insights",
   },
 ];
 
@@ -39,140 +44,157 @@ const Features = () => {
   return (
     <section
       id="features"
-      className="py-28 relative overflow-hidden"
-      style={{ background: "#0a0608", fontFamily: "'DM Sans', sans-serif" }}
+      className="py-24 lg:py-32 relative overflow-hidden bg-white"
+      style={{ fontFamily: "'DM Sans', sans-serif" }}
     >
+      {/* Subtle ambient light mesh */}
+      <div className="absolute top-1/2 left-0 w-[450px] h-[450px] bg-emerald-50/70 rounded-full blur-3xl -translate-y-1/2 pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[450px] h-[450px] bg-amber-50/70 rounded-full blur-3xl pointer-events-none" />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* Section header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-20">
-          <div>
-            <div className="flex items-center gap-3 mb-5">
-              <div className="h-px w-10 bg-[#9f1239]" />
-              <span className="text-xs font-bold tracking-[0.25em] uppercase" style={{ color: "#e2a0b0" }}>
-                Why Glenanda
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 lg:mb-20">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200/80 px-3.5 py-1 rounded-full mb-4">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#156e52]" />
+              <span className="text-xs font-bold tracking-[0.2em] uppercase text-[#156e52]">
+                Seamless Client Care
               </span>
             </div>
             <h2
-              className="leading-[1.05] tracking-tight"
+              className="leading-[1.08] tracking-tight text-[#0f2820]"
               style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: "clamp(2.2rem, 4vw, 3.5rem)",
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontSize: "clamp(2.25rem, 4vw, 3.5rem)",
                 fontWeight: 900,
-                color: "#fff",
               }}
             >
-              Everything Your Child
-              <br />
-              <span style={{ fontStyle: "italic", color: "#38bdf8" }}>Needs to Excel</span>
+              Support & Healing,{" "}
+              <span
+                className="italic"
+                style={{
+                  background: "linear-gradient(135deg, #156e52 0%, #52b74c 50%, #ea7627 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                Made Accessible
+              </span>
             </h2>
           </div>
-          <p className="text-[#888] max-w-md leading-relaxed text-base lg:text-right">
-            A complete home schooling solution — from live certified classes to official CAPS report cards — all under one roof.
+          <p className="text-[#475569] max-w-md leading-relaxed text-base lg:text-right">
+            We remove the administrative friction so you can focus entirely on what matters most — emotional wellbeing, self-mastery, and authentic connection.
           </p>
         </div>
 
         {/* Feature cards — 2×2 grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {features.map((feature, idx) => (
-            <div
-              key={idx}
-              className="group relative rounded-2xl overflow-hidden flex flex-col"
-              style={{
-                border: "1px solid rgba(255,255,255,0.07)",
-                background: "rgba(255,255,255,0.02)",
-                transition: "border-color 0.3s, transform 0.3s",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(56,189,248,0.2)";
-                (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.07)";
-                (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-              }}
-            >
-              {/* Image */}
-              <div className="relative overflow-hidden" style={{ height: "220px" }}>
-                <img
-                  src={feature.img}
-                  alt={feature.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div
-                  className="absolute inset-0"
-                  style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(8,5,8,0.8) 100%)" }}
-                />
-                {/* Stat overlay */}
-                <div className="absolute bottom-4 right-4 text-right">
-                  <p
-                    className="text-white font-black text-3xl"
-                    style={{ fontFamily: "'Playfair Display', serif" }}
-                  >
-                    {feature.stat}
-                  </p>
-                  <p className="text-[#aaa] text-xs">{feature.statLabel}</p>
-                </div>
-                {/* Label pill */}
-                <div
-                  className="absolute top-4 left-4 px-3 py-1 rounded text-xs font-bold text-white"
-                  style={{ background: "rgba(92,6,28,0.85)", letterSpacing: "0.06em" }}
-                >
-                  {feature.label}
-                </div>
-              </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {features.map((feature, idx) => {
+            const Icon = feature.icon;
+            return (
+              <div
+                key={idx}
+                className="group relative rounded-3xl overflow-hidden bg-white border border-slate-200/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-2xl hover:border-emerald-300 hover:-translate-y-1.5 transition-all duration-300 flex flex-col"
+              >
+                {/* Card Image Banner with small padding */}
+                <div className="p-3 sm:p-3.5 pb-0">
+                  <div className="relative overflow-hidden rounded-2xl" style={{ height: "220px" }}>
+                    <img
+                      src={feature.img}
+                      alt={feature.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-900/10 to-transparent" />
+                    
+                    {/* Label pill on top left */}
+                    <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-bold text-[#0f2820] border border-slate-200/60 shadow-sm">
+                      <Icon className="w-3.5 h-3.5 text-[#156e52]" />
+                      {feature.label}
+                    </div>
 
-              {/* Text */}
-              <div className="p-7 flex flex-col gap-3">
-                <h3
-                  className="text-white font-bold text-xl"
-                  style={{ fontFamily: "'Playfair Display', serif" }}
-                >
-                  {feature.title}
-                </h3>
-                <p className="text-[#888] text-sm leading-relaxed">{feature.desc}</p>
+                    {/* Stat overlay on bottom right */}
+                    <div className="absolute bottom-4 right-4 text-right text-white">
+                      <p
+                        className="font-black text-2xl sm:text-3xl drop-shadow-sm"
+                        style={{ fontFamily: "'Playfair Display', serif" }}
+                      >
+                        {feature.stat}
+                      </p>
+                      <p className="text-emerald-200 text-xs font-medium drop-shadow-sm">{feature.statLabel}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card Text Content */}
+                <div className="p-7 sm:p-8 flex flex-col justify-between flex-1 bg-white">
+                  <div>
+                    <h3
+                      className="text-[#0f2820] font-bold text-xl mb-2.5 group-hover:text-[#156e52] transition-colors"
+                      style={{ fontFamily: "'Playfair Display', serif" }}
+                    >
+                      {feature.title}
+                    </h3>
+                    <p className="text-[#475569] text-sm sm:text-base leading-relaxed">{feature.desc}</p>
+                  </div>
+
+                  <div className="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
+                    <span className="text-xs font-semibold text-[#64748b]">
+                      Available for all sessions
+                    </span>
+                    <Link
+                      to="/services"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#156e52] group-hover:text-[#52b74c] group-hover:translate-x-0.5 transition-all cursor-pointer"
+                    >
+                      Learn more <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        {/* Bottom CTA */}
+        {/* Bottom CTA Banner */}
         <div
-          className="mt-16 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6"
+          className="mt-16 rounded-3xl p-8 sm:p-12 flex flex-col lg:flex-row items-center justify-between gap-8 border border-emerald-200/80 shadow-lg shadow-emerald-950/5 relative overflow-hidden"
           style={{
-            background: "linear-gradient(135deg, rgba(92,6,28,0.15) 0%, rgba(56,189,248,0.05) 100%)",
-            border: "1px solid rgba(159,18,57,0.2)",
+            background: "linear-gradient(135deg, #f0fdf4 0%, #ffffff 50%, #fffbeb 100%)",
           }}
         >
-          <div>
-            <p
-              className="text-white font-bold text-xl"
+          <div className="relative z-10 max-w-xl text-center lg:text-left">
+            <h3
+              className="text-[#0f2820] font-extrabold text-2xl sm:text-3xl"
               style={{ fontFamily: "'Playfair Display', serif" }}
             >
-              Ready to give your child the best start?
+              Ready to begin your healing journey?
+            </h3>
+            <p className="text-[#475569] text-sm sm:text-base mt-2">
+              Book your session in just 2 minutes with Maletsatsi Sibanda. In-person and telehealth consultations available.
             </p>
-            <p className="text-[#888] text-sm mt-1">Enrolments for 2026 are open now. Limited seats per grade.</p>
           </div>
-          <Link
-            to="/apply"
-            className="shrink-0 inline-flex items-center gap-2 px-8 py-4 text-white font-bold text-sm transition-all duration-300"
-            style={{
-              background: "linear-gradient(135deg, #7f0c26, #c01442)",
-              borderRadius: "4px",
-              whiteSpace: "nowrap",
-              letterSpacing: "0.04em",
-            }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 30px rgba(159,18,57,0.4)"; }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = "none"; }}
-          >
-            Apply Now →
-          </Link>
+          <div className="relative z-10 flex flex-col sm:flex-row items-center gap-3 shrink-0">
+            <Link
+              to="/booking"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 text-white font-bold text-sm rounded-xl transition-all duration-300 shadow-md shadow-emerald-900/15 hover:shadow-lg hover:shadow-emerald-900/25 hover:-translate-y-0.5 cursor-pointer"
+              style={{
+                background: "linear-gradient(135deg, #156e52, #52b74c)",
+              }}
+            >
+              Book a Session
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              to="/contact"
+              className="inline-flex items-center justify-center px-6 py-4 text-[#1e293b] font-semibold text-sm bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer"
+            >
+              Ask a Question
+            </Link>
+          </div>
         </div>
-      </div>
 
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@400;500;600;700;800&display=swap');
-      `}</style>
+      </div>
     </section>
   );
 };

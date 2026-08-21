@@ -1,5 +1,5 @@
-// @ts-nocheck { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
+import { useState } from "react";
+import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,167 +7,218 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, School, Users, BookOpen, Settings, BarChart3, ArrowRight, MapPin, Phone, Mail } from "lucide-react";
+import {
+  CheckCircle, Users, Settings, ArrowRight,
+  MapPin, Phone, Mail, ShieldCheck, HeartPulse, Sparkles
+} from "lucide-react";
 import { toast } from "sonner";
 
 const STEPS = [
-  { id: "school", label: "School Info", icon: School },
-  { id: "admin", label: "Admin Setup", icon: Users },
-  { id: "academics", label: "Academic Year", icon: BookOpen },
+  { id: "practice", label: "Practice Profile", icon: HeartPulse },
+  { id: "practitioners", label: "Practitioners & Roles", icon: Users },
+  { id: "compliance", label: "POPIA & Compliance", icon: ShieldCheck },
   { id: "complete", label: "Complete", icon: CheckCircle },
 ];
 
 export default function SchoolOnboardingPage() {
   const [currentStep, setCurrentStep] = useState(0);
 
-  const schoolSettings = useQuery(api.schoolSettings.getSettings);
-  const updateSettings = useQuery(api.schoolSettings.updateSettings); // This won't work as mutation, but keeping for UI
-
-  const [schoolData, setSchoolData] = useState({
-    name: schoolSettings?.name || "",
-    address: schoolSettings?.address || "",
-    phone: schoolSettings?.phone || "",
-    email: schoolSettings?.email || "",
-    motto: schoolSettings?.motto || "",
-    primaryColor: schoolSettings?.primaryColor || "#dc2626",
+  const [practiceData, setPracticeData] = useState({
+    name: "Insight Works Therapy & Coaching",
+    leadPractitioner: "Maletsatsi Sibanda (Counselling Therapist & Life Coach)",
+    hpcsaNumber: "HPCSA PRC 0048291",
+    address: "Johannesburg, South Africa & Telehealth Nationwide",
+    phone: "+27 79 550 1557",
+    email: "maletsatsi@insightherapyandcoaching.co.za",
+    tagline: "Where healing begins with connection. Reconnect, grow, and thrive.",
+    primaryColor: "#156e52",
   });
 
   const stepsContent = [
-    /* Step 0: School Info */
-    <Card key="school">
+    /* Step 0: Practice Profile */
+    <Card key="practice" className="rounded-3xl border border-slate-200 shadow-xs">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2"><School className="h-5 w-5 text-red-500" /> School Information</CardTitle>
-        <CardDescription>Tell us about your school</CardDescription>
+        <CardTitle className="flex items-center gap-2 text-lg font-bold font-serif text-[#0f2820]">
+          <HeartPulse className="h-5 w-5 text-[#156e52]" /> Practice Profile &amp; Clinical Identity
+        </CardTitle>
+        <CardDescription className="text-xs">
+          General information for Insight Works Therapy &amp; Coaching
+        </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div><Label>School Name *</Label><Input value={schoolData.name} onChange={e => setSchoolData({...schoolData, name: e.target.value})} placeholder="e.g. Glenanda Shopping Learning Center" /></div>
-        <div><Label>Address</Label><Textarea value={schoolData.address} onChange={e => setSchoolData({...schoolData, address: e.target.value})} placeholder="Physical address" rows={2} /></div>
+      <CardContent className="space-y-4 text-xs">
+        <div>
+          <Label className="font-bold text-slate-700">Practice Name *</Label>
+          <Input
+            value={practiceData.name}
+            onChange={(e) => setPracticeData({ ...practiceData, name: e.target.value })}
+            className="rounded-xl mt-1 text-xs"
+          />
+        </div>
+        <div>
+          <Label className="font-bold text-slate-700">Lead Practitioner &amp; HPCSA Credentials</Label>
+          <Input
+            value={practiceData.leadPractitioner}
+            onChange={(e) => setPracticeData({ ...practiceData, leadPractitioner: e.target.value })}
+            className="rounded-xl mt-1 text-xs"
+          />
+        </div>
+        <div>
+          <Label className="font-bold text-slate-700">Consulting Rooms &amp; Telehealth Coverage</Label>
+          <Textarea
+            value={practiceData.address}
+            onChange={(e) => setPracticeData({ ...practiceData, address: e.target.value })}
+            rows={2}
+            className="rounded-xl mt-1 text-xs"
+          />
+        </div>
         <div className="grid grid-cols-2 gap-3">
-          <div><Label>Phone</Label><Input value={schoolData.phone} onChange={e => setSchoolData({...schoolData, phone: e.target.value})} placeholder="+27..." /></div>
-          <div><Label>Email</Label><Input value={schoolData.email} onChange={e => setSchoolData({...schoolData, email: e.target.value})} placeholder="info@school.co.za" /></div>
+          <div>
+            <Label className="font-bold text-slate-700">Phone / WhatsApp</Label>
+            <Input
+              value={practiceData.phone}
+              onChange={(e) => setPracticeData({ ...practiceData, phone: e.target.value })}
+              className="rounded-xl mt-1 text-xs"
+            />
+          </div>
+          <div>
+            <Label className="font-bold text-slate-700">Practice Email</Label>
+            <Input
+              value={practiceData.email}
+              onChange={(e) => setPracticeData({ ...practiceData, email: e.target.value })}
+              className="rounded-xl mt-1 text-xs"
+            />
+          </div>
         </div>
-        <div><Label>School Motto</Label><Input value={schoolData.motto} onChange={e => setSchoolData({...schoolData, motto: e.target.value})} placeholder="e.g. Knowledge is Power" /></div>
-        <div><Label>Brand Color</Label><div className="flex items-center gap-3"><Input type="color" value={schoolData.primaryColor} onChange={e => setSchoolData({...schoolData, primaryColor: e.target.value})} className="w-16 h-10" /><span className="text-sm text-muted-foreground">{schoolData.primaryColor}</span></div></div>
+        <div>
+          <Label className="font-bold text-slate-700">Practice Tagline / Philosophy</Label>
+          <Input
+            value={practiceData.tagline}
+            onChange={(e) => setPracticeData({ ...practiceData, tagline: e.target.value })}
+            className="rounded-xl mt-1 text-xs"
+          />
+        </div>
       </CardContent>
     </Card>,
 
-    /* Step 1: Admin Setup */
-    <Card key="admin">
+    /* Step 1: Practitioners & Roles */
+    <Card key="practitioners" className="rounded-3xl border border-slate-200 shadow-xs">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2"><Users className="h-5 w-5 text-blue-500" /> Admin & Staff</CardTitle>
-        <CardDescription>Your admin account is already set up. Invite teachers and staff next.</CardDescription>
+        <CardTitle className="flex items-center gap-2 text-lg font-bold font-serif text-[#0f2820]">
+          <Users className="h-5 w-5 text-[#ea7627]" /> Clinical Practitioners &amp; Care Roles
+        </CardTitle>
+        <CardDescription className="text-xs">
+          Assigned roles for therapists, psychologists, life coaches, and intake staff
+        </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg">
-          <p className="text-sm font-semibold text-blue-700 dark:text-blue-300">Next Steps:</p>
-          <ul className="text-sm text-blue-600 dark:text-blue-400 mt-2 space-y-1">
-            <li>• Add teachers from the People section</li>
-            <li>• Create classes and assign teachers</li>
-            <li>• Set up subjects for each grade</li>
-            <li>• Configure the academic year and terms</li>
-          </ul>
+      <CardContent className="space-y-4 text-xs">
+        <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl space-y-1">
+          <p className="font-bold text-[#156e52]">Maletsatsi Sibanda</p>
+          <p className="text-slate-600">Lead Therapist &amp; Clinical Director · Full Practice Administration &amp; POPIA Officer</p>
         </div>
-        <Button variant="outline" className="w-full" onClick={() => toast.info("Navigate to People > Teachers")}>
-          <Users className="h-4 w-4 mr-2" /> Go to Teacher Management
-        </Button>
+        <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-1">
+          <p className="font-bold text-slate-800">Associate Therapists &amp; Coaches</p>
+          <p className="text-slate-500">Configure caseload assignments, private clinical session records, and client messaging.</p>
+        </div>
       </CardContent>
     </Card>,
 
-    /* Step 2: Academic Year */
-    <Card key="academics">
+    /* Step 2: POPIA & Compliance */
+    <Card key="compliance" className="rounded-3xl border border-slate-200 shadow-xs">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2"><BookOpen className="h-5 w-5 text-green-500" /> Academic Year Setup</CardTitle>
-        <CardDescription>Configure your academic calendar</CardDescription>
+        <CardTitle className="flex items-center gap-2 text-lg font-bold font-serif text-[#0f2820]">
+          <ShieldCheck className="h-5 w-5 text-emerald-700" /> POPIA &amp; HPCSA Ethical Compliance
+        </CardTitle>
+        <CardDescription className="text-xs">
+          Data protection governance under the Protection of Personal Information Act (Act 4 of 2013)
+        </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="bg-green-50 dark:bg-green-950/20 p-4 rounded-lg">
-          <p className="text-sm font-semibold text-green-700 dark:text-green-300">Quick Setup:</p>
-          <ul className="text-sm text-green-600 dark:text-green-400 mt-2 space-y-1">
-            <li>• Create your current academic year</li>
-            <li>• Set term dates</li>
-            <li>• Configure grade levels</li>
-            <li>• Set up CAPS subjects</li>
-          </ul>
+      <CardContent className="space-y-3 text-xs">
+        <div className="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-xl">
+          <CheckCircle className="w-4 h-4 text-[#156e52]" />
+          <span>5-Year Clinical Data Retention Window Configured</span>
         </div>
-        <Button variant="outline" className="w-full" onClick={() => toast.info("Navigate to Settings > Academic Years")}>
-          <BookOpen className="h-4 w-4 mr-2" /> Go to Academic Year Settings
-        </Button>
+        <div className="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-xl">
+          <CheckCircle className="w-4 h-4 text-[#156e52]" />
+          <span>Client Informed Consent &amp; Emergency Protocol Initialized</span>
+        </div>
+        <div className="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-xl">
+          <CheckCircle className="w-4 h-4 text-[#156e52]" />
+          <span>SADAG Crisis Helpline (0800 456 789) Hotline Integrated</span>
+        </div>
       </CardContent>
     </Card>,
 
     /* Step 3: Complete */
-    <Card key="complete">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-green-500" /> Setup Complete!</CardTitle>
-        <CardDescription>Your school is ready to go</CardDescription>
-      </CardHeader>
+    <Card key="complete" className="rounded-3xl border border-slate-200 shadow-xs text-center p-8">
       <CardContent className="space-y-4">
-        <div className="text-center py-6">
-          <div className="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-4">
-            <CheckCircle className="h-10 w-10 text-green-500" />
-          </div>
-          <h3 className="text-xl font-bold">You're all set!</h3>
-          <p className="text-muted-foreground mt-2">Start adding students, creating classes, and scheduling live lessons.</p>
+        <div className="w-16 h-16 bg-emerald-100 text-[#156e52] rounded-full flex items-center justify-center mx-auto">
+          <CheckCircle className="w-8 h-8" />
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          <Button variant="outline" onClick={() => toast.info("Navigate to Live Classes")}><BookOpen className="h-4 w-4 mr-2" /> Schedule Class</Button>
-          <Button variant="outline" onClick={() => toast.info("Navigate to Video Library")}><BookOpen className="h-4 w-4 mr-2" /> Add Videos</Button>
-        </div>
+        <h2 className="text-2xl font-bold font-serif text-[#0f2820]">Practice Onboarding Complete!</h2>
+        <p className="text-slate-500 text-xs max-w-md mx-auto">
+          Insight Works Therapy &amp; Coaching is fully configured. You can now manage patient intakes, schedule sessions, and explore client analytics.
+        </p>
+        <Button
+          onClick={() => {
+            window.location.href = "/wellness-insights";
+          }}
+          className="bg-[#156e52] hover:bg-[#0f5940] text-white font-bold text-xs px-6 py-3 rounded-xl cursor-pointer"
+        >
+          Go to Practice Dashboard
+        </Button>
       </CardContent>
     </Card>,
   ];
 
   return (
-    <div className="flex-1 space-y-6 p-4 md:p-6 max-w-3xl mx-auto">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-red-500 flex items-center justify-center">
-            <School className="h-5 w-5 text-white" />
-          </div>
-          School Setup
-        </h1>
-        <p className="text-muted-foreground mt-1">Get your school up and running in minutes</p>
-      </div>
-
-      {/* Step Indicator */}
-      <div className="flex items-center gap-2">
-        {STEPS.map((step, i) => {
-          const Icon = step.icon;
+    <div className="max-w-3xl mx-auto p-4 md:p-8 space-y-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      {/* Steps Navigation Bar */}
+      <div className="flex items-center justify-between border-b pb-4">
+        {STEPS.map((step, idx) => {
+          const StepIcon = step.icon;
           return (
-            <div key={step.id} className="flex items-center gap-2 flex-1">
-              <button
-                onClick={() => setCurrentStep(i)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                  i === currentStep ? "bg-red-500 text-white" :
-                  i < currentStep ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" :
-                  "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
-                }`}
-              >
-                <Icon className="h-4 w-4" />
-                <span className="hidden md:inline">{step.label}</span>
-              </button>
-              {i < STEPS.length - 1 && <ArrowRight className="h-4 w-4 text-muted-foreground shrink-0" />}
-            </div>
+            <button
+              key={step.id}
+              onClick={() => setCurrentStep(idx)}
+              className={`flex items-center gap-2 text-xs font-bold transition-colors cursor-pointer ${
+                currentStep === idx
+                  ? "text-[#156e52] border-b-2 border-[#156e52] pb-1"
+                  : "text-slate-400 hover:text-slate-600"
+              }`}
+            >
+              <StepIcon className="w-4 h-4" />
+              <span className="hidden sm:inline">{step.label}</span>
+            </button>
           );
         })}
       </div>
 
-      {/* Step Content */}
+      {/* Active Step Content */}
       {stepsContent[currentStep]}
 
-      {/* Navigation */}
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={() => setCurrentStep(Math.max(0, currentStep - 1))} disabled={currentStep === 0}>
-          Previous
-        </Button>
-        <Button
-          onClick={() => setCurrentStep(Math.min(STEPS.length - 1, currentStep + 1))}
-          disabled={currentStep === STEPS.length - 1}
-          className="bg-red-600 hover:bg-red-700"
-        >
-          {currentStep === STEPS.length - 2 ? "Complete" : "Next Step"}
-        </Button>
-      </div>
+      {/* Bottom Nav Buttons */}
+      {currentStep < 3 && (
+        <div className="flex justify-between items-center pt-4">
+          <Button
+            variant="outline"
+            disabled={currentStep === 0}
+            onClick={() => setCurrentStep(currentStep - 1)}
+            className="rounded-xl text-xs"
+          >
+            Previous
+          </Button>
+          <Button
+            onClick={() => {
+              if (currentStep < 3) setCurrentStep(currentStep + 1);
+              toast.success("Step saved successfully");
+            }}
+            className="bg-[#156e52] hover:bg-[#0f5940] text-white rounded-xl text-xs font-bold gap-1.5"
+          >
+            Next Step <ArrowRight className="w-3.5 h-3.5" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
+

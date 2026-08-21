@@ -2,16 +2,15 @@
 
 import {
   Settings2,
-  School,
-  GraduationCap,
   Users,
   LayoutDashboard,
-  Banknote,
   Megaphone,
-  BookOpen,
   type LucideIcon,
   LogOut,
   Sparkles,
+  HeartPulse,
+  ShieldCheck,
+  Video,
 } from "lucide-react";
 
 import { NavMain } from "@/components/sidebar/nav-main";
@@ -49,118 +48,66 @@ export interface NavItem {
   }[];
 }
 
-// This is sample data.
+// Practice Sidebar Navigation Data
 export const sidebardata = {
   teams: [
     {
-      name: "Glenanda Shopping Learning Center",
-      logo: School,
-      logoSrc: "/logo-school.jpeg",
+      name: "Insight Works Therapy & Coaching",
+      logo: HeartPulse,
+      logoSrc: "/images/logo.png",
     },
   ],
   navMain: [
     {
-      title: "Dashboard",
+      title: "Practice Care",
       url: "/dashboard",
       icon: LayoutDashboard,
       isActive: true,
       roles: ["admin", "teacher", "student", "parent"],
       items: [
-        { title: "Dashboard", url: "/dashboard", roles: ["admin", "teacher", "student", "parent"] },
-        { title: "Parent Portal", url: "/parent-portal", roles: ["parent"] },
-        { title: "Student Portal", url: "/student-portal", roles: ["student"] },
-        { title: "Activities Log", url: "/activities-log", roles: ["admin"] },
-        { title: "Analytics", url: "/analytics", roles: ["admin"] },
+        { title: "Clinical Dashboard", url: "/dashboard", roles: ["admin", "teacher", "student", "parent"] },
+        { title: "Appointments CRM", url: "/appointments", roles: ["admin", "teacher", "student"] },
+        { title: "Appointments Calendar", url: "/events", roles: ["admin", "teacher", "student", "parent"] },
+        { title: "Client Intake Queue", url: "/admin/applications", roles: ["admin", "teacher"] },
+        { title: "Enrolment Pipeline", url: "/admin/pipeline", roles: ["admin", "teacher"] },
+        { title: "Practice Analytics", url: "/analytics", roles: ["admin", "teacher"] },
       ],
     },
     {
-      title: "Resources",
-      url: "/resources",
-      icon: GraduationCap,
-      roles: ["admin", "teacher", "student", "parent"],
-      items: [
-        { title: "Resource Library", url: "/resources", roles: ["admin", "teacher", "student", "parent"] },
-        { title: "AI Chat", url: "/study-buddy", roles: ["admin", "teacher", "student"] },
-        { title: "Whiteboard (Miro)", url: "/whiteboard", roles: ["admin", "teacher", "student", "parent"] },
-        { title: "Past Papers", url: "/resources?type=past-papers", roles: ["admin", "teacher", "student", "parent"] },
-        { title: "Study Materials", url: "/resources?type=study-materials", roles: ["admin", "teacher", "student", "parent"] },
-      ],
-    },
-    {
-      title: "Communication",
+      title: "Telehealth & Sessions",
       url: "#",
-      icon: Megaphone,
-      roles: ["admin", "teacher", "student", "parent"],
+      icon: Video,
+      isActive: true,
+      roles: ["admin", "teacher", "student"],
       items: [
-        { title: "Announcements", url: "/announcements" },
-        { title: "Messages", url: "/messages" },
-        { title: "Events Calendar", url: "/events" },
+        { title: "Start Video Session (Lobby)", url: "/therapy-lobby/room-live", roles: ["admin", "teacher", "student"] },
+        { title: "Group Live Workshops", url: "/lives", roles: ["admin", "teacher", "student"] },
+        { title: "Whiteboard Canvas", url: "/whiteboard", roles: ["admin", "teacher", "student"] },
       ],
     },
     {
-      title: "Academics",
-      url: "#",
-      icon: School,
-      roles: ["admin", "teacher", "student", "parent"],
-      items: [
-        { title: "Classes", url: "/classes", roles: ["admin", "teacher"] },
-        { title: "Subjects", url: "/subjects", roles: ["admin", "teacher"] },
-        { title: "Timetable", url: "/timetable" },
-        { title: "Attendance", url: "/attendance" },
-        { title: "Learning Paths", url: "/learning-paths" },
-        { title: "Report Cards", url: "/report-cards", roles: ["admin", "teacher"] },
-      ],
-    },
-    {
-      title: "Learning (LMS)",
-      url: "#",
-      icon: BookOpen,
-      roles: ["teacher", "student", "admin"],
-      items: [
-        { title: "Homework Studio", url: "/ai/homework", icon: Sparkles },
-        { title: "Assignments", url: "/lms/assignments" },
-        { title: "Assessments", url: "/lms/exams" },
-        { title: "Question Bank", url: "/lms/question-bank", roles: ["teacher", "admin"] },
-        { title: "Study Materials", url: "/lms/materials" },
-        { title: "Live Classes", url: "/lives" },
-        { title: "Video Lessons", url: "/videos" },
-      ],
-    },
-    {
-      title: "People",
+      title: "Clients & Practitioners",
       url: "#",
       icon: Users,
       roles: ["admin", "teacher"],
       items: [
-        { title: "Students", url: "/users/students" },
-        { title: "Teachers", url: "/users/teachers", roles: ["admin"] },
-        { title: "Parents", url: "/users/parents", roles: ["admin"] },
-        { title: "Admins", url: "/users/admins", roles: ["admin"] },
-        { title: "Badges", url: "/badges", roles: ["admin", "teacher"] },
-        { title: "Enrolment Applications", url: "/admin/applications", roles: ["admin", "teacher"] },
+        { title: "Client Directory", url: "/users/students", roles: ["admin", "teacher"] },
+        { title: "Practitioners & Coaches", url: "/users/teachers", roles: ["admin"] },
+        { title: "Family & Partners", url: "/users/parents", roles: ["admin"] },
+        { title: "Practice Administrators", url: "/users/admins", roles: ["admin"] },
+        { title: "New Client Intakes", url: "/admin/applications", roles: ["admin", "teacher"] },
       ],
     },
     {
-      title: "Finance",
-      url: "#",
-      icon: Banknote,
-      roles: ["admin"],
-      items: [
-        { title: "Fee Collection", url: "/finance/fees" },
-        { title: "Expenses", url: "/finance/expenses" },
-        { title: "Salary", url: "/finance/salary" },
-      ],
-    },
-    {
-      title: "System",
+      title: "System & Compliance",
       url: "#",
       icon: Settings2,
       roles: ["admin", "teacher", "student", "parent"],
       items: [
-        { title: "School Settings", url: "/settings/general", roles: ["admin"] },
-        { title: "Academic Years", url: "/settings/academic-years", roles: ["admin"] },
-        { title: "Roles & Permissions", url: "/settings/roles", roles: ["admin"] },
-        { title: "Manage Resources", url: "/admin/resources", roles: ["admin"] },
+        { title: "Practice Profile & Settings", url: "/settings/general", roles: ["admin"] },
+        { title: "POPIA Roles & Access", url: "/settings/roles", roles: ["admin"] },
+        { title: "Blog & Publications", url: "/admin/blogs", roles: ["admin", "teacher"] },
+        { title: "Manage Clinical Files", url: "/admin/resources", roles: ["admin"] },
         { title: "My Profile", url: "/profile", roles: ["admin", "teacher", "student", "parent"] },
       ],
     },
@@ -246,46 +193,29 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <TeamSwitcher teams={sidebardata.teams} yearName={year?.name!} />
       </SidebarHeader>
-      {/* AI Chat Button */}
-      {isApproved && (
-        <div className="px-3 py-2">
-          <Button
-            className={cn(
-              "w-full gap-2 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-medium shadow-md transition-all duration-300 rounded-lg text-xs",
-              isCollapsed ? "h-8 w-8 p-0 justify-center rounded-lg" : "h-9"
-            )}
-            onClick={() => navigate("/study-buddy")}
-            title="AI Study Chat"
-          >
-            {!isCollapsed ? (
-              <span className="flex items-center gap-1.5 justify-center">
-                <Sparkles className="h-3.5 w-3.5 text-rose-100" />
-                AI Study Chat
-              </span>
-            ) : (
-              <Sparkles className="h-4 w-4 text-rose-100" />
-            )}
-          </Button>
-        </div>
-      )}
       <SidebarContent>
         <NavMain items={filteredNav} />
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="border-t border-zinc-200/80 dark:border-zinc-800/80 p-2 gap-2">
+        <NavUser user={userData} />
         <div
           className={cn(
-            "gap-2",
-            isCollapsed ? "flex-row space-y-2" : "flex justify-between",
+            "flex items-center gap-1.5 pt-1",
+            isCollapsed ? "flex-col" : "justify-between"
           )}
         >
-          <SidebarMenuItem title="Logout">
-            <Button onClick={logout} variant={"ghost"} size="icon-sm">
-              <LogOut />
-            </Button>
-          </SidebarMenuItem>
-          <ThemeToogle />
+          <Button
+            onClick={logout}
+            variant="ghost"
+            size="sm"
+            className="h-8 rounded-xl px-2 text-xs font-semibold text-zinc-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all cursor-pointer gap-1.5"
+            title="Log out of portal"
+          >
+            <LogOut className="h-3.5 w-3.5" />
+            {!isCollapsed && <span>Log out</span>}
+          </Button>
+          {!isCollapsed && <ThemeToogle />}
         </div>
-        <NavUser user={userData} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

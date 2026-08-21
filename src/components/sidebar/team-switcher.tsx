@@ -1,20 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { ChevronsUpDown, Plus } from "lucide-react";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Link } from "react-router";
 import {
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
@@ -30,71 +19,31 @@ export function TeamSwitcher({
   }[];
   yearName: string;
 }) {
-  const { isMobile } = useSidebar();
-  const [activeTeam, setActiveTeam] = React.useState(teams[0]);
-
-  if (!activeTeam) {
-    return null;
-  }
+  const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
 
   return (
     <SidebarMenu>
-      <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-            >
-              <div className="flex aspect-square size-12 items-center justify-center overflow-hidden rounded-md border border-red-200 bg-white">
-                <img
-                  src="/logo-school.jpeg"
-                  alt="Glenanda Shopping Learning Center"
-                  className="size-full object-cover"
-                />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate text-xs">{yearName}</span>
-              </div>
-              <ChevronsUpDown className="ml-auto" />
-            </SidebarMenuButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            align="start"
-            side={isMobile ? "bottom" : "right"}
-            sideOffset={4}
-          >
-            <DropdownMenuLabel className="text-muted-foreground text-xs">
-              Teams
-            </DropdownMenuLabel>
-            {teams.map((team, index) => (
-              <DropdownMenuItem
-                key={team.name}
-                onClick={() => setActiveTeam(team)}
-                className="gap-2 p-2"
-              >
-                <div className="flex size-6 items-center justify-center overflow-hidden rounded-md border bg-white">
-                  <img
-                    src={team.logoSrc || "/logo-school.jpeg"}
-                    alt={`${team.name} logo`}
-                    className="size-full object-cover"
-                  />
-                </div>
-                {team.name}
-                <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
-              </DropdownMenuItem>
-            ))}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2">
-              <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
-                <Plus className="size-4" />
-              </div>
-              <div className="text-muted-foreground font-medium">Add team</div>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <SidebarMenuItem className="px-1 py-1.5">
+        <Link
+          to="/dashboard"
+          className="flex items-center justify-start w-full transition-all group cursor-pointer"
+          title="Dashboard"
+        >
+          <div className="flex items-center justify-start w-full overflow-visible">
+            <img
+              src="/images/logo.png"
+              alt="Logo"
+              className={
+                isCollapsed
+                  ? "size-12 object-contain rounded-md transition-transform group-hover:scale-110"
+                  : "h-16 sm:h-18 w-auto max-w-[245px] object-contain rounded-md transition-transform group-hover:scale-105 filter drop-shadow-sm"
+              }
+            />
+          </div>
+        </Link>
       </SidebarMenuItem>
     </SidebarMenu>
   );
 }
+

@@ -7,6 +7,9 @@ export interface Env {
   CONVEX_URL?: string;
   CLOUDFLARE_ACCOUNT_ID?: string;
   CLOUDFLARE_API_TOKEN?: string;
+  // Cloudflare TURN Server credentials (set via wrangler secret put)
+  TURN_TOKEN_ID?: string;
+  TURN_API_TOKEN?: string;
 }
 
 export interface UploadMetadata {

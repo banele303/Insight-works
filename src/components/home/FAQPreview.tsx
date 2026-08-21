@@ -1,31 +1,23 @@
 import { useState } from "react";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, HelpCircle, ArrowRight } from "lucide-react";
 import { Link } from "react-router";
 
 const faqs = [
   {
-    q: "Is Glenanda Shopping Learning Center aligned with the South African CAPS curriculum?",
-    a: "Yes — every feature in Glenanda Shopping Learning Center is purpose-built around CAPS. From timetabling to assessment creation, all content, mark sheets, and report templates are fully aligned to the DBE's curriculum framework for all phases (Foundation, Intermediate, Senior, and FET).",
+    q: "Is everything I say in counselling and coaching completely confidential?",
+    a: "Yes. Confidentiality is the cornerstone of Insight Works. Everything discussed in your sessions remains strictly private, in full compliance with professional standards and POPIA regulations. Exceptions only apply in rare cases of severe, imminent harm to yourself or others, which is thoroughly discussed during intake.",
   },
   {
-    q: "How long does it take to set up Glenanda Shopping Learning Center for my school?",
-    a: "Most schools are fully operational within 24–48 hours. Our onboarding team walks you through the process: school configuration, bulk learner import, staff setup, and timetabling. We offer free, dedicated onboarding support for every plan.",
+    q: "What are your session rates and payment methods?",
+    a: "Standard individual counselling and coaching sessions range from R600 to R850, while couples sessions range from R850 to R1,100. We accept secure PayFast payments (Credit/Debit card and Instant EFT) as well as direct EFT.",
   },
   {
-    q: "Is my school's data safe and POPIA compliant?",
-    a: "Absolutely. Glenanda Shopping Learning Center stores all data on South African servers, uses AES-256 encryption at rest and TLS in transit, and is fully POPIA compliant. We never sell or share your data. Detailed data processing agreements are available on request.",
+    q: "How does telehealth (online sessions) work?",
+    a: "Telehealth sessions are conducted via secure, end-to-end encrypted video link. You will receive an access link upon booking confirmation. You only need a quiet, private space and a stable internet connection. Online sessions across South Africa offer the same depth of connection as in-person consultations.",
   },
   {
-    q: "Can parents and learners access lessons on mobile?",
-    a: "Yes — Glenanda Shopping Learning Center is mobile-first and works seamlessly in any browser on any device. We also offer a low-data mode for areas with limited connectivity, making it accessible to learners and parents in all communities.",
-  },
-  {
-    q: "Do you offer training for teachers and admin staff?",
-    a: "All plans include access to our video training library and live onboarding webinars. Professional and District plans also include priority support with a dedicated account manager. On-site training is available for District-tier clients.",
-  },
-  {
-    q: "What happens to our data if we cancel?",
-    a: "You own your data. On cancellation you receive a full data export in industry-standard formats (CSV, PDF) within 72 hours. We retain data for 30 days post-cancellation in case you change your mind, then securely delete it.",
+    q: "What should I expect in my first consultation session with Maletsatsi?",
+    a: "The first session is a gentle, collaborative initial conversation. We will explore your background, current challenges, and personal goals for therapy or life coaching at your own pace. There is zero pressure — this is your safe, supportive space.",
   },
 ];
 
@@ -33,45 +25,68 @@ const FAQPreview = () => {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq-preview" className="py-28 bg-[#050a18] relative overflow-hidden">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="faq-preview" className="py-24 lg:py-32 bg-[#fbfdfc] relative overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      {/* Ambient glows */}
+      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-emerald-100/40 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-amber-100/30 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <div className="text-center mb-16 space-y-4">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-[#f97316]/10 border border-[#f97316]/20 text-[#f97316] text-xs font-bold uppercase tracking-widest">
-            FAQ
-          </span>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white">
-            Questions?{" "}
-            <span className="text-[#f97316]">We've Got Answers</span>
+          <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200/80 px-3.5 py-1 rounded-full">
+            <HelpCircle className="h-3.5 w-3.5 text-[#156e52]" />
+            <span className="text-xs font-bold tracking-[0.2em] uppercase text-[#156e52]">
+              Questions & Answers
+            </span>
+          </div>
+          <h2
+            className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0f2820]"
+            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+          >
+            Clear Answers to Your{" "}
+            <span
+              className="italic"
+              style={{
+                background: "linear-gradient(135deg, #156e52 0%, #52b74c 50%, #ea7627 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              Questions
+            </span>
           </h2>
-          <p className="text-gray-400 text-lg">
-            Everything you need to know before getting your school on Glenanda Shopping Learning Center.
+          <p className="text-[#475569] text-base sm:text-lg max-w-xl mx-auto">
+            Everything you need to know about starting your healing journey, session formats, fees, and confidentiality.
           </p>
         </div>
 
-        {/* Accordion */}
-        <div className="space-y-3">
+        {/* Accordion List */}
+        <div className="space-y-4">
           {faqs.map((faq, idx) => (
             <div
               key={idx}
-              className={`bg-white/[0.03] border rounded-2xl overflow-hidden transition-all duration-300 ${
+              className={`bg-white border rounded-2xl overflow-hidden transition-all duration-300 ${
                 open === idx
-                  ? "border-[#f97316]/40 shadow-lg shadow-[#f97316]/5"
-                  : "border-white/[0.08] hover:border-gray-300 dark:hover:border-gray-700"
+                  ? "border-emerald-200 shadow-md shadow-emerald-900/5 ring-1 ring-emerald-100"
+                  : "border-slate-200/80 hover:border-slate-300 shadow-2xs"
               }`}
             >
               <button
                 onClick={() => setOpen(open === idx ? null : idx)}
-                className="w-full flex items-center justify-between p-6 text-left gap-4"
+                className="w-full flex items-center justify-between p-6 text-left gap-4 cursor-pointer"
               >
-                <span className="font-semibold text-white text-sm md:text-base pr-4">
+                <span
+                  className="font-bold text-[#0f2820] text-base sm:text-lg pr-4"
+                  style={{ fontFamily: "'Playfair Display', serif" }}
+                >
                   {faq.q}
                 </span>
                 <span
                   className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all ${
                     open === idx
-                      ? "bg-[#f97316] text-black"
-                      : "bg-gray-100 dark:bg-[#2a2a2a] text-gray-500 dark:text-gray-400"
+                      ? "bg-[#156e52] text-white"
+                      : "bg-slate-100 text-slate-500"
                   }`}
                 >
                   {open === idx ? (
@@ -83,11 +98,11 @@ const FAQPreview = () => {
               </button>
 
               <div
-                className={`overflow-hidden transition-all duration-300 ${
-                  open === idx ? "max-h-64 pb-6 px-6" : "max-h-0"
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                  open === idx ? "max-h-72 pb-6 px-6" : "max-h-0"
                 }`}
               >
-                <p className="text-gray-400 text-sm leading-relaxed">
+                <p className="text-[#475569] text-sm sm:text-base leading-relaxed">
                   {faq.a}
                 </p>
               </div>
@@ -95,23 +110,23 @@ const FAQPreview = () => {
           ))}
         </div>
 
-        {/* See all FAQs link */}
-        <div className="text-center mt-12">
-          <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
-            Still have questions? Our SA-based support team is ready to help.
+        {/* CTA below FAQ */}
+        <div className="text-center mt-12 pt-4">
+          <p className="text-[#64748b] text-sm mb-4">
+            Have a specific concern or inquiry? Maletsatsi and our team are glad to assist you.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-3">
             <Link
               to="/faq"
-              className="px-7 py-3 rounded-xl border border-white/[0.08] text-gray-300 font-bold text-sm hover:border-[#f97316] hover:text-[#f97316] transition-all"
+              className="px-6 py-3.5 rounded-xl border border-slate-200 text-[#1e293b] font-bold text-sm bg-white hover:bg-slate-50 hover:border-slate-300 transition-all shadow-2xs cursor-pointer"
             >
-              Browse All FAQs
+              Browse Complete FAQ
             </Link>
             <Link
               to="/contact"
-              className="px-7 py-3 rounded-xl bg-[#f97316] text-black font-bold text-sm hover:bg-[#ea580c] transition-all hover:scale-105 shadow-lg shadow-[#f97316]/20"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl btn-dual-gradient text-white font-bold text-sm hover:shadow-lg hover:shadow-emerald-900/20 transition-all shadow-xs cursor-pointer"
             >
-              Contact Support
+              Contact Us <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>

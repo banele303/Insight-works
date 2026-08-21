@@ -1,31 +1,69 @@
-const phases = [
+import { Link } from "react-router";
+import { ArrowRight, User, Heart, Target, Sparkles, Compass, ShieldAlert, Zap } from "lucide-react";
+
+const services = [
   {
-    phase: "Foundation Phase",
-    grades: "Grade R – 3",
-    desc: "Literacy, numeracy and life skills — building the core academic foundation with care and patience.",
-    subjects: ["Home Language", "Mathematics", "Life Skills"],
-    color: "#38bdf8",
+    icon: User,
+    phase: "One-on-One",
+    grades: "Individual Counselling",
+    desc: "A confidential, supportive space to navigate anxiety, stress, depression, life transitions, and emotional wellbeing.",
+    subjects: ["Personalized Care", "50–60 minutes", "In-Person & Telehealth"],
+    badgeColor: "bg-emerald-50 text-[#156e52] border-emerald-200/80",
+    accentColor: "#156e52",
   },
   {
-    phase: "Intermediate Phase",
-    grades: "Grade 4 – 6",
-    desc: "Expanding learning areas with Natural Sciences, Social Sciences, Technology and the Arts.",
-    subjects: ["English", "Mathematics", "Natural Sciences", "Social Sciences", "Technology", "Arts & Culture"],
-    color: "#9f1239",
+    icon: Heart,
+    phase: "Partners",
+    grades: "Couples & Relationship Counselling",
+    desc: "Strengthen emotional connection, navigate difficult conversations, rebuild trust, and cultivate healthy relational dynamics.",
+    subjects: ["Relationship Growth", "60–75 minutes", "In-Person & Telehealth"],
+    badgeColor: "bg-amber-50 text-[#ea7627] border-amber-200/80",
+    accentColor: "#ea7627",
   },
   {
-    phase: "Senior Phase",
-    grades: "Grade 7 – 9",
-    desc: "Deeper subject specialisation and critical thinking to prepare learners for the FET phase.",
-    subjects: ["English", "Mathematics / Maths Lit", "Natural Sciences", "Social Sciences", "EMS", "Creative Arts"],
-    color: "#38bdf8",
+    icon: Target,
+    phase: "Goal-Oriented",
+    grades: "Life Coaching",
+    desc: "Action-oriented strategies, mindset alignment, and accountability to help you bridge the gap between where you are and where you want to be.",
+    subjects: ["Clarity & Action", "45–60 minutes", "In-Person & Telehealth"],
+    badgeColor: "bg-emerald-50 text-[#156e52] border-emerald-200/80",
+    accentColor: "#156e52",
   },
   {
-    phase: "FET Phase",
-    grades: "Grade 10 – 12",
-    desc: "Full NSC preparation — Matric subjects, SBA tracking, and official certified assessment plans.",
-    subjects: ["Mathematics / Maths Lit", "Physical Sciences", "Life Sciences", "Accounting", "Business Studies", "History", "English HL/FAL"],
-    color: "#9f1239",
+    icon: Sparkles,
+    phase: "Healing & Restoration",
+    grades: "Trauma Recovery & Emotional Healing",
+    desc: "Gentle, trauma-informed guidance to safely process painful past experiences, release emotional burdens, and rediscover wholeness.",
+    subjects: ["Trauma-Informed", "60 minutes", "Safe & Grounded"],
+    badgeColor: "bg-amber-50 text-[#ea7627] border-amber-200/80",
+    accentColor: "#ea7627",
+  },
+  {
+    icon: Compass,
+    phase: "Adolescents & Youth",
+    grades: "Youth & Young Adult Support",
+    desc: "Empowering teens and young adults to overcome academic pressures, peer challenges, identity questions, and emotional overwhelm.",
+    subjects: ["Youth Mentorship", "50 minutes", "Empowering & Safe"],
+    badgeColor: "bg-emerald-50 text-[#156e52] border-emerald-200/80",
+    accentColor: "#156e52",
+  },
+  {
+    icon: ShieldAlert,
+    phase: "Recovery Support",
+    grades: "Substance Use Support",
+    desc: "Empathetic, non-judgmental guidance and practical coping toolkits to navigate addiction patterns and foster sustainable recovery.",
+    subjects: ["Non-Judgmental", "50–60 minutes", "Confidential"],
+    badgeColor: "bg-amber-50 text-[#ea7627] border-amber-200/80",
+    accentColor: "#ea7627",
+  },
+  {
+    icon: Zap,
+    phase: "Transformation",
+    grades: "Personal Growth & Self-Mastery",
+    desc: "Unlocking deeper self-awareness, emotional resilience, boundary-setting, and purpose-driven living.",
+    subjects: ["Self-Mastery", "50 minutes", "Transformational"],
+    badgeColor: "bg-emerald-50 text-[#156e52] border-emerald-200/80",
+    accentColor: "#156e52",
   },
 ];
 
@@ -33,171 +71,131 @@ const Programs = () => {
   return (
     <section
       id="programs"
-      className="py-28 relative overflow-hidden"
-      style={{ background: "#060408", fontFamily: "'DM Sans', sans-serif" }}
+      className="py-24 lg:py-32 relative overflow-hidden bg-[#fbfdfc]"
+      style={{ fontFamily: "'DM Sans', sans-serif" }}
     >
-      {/* Decorative image strip */}
-      <div className="relative h-56 mb-0 overflow-hidden">
-        <img
-          src="/img-books.jpg"
-          alt="CAPS textbooks and school resources"
-          className="w-full h-full object-cover"
-          style={{ filter: "brightness(0.35)" }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background: "linear-gradient(to bottom, rgba(6,4,8,0) 0%, rgba(6,4,8,1) 100%)",
-          }}
-        />
-        {/* Centred headline on image */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="h-px w-10 bg-[#9f1239]" />
-            <span className="text-xs font-bold tracking-[0.25em] uppercase" style={{ color: "#e2a0b0" }}>
-              CAPS-Aligned Programmes
+      {/* Decorative ambient gradients */}
+      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-emerald-100/40 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-amber-100/40 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16 lg:mb-20">
+          <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200/80 px-3.5 py-1 rounded-full mb-4">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#156e52]" />
+            <span className="text-xs font-bold tracking-[0.2em] uppercase text-[#156e52]">
+              Coaching & Therapy Offerings
             </span>
-            <div className="h-px w-10 bg-[#9f1239]" />
           </div>
           <h2
-            className="leading-[1.05] tracking-tight text-white"
+            className="leading-[1.08] tracking-tight text-[#0f2820] mb-5"
             style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: "clamp(2rem, 4vw, 3.5rem)",
+              fontFamily: "'Playfair Display', Georgia, serif",
+              fontSize: "clamp(2.25rem, 4vw, 3.5rem)",
               fontWeight: 900,
             }}
           >
-            Every Grade.{" "}
-            <span style={{ fontStyle: "italic", color: "#38bdf8" }}>Every Subject.</span>
-          </h2>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-16">
-
-        {/* Phase grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {phases.map((phase, idx) => (
-            <div
-              key={idx}
-              className="rounded-2xl p-8 flex flex-col gap-5 transition-all duration-300"
+            How We{" "}
+            <span
+              className="italic"
               style={{
-                background: "rgba(255,255,255,0.02)",
-                border: "1px solid rgba(255,255,255,0.07)",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = `${phase.color}33`;
-                (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.035)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.07)";
-                (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.02)";
+                background: "linear-gradient(135deg, #156e52 0%, #52b74c 50%, #ea7627 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
               }}
             >
-              {/* Phase header */}
-              <div className="flex items-start justify-between">
+              Help You Thrive
+            </span>
+          </h2>
+          <p className="text-[#475569] text-base sm:text-lg leading-relaxed">
+            You don't have to face life's challenges alone. Explore our core therapeutic and coaching disciplines tailored to your healing and self-mastery.
+          </p>
+        </div>
+
+        {/* Services Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {services.map((service, idx) => {
+            const Icon = service.icon;
+            return (
+              <div
+                key={idx}
+                className="group relative rounded-3xl p-8 bg-white border border-slate-200/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.04)] hover:shadow-xl hover:border-emerald-300 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between"
+              >
                 <div>
-                  <p
-                    className="text-xs font-bold uppercase tracking-widest mb-1"
-                    style={{ color: phase.color }}
-                  >
-                    {phase.phase}
-                  </p>
+                  {/* Top Bar with Icon and Category */}
+                  <div className="flex items-center justify-between mb-5">
+                    <div
+                      className="w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-105"
+                      style={{
+                        background: `${service.accentColor}14`,
+                        border: `1px solid ${service.accentColor}30`,
+                      }}
+                    >
+                      <Icon className="w-5 h-5" style={{ color: service.accentColor }} />
+                    </div>
+                    <span
+                      className={`text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border ${service.badgeColor}`}
+                    >
+                      {service.phase}
+                    </span>
+                  </div>
+
+                  {/* Title */}
                   <h3
-                    className="text-white text-2xl font-bold"
+                    className="text-[#0f2820] text-2xl font-bold mb-3 group-hover:text-[#156e52] transition-colors"
                     style={{ fontFamily: "'Playfair Display', serif" }}
                   >
-                    {phase.grades}
+                    {service.grades}
                   </h3>
+
+                  {/* Description */}
+                  <p className="text-[#475569] text-sm leading-relaxed mb-6">
+                    {service.desc}
+                  </p>
                 </div>
-                <div
-                  className="h-px mt-4 flex-1 mx-4"
-                  style={{ background: `linear-gradient(to right, ${phase.color}40, transparent)` }}
-                />
-              </div>
 
-              <p className="text-[#888] text-sm leading-relaxed">{phase.desc}</p>
+                {/* Bottom Tags and CTA */}
+                <div>
+                  <div className="flex flex-wrap gap-2 pt-4 border-t border-slate-100 mb-6">
+                    {service.subjects.map((sub, i) => (
+                      <span
+                        key={i}
+                        className="text-xs font-medium text-slate-600 bg-slate-50 border border-slate-200 px-3 py-1 rounded-full"
+                      >
+                        {sub}
+                      </span>
+                    ))}
+                  </div>
 
-              {/* Subject tags */}
-              <div className="flex flex-wrap gap-2">
-                {phase.subjects.map((subject) => (
-                  <span
-                    key={subject}
-                    className="px-3 py-1 rounded text-xs font-medium"
-                    style={{
-                      background: `${phase.color}10`,
-                      border: `1px solid ${phase.color}25`,
-                      color: "#ccc",
-                    }}
+                  <Link
+                    to="/booking"
+                    className="inline-flex items-center justify-between w-full py-2 text-xs font-bold text-[#0f2820] group-hover:text-[#156e52] transition-colors cursor-pointer"
                   >
-                    {subject}
-                  </span>
-                ))}
+                    <span>Book this service</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        {/* Bottom image + stats row */}
-        <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Graduation photo */}
-          <div
-            className="lg:col-span-2 relative rounded-2xl overflow-hidden"
-            style={{ height: "260px", boxShadow: "0 20px 40px rgba(0,0,0,0.5)" }}
+        {/* Bottom CTA Row */}
+        <div className="mt-16 text-center">
+          <Link
+            to="/services"
+            className="inline-flex items-center gap-2 px-8 py-4 text-white font-bold text-sm rounded-xl transition-all duration-300 shadow-md shadow-emerald-900/15 hover:shadow-lg hover:shadow-emerald-900/25 hover:-translate-y-0.5 cursor-pointer"
+            style={{
+              background: "linear-gradient(135deg, #156e52, #52b74c)",
+            }}
           >
-            <img
-              src="/img-graduation.jpg"
-              alt="Glenanda Learning Centre graduating class"
-              className="w-full h-full object-cover"
-            />
-            <div
-              className="absolute inset-0"
-              style={{ background: "linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)" }}
-            />
-            <div className="absolute left-7 top-1/2 -translate-y-1/2">
-              <p
-                className="text-white font-black text-4xl"
-                style={{ fontFamily: "'Playfair Display', serif" }}
-              >
-                94%
-              </p>
-              <p className="text-[#ddd] font-semibold text-sm mt-1">Matric Pass Rate 2025</p>
-              <p className="text-[#aaa] text-xs mt-0.5">CAPS-aligned · SACE certified educators</p>
-            </div>
-          </div>
-
-          {/* Quick stats */}
-          <div className="flex flex-col gap-4">
-            {[
-              { num: "200+", label: "Active Learners", sub: "Across all grades" },
-              { num: "13", label: "Subject Areas", sub: "Full CAPS coverage" },
-              { num: "4", label: "Phase Programmes", sub: "Foundation to FET" },
-            ].map((stat) => (
-              <div
-                key={stat.label}
-                className="flex-1 rounded-xl p-5 flex flex-col justify-center"
-                style={{
-                  background: "rgba(255,255,255,0.02)",
-                  border: "1px solid rgba(255,255,255,0.07)",
-                }}
-              >
-                <p
-                  className="text-white font-black text-3xl"
-                  style={{ fontFamily: "'Playfair Display', serif" }}
-                >
-                  {stat.num}
-                </p>
-                <p className="text-white text-sm font-semibold mt-0.5">{stat.label}</p>
-                <p className="text-[#666] text-xs">{stat.sub}</p>
-              </div>
-            ))}
-          </div>
+            View Full Service Breakdown & Modalities
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       </div>
-
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@400;500;600;700;800&display=swap');
-      `}</style>
     </section>
   );
 };

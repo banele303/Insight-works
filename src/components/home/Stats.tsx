@@ -1,164 +1,214 @@
+import { Shield, Sparkles, Award, HeartHandshake } from "lucide-react";
+
 const stats = [
-  { num: "200+", label: "Enrolled Learners", sub: "Across Gauteng and beyond" },
-  { num: "94%", label: "Matric Pass Rate", sub: "2025 NSC cohort" },
-  { num: "13+", label: "Subject Areas", sub: "Full CAPS curriculum" },
-  { num: "100%", label: "SACE-Certified Staff", sub: "Qualified educators only" },
+  {
+    num: "10+",
+    label: "Years in Practice",
+    sub: "Dedicated clinical & psychological experience",
+    icon: Award,
+  },
+  {
+    num: "500+",
+    label: "Clients Guided",
+    sub: "Individuals & couples across South Africa",
+    icon: HeartHandshake,
+  },
+  {
+    num: "4.9/5",
+    label: "Client Satisfaction",
+    sub: "Based on verified post-therapy feedback",
+    icon: Sparkles,
+  },
+  {
+    num: "8+",
+    label: "Medical Aids Covered",
+    sub: "Direct claim invoices provided for sessions",
+    icon: Shield,
+  },
 ];
 
 const Stats = () => {
   return (
     <section
       id="stats"
-      className="relative overflow-hidden"
-      style={{ background: "#080508", fontFamily: "'DM Sans', sans-serif" }}
+      className="relative overflow-hidden bg-white py-24 lg:py-32"
+      style={{ fontFamily: "'DM Sans', sans-serif" }}
     >
-      {/* Full-width image banner */}
-      <div className="relative" style={{ height: "420px" }}>
-        <img
-          src="/img-graduation.jpg"
-          alt="Glenanda Learning Centre graduating learners"
-          className="w-full h-full object-cover"
-          style={{ filter: "brightness(0.4)" }}
-        />
-        {/* Gradient overlays */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(8,5,8,0.4) 0%, rgba(8,5,8,0.1) 40%, rgba(8,5,8,0.95) 100%)",
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to right, rgba(92,6,28,0.25) 0%, transparent 60%)",
-          }}
-        />
+      {/* Background ambient lighting */}
+      <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-emerald-50/80 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 left-0 w-[500px] h-[500px] bg-amber-50/60 rounded-full blur-3xl pointer-events-none" />
 
-        {/* Headline on image */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="h-px w-10 bg-[#9f1239]" />
-            <span className="text-xs font-bold tracking-[0.25em] uppercase" style={{ color: "#e2a0b0" }}>
-              Our Track Record
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200/80 px-3.5 py-1 rounded-full mb-4">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#156e52]" />
+            <span className="text-xs font-bold tracking-[0.2em] uppercase text-[#156e52]">
+              Meaningful Impact
             </span>
-            <div className="h-px w-10 bg-[#9f1239]" />
           </div>
           <h2
-            className="leading-[1.05] tracking-tight text-white max-w-2xl"
+            className="leading-[1.08] tracking-tight text-[#0f2820] mb-5"
             style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: "clamp(2rem, 4vw, 3.5rem)",
+              fontFamily: "'Playfair Display', Georgia, serif",
+              fontSize: "clamp(2.25rem, 4vw, 3.5rem)",
               fontWeight: 900,
             }}
           >
-            Proven Results for
-            <br />
-            <span style={{ fontStyle: "italic", color: "#38bdf8" }}>South African Families</span>
-          </h2>
-        </div>
-      </div>
-
-      {/* Stats strip — overlapping the image */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-10 pb-28">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {stats.map((stat, idx) => (
-            <div
-              key={idx}
-              className="rounded-2xl p-7 text-center flex flex-col items-center gap-2"
+            A Journey Towards{" "}
+            <span
+              className="italic"
               style={{
-                background: idx === 0
-                  ? "linear-gradient(135deg, #5c061c, #9f1239)"
-                  : "rgba(255,255,255,0.03)",
-                border: idx === 0 ? "none" : "1px solid rgba(255,255,255,0.08)",
-                boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
+                background: "linear-gradient(135deg, #156e52 0%, #52b74c 50%, #ea7627 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
               }}
             >
+              Healing & Growth
+            </span>
+          </h2>
+          <p className="text-[#475569] text-base sm:text-lg leading-relaxed">
+            You don't have to face life's challenges alone. Together, we can help you heal, grow, reconnect, and thrive.
+          </p>
+        </div>
+
+        {/* 4 Overlapping Stat Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {stats.map((stat, idx) => {
+            const Icon = stat.icon;
+            const isFeatured = idx === 0;
+            return (
+              <div
+                key={idx}
+                className={`rounded-3xl p-8 text-center flex flex-col items-center justify-between transition-all duration-300 ${
+                  isFeatured
+                    ? "bg-gradient-to-br from-[#156e52] to-[#52b74c] text-white shadow-xl shadow-emerald-900/20 hover:-translate-y-1.5"
+                    : "bg-white border border-slate-200/80 text-[#0f2820] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.04)] hover:shadow-xl hover:border-emerald-200 hover:-translate-y-1.5"
+                }`}
+              >
+                <div
+                  className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${
+                    isFeatured
+                      ? "bg-white/15 text-white"
+                      : "bg-emerald-50 text-[#156e52] border border-emerald-100"
+                  }`}
+                >
+                  <Icon className="w-6 h-6" />
+                </div>
+                <div>
+                  <p
+                    className="font-black text-4xl sm:text-5xl tracking-tight mb-2"
+                    style={{
+                      fontFamily: "'Playfair Display', serif",
+                      color: isFeatured ? "#ffffff" : "#0f2820",
+                    }}
+                  >
+                    {stat.num}
+                  </p>
+                  <p
+                    className={`font-bold text-base mb-1 ${
+                      isFeatured ? "text-white" : "text-[#1e293b]"
+                    }`}
+                  >
+                    {stat.label}
+                  </p>
+                  <p
+                    className={`text-xs ${
+                      isFeatured ? "text-emerald-100" : "text-[#64748b]"
+                    }`}
+                  >
+                    {stat.sub}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Two-Column Feature Below */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          {/* Left card - Telehealth highlight (Larger, more prominent image) */}
+          <div className="lg:col-span-7 relative rounded-3xl overflow-hidden bg-[#0f2820] border border-slate-200/80 shadow-xl group min-h-[420px] sm:min-h-[480px] flex flex-col justify-end p-8 sm:p-10 transition-all duration-300 hover:shadow-2xl">
+            <img
+              src="https://images.unsplash.com/photo-1573497491765-dccce02b29df?w=1200&h=800&fit=crop"
+              alt="Telehealth therapy session"
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 brightness-[0.92]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0f2820]/95 via-[#0f2820]/40 to-transparent" />
+            <div className="relative z-10 text-white space-y-2">
+              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#156e52]/90 border border-emerald-400/40 text-emerald-100 backdrop-blur-md shadow-xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse" />
+                Accessible Nationally
+              </span>
+              <h3
+                className="font-bold text-2xl sm:text-3xl text-white tracking-tight leading-tight"
+                style={{ fontFamily: "'Playfair Display', serif" }}
+              >
+                Flexible Telehealth Care
+              </h3>
+              <p className="text-slate-200 text-sm sm:text-base leading-relaxed max-w-xl">
+                Connect conveniently via secure, encrypted video consultations from the comfort of your private space anywhere in South Africa.
+              </p>
+            </div>
+          </div>
+
+          {/* Right column - 2 stacked cards */}
+          <div className="lg:col-span-5 flex flex-col gap-6 justify-between">
+            {/* Top small card */}
+            <div className="relative rounded-3xl overflow-hidden bg-white border border-slate-200/80 shadow-sm group p-6 flex items-center gap-5">
+              <div className="w-20 h-20 rounded-2xl overflow-hidden shrink-0 border border-slate-100">
+                <img
+                  src="/images/therapist-portrait.jpg"
+                  alt="Maletsatsi Sibanda"
+                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+              <div>
+                <span className="text-xs font-bold text-[#156e52] uppercase tracking-wider">
+                  Counselling & Coaching
+                </span>
+                <h4
+                  className="text-[#0f2820] font-bold text-lg"
+                  style={{ fontFamily: "'Playfair Display', serif" }}
+                >
+                  Maletsatsi Sibanda
+                </h4>
+                <p className="text-[#64748b] text-xs mt-1">
+                  Counselling Therapist & Life Coach · Insight Works Therapy & Coaching
+                </p>
+              </div>
+            </div>
+
+            {/* Bottom stat callout */}
+            <div className="rounded-3xl p-7 flex items-center gap-6 bg-emerald-50/80 border border-emerald-200/80 shadow-sm">
               <p
-                className="text-white font-black"
+                className="text-[#156e52] font-black shrink-0"
                 style={{
                   fontFamily: "'Playfair Display', serif",
-                  fontSize: "clamp(2rem, 3vw, 2.8rem)",
+                  fontSize: "3.25rem",
                   lineHeight: 1,
                 }}
               >
-                {stat.num}
-              </p>
-              <p className="text-white font-bold text-sm">{stat.label}</p>
-              <p className="text-xs" style={{ color: idx === 0 ? "rgba(255,255,255,0.6)" : "#666" }}>{stat.sub}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Two-column image feature below */}
-        <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div
-            className="relative rounded-2xl overflow-hidden"
-            style={{ height: "280px" }}
-          >
-            <img
-              src="/img-online-class.jpg"
-              alt="Live online learning session"
-              className="w-full h-full object-cover"
-            />
-            <div
-              className="absolute inset-0"
-              style={{ background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 60%)" }}
-            />
-            <div className="absolute bottom-6 left-6">
-              <p className="text-white font-bold text-lg" style={{ fontFamily: "'Playfair Display', serif" }}>
-                Live Daily Classes
-              </p>
-              <p className="text-[#aaa] text-sm mt-1">Interactive · SACE educators · Grade R–12</p>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <div
-              className="relative rounded-2xl overflow-hidden flex-1"
-              style={{ minHeight: "130px" }}
-            >
-              <img
-                src="/img-teacher.jpg"
-                alt="Qualified teacher"
-                className="w-full h-full object-cover"
-              />
-              <div
-                className="absolute inset-0"
-                style={{ background: "linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 60%)" }}
-              />
-              <div className="absolute left-5 top-1/2 -translate-y-1/2">
-                <p className="text-white font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>Qualified Educators</p>
-                <p className="text-[#aaa] text-xs mt-0.5">SACE-registered · Subject specialists</p>
-              </div>
-            </div>
-
-            <div
-              className="rounded-2xl p-6 flex items-center gap-5"
-              style={{
-                background: "linear-gradient(135deg, rgba(56,189,248,0.07), rgba(255,255,255,0.02))",
-                border: "1px solid rgba(56,189,248,0.15)",
-              }}
-            >
-              <p
-                className="text-[#38bdf8] font-black shrink-0"
-                style={{ fontFamily: "'Playfair Display', serif", fontSize: "2.5rem", lineHeight: 1 }}
-              >
-                48h
+                7
               </p>
               <div>
-                <p className="text-white font-bold text-sm">Application Response</p>
-                <p className="text-[#888] text-xs mt-0.5">We respond to every application within 48 hours — guaranteed.</p>
+                <h4
+                  className="text-[#0f2820] font-bold text-lg mb-1"
+                  style={{ fontFamily: "'Playfair Display', serif" }}
+                >
+                  Core Healing & Coaching Offerings
+                </h4>
+                <p className="text-[#475569] text-xs sm:text-sm">
+                  Individual counselling, couples & relationship support, life coaching, trauma recovery, youth support, substance use support, and self-mastery.
+                </p>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@400;500;600;700;800&display=swap');
-      `}</style>
+      </div>
     </section>
   );
 };

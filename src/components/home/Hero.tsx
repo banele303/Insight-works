@@ -1,323 +1,326 @@
 import { Link } from "react-router";
+import { ArrowRight, CheckCircle2, ShieldCheck, HeartHandshake, Sparkles } from "lucide-react";
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#0a0608] flex flex-col">
-
-      {/* ── BACKGROUND TEXTURE ── */}
+    <section className="relative min-h-screen overflow-hidden bg-white flex flex-col justify-between pt-24 pb-0">
+      {/* ── BACKGROUND AMBIENT GRADIENTS & TEXTURE ── */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Noise texture */}
+        {/* Soft rose ambient orb - top right */}
         <div
-          className="absolute inset-0 opacity-[0.03]"
+          className="absolute -top-32 -right-32 w-[650px] h-[650px] rounded-full blur-3xl opacity-70"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-            backgroundRepeat: "repeat",
-            backgroundSize: "128px",
+            background: "radial-gradient(circle, rgba(244,63,94,0.12) 0%, rgba(254,205,211,0.08) 40%, transparent 70%)",
           }}
         />
-        {/* Deep burgundy glow — top right */}
-        <div className="absolute -top-40 -right-40 w-[700px] h-[700px] rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(92,6,28,0.35) 0%, transparent 70%)" }} />
-        {/* Sky blue glow — bottom left */}
-        <div className="absolute -bottom-20 -left-20 w-[500px] h-[500px] rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%)" }} />
-        {/* Thin horizontal rule accent */}
-        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#9f1239]/40 to-transparent" />
+        {/* Calming sky ambient orb - bottom left */}
+        <div
+          className="absolute top-1/3 -left-32 w-[550px] h-[550px] rounded-full blur-3xl opacity-60"
+          style={{
+            background: "radial-gradient(circle, rgba(56,189,248,0.12) 0%, rgba(224,242,254,0.06) 50%, transparent 70%)",
+          }}
+        />
+        {/* Warm pearl glow in center */}
+        <div
+          className="absolute -bottom-20 right-1/4 w-[600px] h-[600px] rounded-full blur-3xl opacity-50"
+          style={{
+            background: "radial-gradient(circle, rgba(251,207,232,0.1) 0%, transparent 60%)",
+          }}
+        />
+        {/* Subtle grid lines */}
+        <div
+          className="absolute inset-0 opacity-[0.025]"
+          style={{
+            backgroundImage: "radial-gradient(#0f172a 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+          }}
+        />
+        {/* Top subtle border line */}
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-rose-200/50 to-transparent" />
       </div>
 
-      {/* ── TOP NAV SPACE ── */}
-      <div className="h-20 shrink-0" />
+      {/* ── MAIN HERO CONTENT ── */}
+      <div className="flex-1 flex items-center relative z-10 py-12 lg:py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 xl:gap-14 items-center">
 
-      {/* ── MAIN CONTENT ── */}
-      <div className="flex-1 flex items-center relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20 items-center">
+            {/* ── LEFT — Typography + CTAs (col-span-7) ── */}
+            <div className="lg:col-span-7 flex flex-col gap-7">
 
-            {/* ── LEFT — Typography + CTAs ── */}
-            <div className="flex flex-col gap-8">
-
-              {/* Eyebrow tag */}
-              <div className="flex items-center gap-3">
-                <div className="h-px w-10 bg-[#9f1239]" />
-                <span
-                  className="text-xs font-bold tracking-[0.25em] uppercase"
-                  style={{ color: "#e2a0b0", fontFamily: "'DM Sans', sans-serif" }}
-                >
-                  Gauteng · Est. 2020
-                </span>
-              </div>
-
-              {/* Headline */}
+              {/* Main Headline */}
               <div>
                 <h1
-                  className="leading-[1.0] tracking-[-0.02em]"
-                  style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(3rem, 6vw, 5.5rem)", fontWeight: 900, color: "#fff" }}
+                  className="leading-[1.04] tracking-[-0.025em] text-[#0f2820]"
+                  style={{
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontSize: "clamp(2.75rem, 5.2vw, 4.75rem)",
+                    fontWeight: 900,
+                  }}
                 >
-                  Where Every
-                  <br />
+                  Where Healing{" "}
                   <span
+                    className="italic inline-block"
                     style={{
-                      fontStyle: "italic",
-                      background: "linear-gradient(90deg, #f43f5e, #38bdf8)",
+                      background: "linear-gradient(135deg, #ea7627 0%, #f59e0b 35%, #22c55e 75%, #156e52 100%)",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
                       backgroundClip: "text",
                     }}
                   >
-                    Child Thrives
-                  </span>
-                  <br />
-                  <span className="text-white">Academically.</span>
+                    Begins with
+                  </span>{" "}
+                  <br className="hidden sm:inline" />
+                  Connection & Insight
                 </h1>
               </div>
 
-              {/* Sub-copy */}
+              {/* Sub-copy from Flyer */}
               <p
-                className="text-[#a09aa5] leading-relaxed max-w-lg"
-                style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "1.05rem" }}
+                className="text-[#334155] leading-relaxed max-w-xl text-base sm:text-lg"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
               >
-                Glenanda Learning Centre is a CAPS-aligned home schooling centre offering
-                structured live lessons, certified assessment plans, and dedicated educators
-                from Grade R through to Matric — all from the comfort of your home.
+                You don't have to face life's challenges alone. Together, we can help you <strong className="text-[#156e52]">heal, grow, reconnect, and thrive</strong> through compassionate counselling and transformational life coaching.
               </p>
 
-              {/* Credential strip */}
-              <div className="flex flex-wrap gap-x-6 gap-y-3">
+              {/* Credential Tags */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl">
                 {[
-                  "SACE-Registered Educators",
-                  "CAPS Curriculum R–12",
-                  "Live Daily Lessons",
-                  "Certified Report Cards",
-                ].map((item) => (
-                  <div key={item} className="flex items-center gap-2">
-                    <div className="h-1.5 w-1.5 rounded-full bg-[#38bdf8]" />
+                  { icon: ShieldCheck, text: "Counselling Therapist & Life Coach" },
+                  { icon: CheckCircle2, text: "POPIA Compliant & Confidential" },
+                  { icon: HeartHandshake, text: "In-Person & Telehealth Nationwide" },
+                  { icon: Sparkles, text: "Evidence-Based Emotional Healing" },
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-2.5 text-slate-700">
+                    <div className="h-5 w-5 rounded-md bg-emerald-50 border border-emerald-200/70 flex items-center justify-center text-[#156e52] shrink-0">
+                      <item.icon className="h-3.5 w-3.5" />
+                    </div>
                     <span
-                      className="text-[#ccc] text-sm font-medium"
+                      className="text-sm font-medium text-[#1e293b]"
                       style={{ fontFamily: "'DM Sans', sans-serif" }}
                     >
-                      {item}
+                      {item.text}
                     </span>
                   </div>
                 ))}
               </div>
 
-              {/* CTAs */}
+              {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 pt-2">
                 <Link
-                  to="/apply"
+                  to="/booking"
                   id="hero-apply-btn"
-                  className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 text-white font-bold text-base overflow-hidden transition-all duration-300"
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    background: "linear-gradient(135deg, #7f0c26 0%, #c01442 100%)",
-                    borderRadius: "4px",
-                    letterSpacing: "0.04em",
-                  }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 16px 40px rgba(159,18,57,0.4)"; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLElement).style.boxShadow = "none"; }}
+                  className="group inline-flex items-center justify-center gap-3 px-8 py-4 text-white font-bold text-base rounded-xl btn-dual-gradient cursor-pointer"
+                  style={{ fontFamily: "'DM Sans', sans-serif" }}
                 >
-                  Apply for Enrolment
-                  <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
+                  Book a Session
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
                 <Link
-                  to="/programs"
+                  to="/services"
                   id="hero-programs-btn"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold text-base border transition-all duration-300"
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    color: "#e2e8f0",
-                    borderColor: "rgba(255,255,255,0.12)",
-                    borderRadius: "4px",
-                    letterSpacing: "0.02em",
-                  }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(56,189,248,0.4)"; (e.currentTarget as HTMLElement).style.color = "#38bdf8"; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.12)"; (e.currentTarget as HTMLElement).style.color = "#e2e8f0"; }}
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold text-base text-white rounded-xl btn-orange-gradient cursor-pointer"
+                  style={{ fontFamily: "'DM Sans', sans-serif" }}
                 >
-                  View Programmes
+                  Explore Services
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
 
-              {/* Social proof */}
-              <div
-                className="flex items-center gap-4 pt-2 border-t"
-                style={{ borderColor: "rgba(255,255,255,0.07)" }}
-              >
+              {/* Social Proof Strip */}
+              <div className="flex items-center gap-5 pt-3 border-t border-slate-200/70">
                 {/* Avatars */}
-                <div className="flex -space-x-2">
-                  {["#5c061c", "#9f1239", "#38bdf8", "#0284c7", "#0ea5e9"].map((color, i) => (
-                    <div
-                      key={i}
-                      className="h-8 w-8 rounded-full border-2 border-[#0a0608] flex items-center justify-center text-white text-xs font-bold"
-                      style={{ background: color, zIndex: 5 - i }}
-                    >
-                      {["T", "K", "L", "A", "M"][i]}
-                    </div>
-                  ))}
-                </div>
-                <div>
-                  <p className="text-white text-sm font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                    200+ enrolled learners
-                  </p>
-                  <p className="text-[#888] text-xs" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                    Trusted by families across Gauteng
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* ── RIGHT — Image collage ── */}
-            <div className="hidden lg:grid grid-cols-5 grid-rows-6 gap-3 h-[560px]">
-
-              {/* Large portrait — student studying */}
-              <div
-                className="col-span-3 row-span-4 rounded-2xl overflow-hidden relative"
-                style={{ boxShadow: "0 30px 60px rgba(0,0,0,0.5)" }}
-              >
-                <img
-                  src="/hero-student.jpg"
-                  alt="Student studying at Glenanda Learning Centre"
-                  className="w-full h-full object-cover"
-                />
-                {/* Overlay label */}
-                <div
-                  className="absolute bottom-0 left-0 right-0 p-5"
-                  style={{ background: "linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%)" }}
-                >
-                  <p
-                    className="text-white font-bold text-sm"
-                    style={{ fontFamily: "'DM Sans', sans-serif" }}
-                  >
-                    Structured Daily Learning
-                  </p>
-                  <p className="text-[#aaa] text-xs mt-0.5" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                    Live classes · Grade R to Matric
-                  </p>
-                </div>
-              </div>
-
-              {/* Study room card */}
-              <div
-                className="col-span-2 row-span-3 rounded-2xl overflow-hidden relative"
-                style={{ boxShadow: "0 20px 40px rgba(0,0,0,0.4)" }}
-              >
-                <img
-                  src="/hero-room.jpg"
-                  alt="Home study environment"
-                  className="w-full h-full object-cover"
-                />
-                <div
-                  className="absolute inset-0"
-                  style={{ background: "linear-gradient(135deg, rgba(92,6,28,0.3) 0%, transparent 60%)" }}
-                />
-              </div>
-
-              {/* Stats card */}
-              <div
-                className="col-span-2 row-span-3 rounded-2xl p-5 flex flex-col justify-between"
-                style={{
-                  background: "linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  backdropFilter: "blur(20px)",
-                }}
-              >
-                <div>
-                  <p
-                    className="text-4xl font-black text-white"
-                    style={{ fontFamily: "'Playfair Display', serif" }}
-                  >
-                    94%
-                  </p>
-                  <p
-                    className="text-[#e2a0b0] text-sm font-semibold mt-1"
-                    style={{ fontFamily: "'DM Sans', sans-serif" }}
-                  >
-                    Matric Pass Rate
-                  </p>
-                  <p className="text-[#666] text-xs mt-0.5" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                    2025 cohort
-                  </p>
-                </div>
-                <div className="space-y-2">
+                <div className="flex -space-x-2.5">
                   {[
-                    { label: "Maths", pct: 86 },
-                    { label: "English", pct: 78 },
-                    { label: "Science", pct: 91 },
-                  ].map((s) => (
-                    <div key={s.label}>
-                      <div className="flex justify-between text-xs mb-1">
-                        <span className="text-[#aaa]" style={{ fontFamily: "'DM Sans', sans-serif" }}>{s.label}</span>
-                        <span className="text-white font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>{s.pct}%</span>
-                      </div>
-                      <div className="h-1 rounded-full bg-white/5 overflow-hidden">
-                        <div
-                          className="h-full rounded-full"
-                          style={{
-                            width: `${s.pct}%`,
-                            background: "linear-gradient(90deg, #9f1239, #38bdf8)",
-                          }}
-                        />
-                      </div>
-                    </div>
+                    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop",
+                    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop",
+                    "/images/therapist-portrait.jpg",
+                    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop",
+                  ].map((src, i) => (
+                    <img
+                      key={i}
+                      src={src}
+                      alt="Client portrait"
+                      className="h-9 w-9 rounded-full border-2 border-white object-cover shadow-sm"
+                    />
                   ))}
+                  <div className="h-9 w-9 rounded-full border-2 border-white bg-[#156e52] flex items-center justify-center text-white text-xs font-bold shadow-sm">
+                    500+
+                  </div>
                 </div>
-              </div>
-
-              {/* Graduate photo */}
-              <div
-                className="col-span-3 row-span-2 rounded-2xl overflow-hidden relative"
-                style={{ boxShadow: "0 20px 40px rgba(0,0,0,0.4)" }}
-              >
-                <img
-                  src="/hero-graduate.jpg"
-                  alt="Glenanda Learning Centre graduate"
-                  className="w-full h-full object-cover object-top"
-                />
-                {/* CAPS badge overlay */}
-                <div
-                  className="absolute top-3 right-3 px-3 py-1.5 rounded text-white text-xs font-black tracking-widest uppercase"
-                  style={{
-                    background: "linear-gradient(135deg, #5c061c, #9f1239)",
-                    fontFamily: "'DM Sans', sans-serif",
-                    letterSpacing: "0.12em",
-                  }}
-                >
-                  CAPS Certified
+                <div>
+                  <div className="flex items-center gap-1 text-amber-500 text-xs">
+                    {"★★★★★".split("").map((star, i) => (
+                      <span key={i}>{star}</span>
+                    ))}
+                    <span className="font-bold text-[#0f172a] text-xs ml-1">4.9/5</span>
+                  </div>
+                  <p
+                    className="text-[#64748b] text-xs font-medium mt-0.5"
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}
+                  >
+                    Trusted by clients across South Africa
+                  </p>
                 </div>
               </div>
 
             </div>
+
+            {/* ── RIGHT — Image collage (col-span-5) ── */}
+            <div className="lg:col-span-5 relative">
+              {/* Decorative back-plate glow */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-emerald-100/60 via-amber-100/40 to-teal-100/60 rounded-3xl blur-2xl transform -rotate-2 scale-105 pointer-events-none" />
+
+              <div className="relative grid grid-cols-12 gap-3.5 h-[560px]">
+
+                {/* Large portrait image (col 1-7, row 1-5) */}
+                <div
+                  className="col-span-7 row-span-4 rounded-2xl overflow-hidden relative bg-white border border-slate-200/80 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.08)] group"
+                >
+                  <img
+                    src="/images/therapist-seated-plant.jpg"
+                    alt="Maletsatsi Sibanda - Counselling Therapist & Life Coach"
+                    className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/15 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+                    <p
+                      className="font-bold text-sm text-white"
+                      style={{ fontFamily: "'Playfair Display', serif" }}
+                    >
+                      Maletsatsi Sibanda
+                    </p>
+                    <p className="text-emerald-200 text-xs mt-0.5" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                      Counselling Therapist & Life Coach
+                    </p>
+                  </div>
+                </div>
+
+                {/* Secondary upper card - Headshot portrait (col 8-12, row 1-2) */}
+                <div
+                  className="col-span-5 row-span-2 rounded-2xl overflow-hidden relative bg-white border border-slate-200/80 shadow-md group"
+                >
+                  <img
+                    src="/images/therapist-portrait.jpg"
+                    alt="Maletsatsi Sibanda Portrait"
+                    className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
+                  <span className="absolute bottom-2.5 left-3 text-[11px] font-bold text-white tracking-wide">
+                    Lead Therapist
+                  </span>
+                </div>
+
+                {/* Stat progress card (col 8-12, row 3-4) */}
+                <div
+                  className="col-span-5 row-span-2 rounded-2xl p-4 flex flex-col justify-between bg-white border border-slate-200/90 shadow-lg shadow-slate-200/50"
+                >
+                  <div>
+                    <div className="flex items-baseline justify-between">
+                      <p
+                        className="text-3xl font-black text-[#0f2820]"
+                        style={{ fontFamily: "'Playfair Display', serif" }}
+                      >
+                        7+
+                      </p>
+                      <span className="text-[10px] font-bold text-[#156e52] bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/50">
+                        Focus Areas
+                      </span>
+                    </div>
+                    <p
+                      className="text-[#ea7627] text-xs font-bold mt-0.5 leading-tight"
+                      style={{ fontFamily: "'DM Sans', sans-serif" }}
+                    >
+                      Coaching & Therapy
+                    </p>
+                  </div>
+
+                  <div className="space-y-2 mt-2">
+                    {[
+                      { label: "Individual", pct: 92 },
+                      { label: "Couples", pct: 85 },
+                      { label: "Life Coaching", pct: 89 },
+                    ].map((s) => (
+                      <div key={s.label}>
+                        <div className="flex justify-between text-[10px] mb-0.5">
+                          <span className="text-[#64748b] font-medium">{s.label}</span>
+                          <span className="text-[#0f172a] font-bold">~{s.pct}%</span>
+                        </div>
+                        <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                          <div
+                            className="h-full rounded-full"
+                            style={{
+                              width: `${s.pct}%`,
+                              background: "linear-gradient(90deg, #156e52, #ea7627)",
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Bottom photo strip with Brand Badge (col 1-12, row 5-6) */}
+                <div
+                  className="col-span-12 row-span-2 rounded-2xl overflow-hidden relative bg-white border border-slate-200/80 shadow-md group"
+                >
+                  <img
+                    src="/images/hero-therapy-session.jpg"
+                    alt="Insight Works Therapy & Coaching Studio Space"
+                    className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-900/40 to-transparent" />
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white">
+                    <p className="font-bold text-sm" style={{ fontFamily: "'Playfair Display', serif" }}>
+                      In-Person & Telehealth Support
+                    </p>
+                    <p className="text-emerald-200 text-xs mt-0.5 font-mono">+27 79 550 1557 · South Africa</p>
+                  </div>
+                  <div
+                    className="absolute top-3 right-3 px-3 py-1 rounded-full text-white text-[11px] font-bold tracking-wider uppercase shadow-md"
+                    style={{
+                      background: "linear-gradient(135deg, #ea7627, #156e52)",
+                      letterSpacing: "0.1em",
+                    }}
+                  >
+                    Insight Works
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
 
-      {/* ── BOTTOM STRIP ── */}
-      <div
-        className="relative z-10 border-t"
-        style={{ borderColor: "rgba(255,255,255,0.06)" }}
-      >
+      {/* ── BOTTOM STATS STRIP ── */}
+      <div className="relative z-10 border-t border-slate-200/80 bg-slate-50/80 backdrop-blur-md mt-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <p
-              className="text-[#555] text-xs tracking-widest uppercase"
-              style={{ fontFamily: "'DM Sans', sans-serif" }}
-            >
-              Enrolments open for 2026
-            </p>
-            <div className="flex flex-wrap gap-x-8 gap-y-2">
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+              <p
+                className="text-[#475569] text-xs font-bold tracking-widest uppercase"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
+              >
+                Accepting New Clients This Month
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-2">
               {[
-                { num: "R–12", label: "All Grades" },
-                { num: "200+", label: "Learners" },
-                { num: "CAPS", label: "Aligned" },
-                { num: "100%", label: "Online" },
+                { num: "10+", label: "Years Experience" },
+                { num: "500+", label: "Clients Guided" },
+                { num: "3", label: "Care Formats" },
+                { num: "100%", label: "POPIA Confidential" },
               ].map((s) => (
                 <div key={s.label} className="flex items-center gap-2">
                   <span
-                    className="font-black text-white text-sm"
+                    className="font-black text-[#0f172a] text-sm"
                     style={{ fontFamily: "'DM Sans', sans-serif" }}
                   >
                     {s.num}
                   </span>
-                  <span className="text-[#555] text-xs" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                  <span className="text-[#64748b] text-xs font-medium" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                     {s.label}
                   </span>
                 </div>

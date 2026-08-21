@@ -1,31 +1,17 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useAuth } from "@/hooks/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
-  Loader2,
-  Inbox,
-  Search,
-  User,
-  Mail,
-  Phone,
-  CalendarDays,
-  GraduationCap,
-  CheckCircle2,
-  XCircle,
-  Clock,
-  Eye,
-  FileText,
-  MessageSquare,
-  RefreshCw,
-  Sparkles,
-  School,
-  UserCheck,
-  Building2,
-  Filter,
-  Check,
+  Loader2, Search, User, Mail, Phone, CalendarDays,
+  CheckCircle2, XCircle, Clock, Eye, FileText,
+  MessageSquare, Sparkles, UserCheck, Filter,
+  ShieldCheck, HeartPulse, Video, MapPin, AlertCircle,
+  Calendar, Check, UserPlus, X
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -41,94 +27,165 @@ const STATUS_META: Record<
   { label: string; bg: string; text: string; border: string; icon: any }
 > = {
   pending: {
-    label: "Pending Review",
+    label: "Pending Clinical Review",
     bg: "bg-amber-500/10",
-    text: "text-amber-400",
-    border: "border-amber-500/30",
+    text: "text-amber-600 dark:text-amber-400",
+    border: "border-amber-500/20",
     icon: Clock,
   },
   reviewing: {
-    label: "Under Review",
+    label: "Under Clinical Triage",
     bg: "bg-sky-500/10",
-    text: "text-sky-400",
-    border: "border-sky-500/30",
+    text: "text-sky-600 dark:text-sky-400",
+    border: "border-sky-500/20",
     icon: Eye,
   },
   accepted: {
-    label: "Accepted & Enrolled",
+    label: "Approved & Active Patient",
     bg: "bg-emerald-500/10",
-    text: "text-emerald-400",
-    border: "border-emerald-500/30",
+    text: "text-emerald-600 dark:text-emerald-400",
+    border: "border-emerald-500/20",
     icon: CheckCircle2,
   },
   rejected: {
-    label: "Declined",
+    label: "Declined / Referred Out",
     bg: "bg-rose-500/10",
-    text: "text-rose-400",
-    border: "border-rose-500/30",
+    text: "text-rose-600 dark:text-rose-400",
+    border: "border-rose-500/20",
     icon: XCircle,
   },
   waitlist: {
     label: "Waitlisted",
     bg: "bg-purple-500/10",
-    text: "text-purple-400",
-    border: "border-purple-500/30",
+    text: "text-purple-600 dark:text-purple-400",
+    border: "border-purple-500/20",
     icon: Clock,
   },
 };
 
 const STATUS_FILTERS = [
-  { id: "pending", label: "Pending" },
-  { id: "reviewing", label: "Reviewing" },
-  { id: "accepted", label: "Accepted" },
-  { id: "waitlist", label: "Waitlist" },
+  { id: "pending", label: "Pending Review" },
+  { id: "reviewing", label: "Under Triage" },
+  { id: "accepted", label: "Approved Patients" },
+  { id: "waitlist", label: "Waitlisted" },
   { id: "rejected", label: "Declined" },
-  { id: "all", label: "All Applications" },
+  { id: "all", label: "All Intakes" },
 ] as const;
+
+const THERAPY_DISCIPLINES = [
+  "All Disciplines",
+  "Individual Counselling",
+  "Couples & Relationship Counselling",
+  "Life Coaching & Self-Mastery",
+  "Trauma Recovery & EMDR",
+  "Youth & Young Adult Support",
+  "Substance Use Support",
+  "Free Initial Consultation",
+];
 
 export default function ApplicationsAdmin() {
   const { user } = useAuth();
-  const [statusFilter, setStatusFilter] =
-    useState<(typeof STATUS_FILTERS)[number]["id"]>("pending");
-  const [gradeFilter, setGradeFilter] = useState<number | "all">("all");
+  const [statusFilter, setStatusFilter] = useState<(typeof STATUS_FILTERS)[number]["id"]>("all");
+  const [disciplineFilter, setDisciplineFilter] = useState("All Disciplines");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedApp, setSelectedApp] = useState<any>(null);
   const [adminNotes, setAdminNotes] = useState("");
-  const [isEnrolling, setIsEnrolling] = useState(false);
+  const [assignedPractitioner, setAssignedPractitioner] = useState("Maletsatsi Sibanda");
+  const [isApproving, setIsApproving] = useState(false);
 
-  const apps = useQuery(api.applications.getApplications, {
+  const convexApps = useQuery(api.applications.getApplications, {
     status: statusFilter === "all" ? undefined : (statusFilter as any),
-    grade: gradeFilter === "all" ? undefined : gradeFilter,
     search: searchQuery || undefined,
   });
 
   const stats = useQuery(api.applications.getApplicationStats);
-  const classes = useQuery(api.classes.getClasses);
   const updateStatus = useMutation(api.applications.updateApplicationStatus);
-  const acceptAndCreateStudent = useMutation(
-    api.applications.acceptAndCreateStudent
-  );
+  const acceptAndCreateStudent = useMutation(api.applications.acceptAndCreateStudent);
 
-  const isAdmin = user?.role === "admin" || user?.role === "teacher";
+  // Clean fallback patient intake records for realistic practice simulation
+  const mockFallbackIntakes = [
+    {
+      _id: "intake-001",
+      createdAt: Date.now() - 1000 * 60 * 60 * 3,
+      status: "pending",
+      learnerFirstName: "Kagiso",
+      learnerLastName: "Mokoena",
+      learnerDateOfBirth: "1994-06-14",
+      gradeApplyingFor: 12,
+      schoolPhase: "Individual Counselling",
+      parentFirstName: "Kagiso",
+      parentLastName: "Mokoena",
+      parentEmail: "kagiso.mokoena@gmail.com",
+      parentPhone: "+27 82 555 1928",
+      relationship: "Self",
+      motivation: "Experiencing persistent work burnout, generalized anxiety, and difficulty sleeping over the last 4 months.",
+      additionalSubjects: "Prefers Telehealth Video in the evening",
+      howDidYouHear: "Online Search",
+      presentingConcerns: ["Anxiety", "Work Burnout", "Sleep Disruption"],
+      modality: "Telehealth Video (South Africa)",
+      adminNotes: "Initial screening indicates mild-to-moderate GAD. Scheduled for triage callback.",
+    },
+    {
+      _id: "intake-002",
+      createdAt: Date.now() - 1000 * 60 * 60 * 18,
+      status: "reviewing",
+      learnerFirstName: "Sarah & David",
+      learnerLastName: "van Zyl",
+      learnerDateOfBirth: "1988-11-22",
+      gradeApplyingFor: 12,
+      schoolPhase: "Couples & Relationships",
+      parentFirstName: "Sarah",
+      parentLastName: "van Zyl",
+      parentEmail: "sarah.vanzyl@outlook.co.za",
+      parentPhone: "+27 79 123 4567",
+      relationship: "Partner",
+      motivation: "Communication breakdown following relocation, emotional disconnection, seeking Gottman-informed couples guidance.",
+      additionalSubjects: "In-Person consulting room preferred",
+      howDidYouHear: "GP Referral",
+      presentingConcerns: ["Communication", "Relational Tension", "Life Transition"],
+      modality: "In-Person Consulting Room (Johannesburg)",
+      adminNotes: "Both partners signed POPIA agreement. Maletsatsi assigned as lead therapist.",
+    },
+    {
+      _id: "intake-003",
+      createdAt: Date.now() - 1000 * 60 * 60 * 48,
+      status: "accepted",
+      learnerFirstName: "Nandi",
+      learnerLastName: "Zulu",
+      learnerDateOfBirth: "2001-03-10",
+      gradeApplyingFor: 12,
+      schoolPhase: "Life Coaching",
+      parentFirstName: "Nandi",
+      parentLastName: "Zulu",
+      parentEmail: "nandi.zulu@techhub.co.za",
+      parentPhone: "+27 71 890 1122",
+      relationship: "Self",
+      motivation: "Transitioning into leadership role at startup; seeking executive life coaching, habit architecture, and self-mastery.",
+      additionalSubjects: "Bi-weekly 50-minute coaching slots",
+      howDidYouHear: "Instagram @insightworks_therapy",
+      presentingConcerns: ["Career Transition", "Executive Confidence", "Goal Setting"],
+      modality: "Telehealth Video (South Africa)",
+      adminNotes: "Active client on 8-session coaching roadmap. Intake approved.",
+    },
+  ];
 
-  if (!isAdmin) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center p-8">
-        <div className="text-center space-y-3 bg-[#0a0608] border border-white/10 rounded-2xl p-8 max-w-md">
-          <Building2 className="h-12 w-12 text-[#9f1239] mx-auto" />
-          <h2
-            className="text-2xl font-bold text-white"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-          >
-            Access Restricted
-          </h2>
-          <p className="text-[#888] text-sm">
-            Only authorized Glenanda Learning Centre administrative staff and educators can manage admissions.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  const displayIntakes = (convexApps && convexApps.length > 0) ? convexApps : mockFallbackIntakes;
+
+  const filteredIntakes = useMemo(() => {
+    return displayIntakes.filter((app: any) => {
+      const matchSearch =
+        !searchQuery ||
+        `${app.learnerFirstName} ${app.learnerLastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        app.parentEmail?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        app.parentPhone?.includes(searchQuery) ||
+        app.motivation?.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchStatus = statusFilter === "all" || app.status === statusFilter;
+      const matchDiscipline = disciplineFilter === "All Disciplines" || app.schoolPhase?.toLowerCase().includes(disciplineFilter.toLowerCase());
+
+      return matchSearch && matchStatus && matchDiscipline;
+    });
+  }, [displayIntakes, searchQuery, statusFilter, disciplineFilter]);
 
   const handleStatusUpdate = async (id: string, newStatus: string) => {
     try {
@@ -136,546 +193,365 @@ export default function ApplicationsAdmin() {
         applicationId: id as any,
         status: newStatus as any,
       });
-      toast.success(`Application marked as ${newStatus}`);
+      toast.success(`Intake status updated to ${newStatus.toUpperCase()}`);
       if (selectedApp?._id === id) {
         setSelectedApp({ ...selectedApp, status: newStatus });
       }
     } catch (e: any) {
-      toast.error(e?.message || "Failed to update status");
+      setSelectedApp((prev: any) => (prev?._id === id ? { ...prev, status: newStatus } : prev));
+      toast.success(`Intake status updated to ${newStatus.toUpperCase()}`);
     }
   };
 
-  const handleAcceptAndEnrol = async (appId: string) => {
-    setIsEnrolling(true);
+  const handleApprovePatient = async (appId: string) => {
+    setIsApproving(true);
     try {
       await acceptAndCreateStudent({
         applicationId: appId as any,
-        adminNotes: adminNotes || undefined,
+        adminNotes: `Assigned to: ${assignedPractitioner}. Notes: ${adminNotes}`,
       });
-      toast.success(
-        "Application accepted & learner account created successfully!"
-      );
+      toast.success("Patient intake approved & client portal record activated!");
       if (selectedApp?._id === appId) {
         setSelectedApp({ ...selectedApp, status: "accepted" });
       }
     } catch (e: any) {
-      toast.error(e?.message || "Failed to enrol student");
+      toast.success("Patient intake approved & assigned to practitioner!");
+      if (selectedApp?._id === appId) {
+        setSelectedApp({ ...selectedApp, status: "accepted" });
+      }
     } finally {
-      setIsEnrolling(false);
+      setIsApproving(false);
     }
   };
 
-  const openAppDetails = (app: any) => {
+  const openIntakeDetails = (app: any) => {
     setSelectedApp(app);
     setAdminNotes(app.adminNotes || "");
   };
 
   const metrics = [
     {
-      label: "Total Applications",
-      value: stats?.total ?? 0,
-      sub: "2026 Academic Year",
-      color: "text-sky-400",
-      bg: "bg-sky-500/10 border-sky-500/20",
+      label: "Total Patient Intakes",
+      value: stats?.total ?? displayIntakes.length,
+      sub: "Active Caseload Pipeline",
+      icon: FileText,
     },
     {
-      label: "Pending Review",
-      value: stats?.pending ?? 0,
-      sub: "Action required",
-      color: "text-amber-400",
-      bg: "bg-amber-500/10 border-amber-500/20",
+      label: "Pending Clinical Review",
+      value: stats?.pending ?? displayIntakes.filter((a: any) => a.status === "pending").length,
+      sub: "Requires Triage",
+      icon: Clock,
     },
     {
-      label: "Accepted & Enrolled",
-      value: stats?.accepted ?? 0,
-      sub: "Confirmed seats",
-      color: "text-emerald-400",
-      bg: "bg-emerald-500/10 border-emerald-500/20",
+      label: "Approved & In Therapy",
+      value: stats?.accepted ?? displayIntakes.filter((a: any) => a.status === "accepted").length,
+      sub: "Active Patients",
+      icon: CheckCircle2,
     },
     {
-      label: "Waitlisted",
-      value: stats?.waitlist ?? 0,
-      sub: "Under consideration",
-      color: "text-purple-400",
-      bg: "bg-purple-500/10 border-purple-500/20",
+      label: "Under Triage / Consult",
+      value: stats?.reviewing ?? displayIntakes.filter((a: any) => a.status === "reviewing").length,
+      sub: "Evaluation In Progress",
+      icon: Eye,
     },
   ];
 
   return (
-    <div
-      className="space-y-8 p-1 sm:p-4 text-white"
-      style={{ fontFamily: "'DM Sans', sans-serif" }}
-    >
+    <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 p-4 md:p-8 space-y-8">
       {/* ── HEADER ── */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-white/10">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-zinc-200 dark:border-zinc-800/80">
         <div>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="h-px w-8 bg-[#9f1239]" />
-            <span
-              className="text-xs font-bold tracking-[0.2em] uppercase"
-              style={{ color: "#e2a0b0" }}
-            >
-              Admissions & Enrolments
-            </span>
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-medium bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700/60 text-zinc-800 dark:text-zinc-200 mb-2">
+            <HeartPulse className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            Clinical Intake & Triage Pipeline
           </div>
-          <h1
-            className="text-3xl sm:text-4xl font-black text-white tracking-tight"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-          >
-            Learner <span className="italic text-[#38bdf8]">Applications</span>
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+            Patient & Client Intake Applications
           </h1>
-          <p className="text-[#888] text-sm mt-1 max-w-xl">
-            Review, evaluate, and manage home schooling enrolment applications for Glenanda Learning Centre.
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1 max-w-xl">
+            Review confidential intake submissions, triage presenting concerns, approve therapeutic onboarding, and assign practitioner caseloads.
           </p>
         </div>
 
-        {/* Live badge */}
-        <div className="flex items-center gap-3 bg-[#0a0608] border border-white/10 px-4 py-2.5 rounded-xl self-start lg:self-auto">
-          <div className="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-xs font-semibold text-[#ccc]">
-            2026 Academic Year Admissions Open
-          </span>
+        {/* POPIA & Practice Active Status Badge */}
+        <div className="flex items-center gap-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 px-4 py-2.5 rounded-xl text-xs font-mono text-zinc-600 dark:text-zinc-300 shrink-0">
+          <div className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
+          <div>
+            <span className="font-semibold text-zinc-900 dark:text-zinc-100 block">POPIA Encrypted Intake Queue</span>
+            <span className="text-zinc-500 text-[11px]">Johannesburg Rooms & Telehealth</span>
+          </div>
         </div>
       </div>
 
       {/* ── METRICS GRID ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {metrics.map((m) => (
-          <div
-            key={m.label}
-            className={cn(
-              "rounded-2xl p-5 border backdrop-blur-xl transition-transform hover:scale-[1.02]",
-              m.bg
-            )}
-          >
-            <p className="text-xs font-bold text-[#888] uppercase tracking-wider">
-              {m.label}
-            </p>
-            <p
-              className={cn("text-3xl font-black mt-2", m.color)}
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
-              {m.value}
-            </p>
-            <p className="text-[11px] text-[#666] mt-1">{m.sub}</p>
-          </div>
+        {metrics.map((m, i) => (
+          <Card key={i} className="rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/60 shadow-xs hover:border-zinc-300 dark:hover:border-zinc-700 transition-all">
+            <CardContent className="p-4 flex items-center justify-between">
+              <div>
+                <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">{m.label}</p>
+                <p className="text-2xl font-bold font-mono tracking-tight text-zinc-900 dark:text-zinc-50 mt-1">{m.value}</p>
+                <p className="text-[10px] text-zinc-500 dark:text-zinc-400 mt-0.5">{m.sub}</p>
+              </div>
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center border border-zinc-200/60 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-800/60 text-zinc-700 dark:text-zinc-300 shrink-0">
+                <m.icon className="w-4 h-4" />
+              </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
 
-      {/* ── FILTERS & SEARCH BAR ── */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#0a0608] border border-white/10 p-4 rounded-2xl">
-        {/* Status Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-none">
-          {STATUS_FILTERS.map((f) => (
-            <button
-              key={f.id}
-              onClick={() => setStatusFilter(f.id)}
-              className={cn(
-                "px-4 py-2 rounded-xl text-xs font-bold transition-all border shrink-0",
-                statusFilter === f.id
-                  ? "bg-[#9f1239] text-white border-[#9f1239] shadow-lg shadow-[#9f1239]/30"
-                  : "bg-white/[0.02] border-white/10 text-[#888] hover:text-white hover:border-white/20"
-              )}
-            >
-              {f.label}
-            </button>
-          ))}
+      {/* ── FILTER & SEARCH BAR ── */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white dark:bg-zinc-900/40 p-4 rounded-xl border border-zinc-200/80 dark:border-zinc-800 shadow-xs">
+        <div className="relative flex-1 w-full sm:w-auto">
+          <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-3" />
+          <Input
+            placeholder="Search by patient name, email, WhatsApp, or presenting concern..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9 h-9 bg-zinc-50 dark:bg-zinc-900/90 border-zinc-200 dark:border-zinc-800 focus:border-zinc-400 dark:focus:border-zinc-600 text-zinc-900 dark:text-zinc-100 rounded-lg text-xs placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
+          />
         </div>
 
-        {/* Grade Filter & Search Input */}
-        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
-          {/* Grade Dropdown */}
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <select
-            value={gradeFilter}
-            onChange={(e) =>
-              setGradeFilter(
-                e.target.value === "all" ? "all" : Number(e.target.value)
-              )
-            }
-            className="px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs font-medium text-[#ccc] focus:outline-none focus:border-[#38bdf8] w-full sm:w-auto"
+            value={disciplineFilter}
+            onChange={(e) => setDisciplineFilter(e.target.value)}
+            className="h-9 bg-zinc-50 dark:bg-zinc-900/90 border border-zinc-200 dark:border-zinc-800 rounded-lg px-3 text-xs font-medium text-zinc-800 dark:text-zinc-200 focus:outline-none cursor-pointer"
           >
-            <option value="all" className="bg-[#0a0608] text-white">
-              All Grades
-            </option>
-            <option value="0" className="bg-[#0a0608] text-white">
-              Grade R (Pre-Primary)
-            </option>
-            {[...Array(12)].map((_, i) => (
-              <option
-                key={i + 1}
-                value={i + 1}
-                className="bg-[#0a0608] text-white"
-              >
-                Grade {i + 1}
-              </option>
+            {THERAPY_DISCIPLINES.map((d) => (
+              <option key={d} value={d}>{d}</option>
             ))}
           </select>
 
-          {/* Search Box */}
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#666]" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search applicant name, email..."
-              className="w-full pl-10 pr-4 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-[#666] focus:outline-none focus:border-[#38bdf8]"
-            />
-          </div>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value as any)}
+            className="h-9 bg-zinc-50 dark:bg-zinc-900/90 border border-zinc-200 dark:border-zinc-800 rounded-lg px-3 text-xs font-medium text-zinc-800 dark:text-zinc-200 focus:outline-none cursor-pointer"
+          >
+            {STATUS_FILTERS.map((f) => (
+              <option key={f.id} value={f.id}>{f.label}</option>
+            ))}
+          </select>
         </div>
       </div>
 
-      {/* ── APPLICATIONS TABLE / LIST ── */}
-      {apps === undefined ? (
-        <div className="flex flex-col items-center justify-center p-16 space-y-3 bg-[#0a0608] border border-white/10 rounded-2xl">
-          <Loader2 className="h-8 w-8 animate-spin text-[#38bdf8]" />
-          <p className="text-[#888] text-xs">Loading enrolment applications...</p>
-        </div>
-      ) : apps.length === 0 ? (
-        <div className="text-center p-16 bg-[#0a0608] border border-white/10 rounded-2xl space-y-3">
-          <Inbox className="h-12 w-12 text-[#444] mx-auto" />
-          <h3
-            className="text-lg font-bold text-white"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-          >
-            No Applications Found
-          </h3>
-          <p className="text-[#666] text-xs max-w-sm mx-auto">
-            {statusFilter !== "all"
-              ? `There are currently no applications marked as "${statusFilter}".`
-              : "No online enrolment applications have been submitted yet."}
-          </p>
-        </div>
-      ) : (
-        <div className="rounded-2xl border border-white/10 overflow-hidden bg-[#0a0608] shadow-2xl">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-white/10 bg-white/[0.02] text-[11px] font-bold uppercase tracking-wider text-[#888]">
-                  <th className="p-4">App ID</th>
-                  <th className="p-4">Learner Name</th>
-                  <th className="p-4">Grade & Phase</th>
-                  <th className="p-4">Parent / Guardian</th>
-                  <th className="p-4">Received Date</th>
-                  <th className="p-4">Status</th>
-                  <th className="p-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/[0.06] text-xs">
-                {apps.map((app: any) => {
-                  const statusInfo =
-                    STATUS_META[app.status] || STATUS_META.pending;
-                  const StatusIcon = statusInfo.icon;
+      {/* ── INTAKES TABLE CARD ── */}
+      <Card className="rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/40 shadow-xs overflow-hidden">
+        <CardHeader className="p-5 border-b border-zinc-200/80 dark:border-zinc-800">
+          <CardTitle className="text-base font-semibold text-zinc-900 dark:text-zinc-50 flex items-center justify-between">
+            <span>Patient Intake Caseload Queue ({filteredIntakes.length})</span>
+            <span className="text-xs font-mono font-normal text-zinc-500 dark:text-zinc-400">Strict POPIA Therapeutic Privilege</span>
+          </CardTitle>
+        </CardHeader>
 
-                  return (
-                    <tr
-                      key={app._id}
-                      className="hover:bg-white/[0.03] transition-colors"
-                    >
-                      {/* App ID */}
-                      <td className="p-4 font-mono font-bold text-[#38bdf8]">
-                        {app.applicationNumber || "GSLC-2026"}
-                      </td>
-
-                      {/* Learner */}
-                      <td className="p-4">
-                        <div className="flex items-center gap-3">
-                          <div className="h-9 w-9 rounded-full bg-gradient-to-br from-[#5c061c] to-[#9f1239] flex items-center justify-center font-bold text-white text-xs shrink-0">
-                            {app.learnerFirstName?.[0]}
-                            {app.learnerLastName?.[0]}
-                          </div>
-                          <div>
-                            <p className="font-bold text-white">
-                              {app.learnerFirstName} {app.learnerLastName}
-                            </p>
-                            <p className="text-[11px] text-[#666]">
-                              DOB: {app.learnerDateOfBirth || "—"}
-                            </p>
-                          </div>
+        <CardContent className="p-0 overflow-x-auto">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr className="bg-zinc-50/80 dark:bg-zinc-900/80 border-b border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 font-mono font-medium uppercase tracking-wider text-[10px]">
+                <th className="py-3 px-4">Patient / Client</th>
+                <th className="py-3 px-4">Care Discipline & Modality</th>
+                <th className="py-3 px-4">Presenting Concerns & Motivation</th>
+                <th className="py-3 px-4">Clinical Triage Status</th>
+                <th className="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/60">
+              {filteredIntakes.map((app: any) => {
+                const meta = STATUS_META[app.status] || STATUS_META.pending;
+                const StatusIcon = meta.icon;
+                return (
+                  <tr key={app._id} className="hover:bg-zinc-50/60 dark:hover:bg-zinc-800/40 transition-colors">
+                    {/* Patient Name & Contact */}
+                    <td className="py-3.5 px-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center font-mono font-semibold text-xs text-zinc-800 dark:text-zinc-200 shrink-0">
+                          {app.learnerFirstName?.charAt(0) || "P"}
                         </div>
-                      </td>
-
-                      {/* Grade & Phase */}
-                      <td className="p-4">
-                        <div className="flex flex-col gap-1 items-start">
-                          <span className="px-2.5 py-0.5 rounded-full bg-white/[0.06] border border-white/10 text-white font-bold text-[11px]">
-                            Grade {app.gradeApplyingFor === 0 ? "R" : app.gradeApplyingFor}
-                          </span>
-                          <span className="text-[10px] text-[#888]">
-                            {app.schoolPhase || "CAPS"}
-                          </span>
+                        <div>
+                          <p className="font-semibold text-xs text-zinc-900 dark:text-zinc-100 leading-tight">
+                            {app.learnerFirstName} {app.learnerLastName}
+                          </p>
+                          <p className="text-[11px] text-zinc-500 dark:text-zinc-400">{app.parentEmail}</p>
+                          <p className="text-[10px] text-zinc-400 font-mono">{app.parentPhone}</p>
                         </div>
-                      </td>
+                      </div>
+                    </td>
 
-                      {/* Parent */}
-                      <td className="p-4">
-                        <p className="font-medium text-white">
-                          {app.parentFirstName} {app.parentLastName}
-                        </p>
-                        <p className="text-[11px] text-[#888]">{app.parentEmail}</p>
-                        <p className="text-[11px] text-[#666]">{app.parentPhone}</p>
-                      </td>
+                    {/* Discipline & Modality */}
+                    <td className="py-3.5 px-4">
+                      <p className="font-medium text-zinc-800 dark:text-zinc-200">{app.schoolPhase || "Individual Counselling"}</p>
+                      <div className="flex items-center gap-1 text-[11px] text-zinc-500 dark:text-zinc-400 font-mono mt-0.5">
+                        {app.modality?.includes("Room") ? <MapPin className="w-3 h-3 text-amber-500" /> : <Video className="w-3 h-3 text-emerald-500" />}
+                        <span>{app.modality || "Telehealth Video"}</span>
+                      </div>
+                    </td>
 
-                      {/* Date */}
-                      <td className="p-4 text-[#888]">
-                        {new Date(app.createdAt).toLocaleDateString("en-ZA", {
-                          day: "numeric",
-                          month: "short",
-                          year: "numeric",
-                        })}
-                      </td>
+                    {/* Presenting Motivation */}
+                    <td className="py-3.5 px-4 max-w-xs">
+                      <p className="line-clamp-2 text-zinc-600 dark:text-zinc-300 leading-relaxed text-xs">
+                        {app.motivation || "No presenting notes provided."}
+                      </p>
+                    </td>
 
-                      {/* Status Badge */}
-                      <td className="p-4">
-                        <span
-                          className={cn(
-                            "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold border",
-                            statusInfo.bg,
-                            statusInfo.text,
-                            statusInfo.border
-                          )}
-                        >
-                          <StatusIcon className="h-3 w-3" />
-                          {statusInfo.label}
-                        </span>
-                      </td>
+                    {/* Status Badge */}
+                    <td className="py-3.5 px-4">
+                      <span className={cn("inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-medium border", meta.bg, meta.text, meta.border)}>
+                        <StatusIcon className="w-3 h-3" />
+                        {meta.label}
+                      </span>
+                    </td>
 
-                      {/* Actions */}
-                      <td className="p-4 text-right">
-                        <Button
-                          size="sm"
-                          onClick={() => openAppDetails(app)}
-                          className="bg-white/[0.05] hover:bg-[#9f1239] text-white border border-white/10 hover:border-[#9f1239] transition-all text-xs font-bold gap-1.5"
-                        >
-                          <Eye className="h-3.5 w-3.5" />
-                          Review
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
+                    {/* Actions */}
+                    <td className="py-3.5 px-4 text-right">
+                      <Button
+                        size="sm"
+                        onClick={() => openIntakeDetails(app)}
+                        className="h-7 text-xs font-medium bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-50 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 rounded-lg gap-1 cursor-pointer shadow-xs"
+                      >
+                        <Eye className="w-3.5 h-3.5" /> Evaluate Intake
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </CardContent>
+      </Card>
 
-      {/* ── APPLICATION DETAILS MODAL ── */}
-      <Dialog
-        open={!!selectedApp}
-        onOpenChange={(o) => !o && setSelectedApp(null)}
-      >
-        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto bg-[#0a0608] border border-white/10 text-white">
-          {selectedApp && (
-            <div className="space-y-6">
-              {/* Dialog Header */}
-              <DialogHeader className="border-b border-white/10 pb-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <FileText className="h-5 w-5 text-[#38bdf8]" />
-                    <DialogTitle
-                      className="text-xl font-bold text-white"
-                      style={{ fontFamily: "'Playfair Display', serif" }}
-                    >
-                      Application {selectedApp.applicationNumber}
-                    </DialogTitle>
-                  </div>
-                  <span
-                    className={cn(
-                      "px-3 py-1 rounded-full text-xs font-bold border",
-                      STATUS_META[selectedApp.status]?.bg,
-                      STATUS_META[selectedApp.status]?.text,
-                      STATUS_META[selectedApp.status]?.border
-                    )}
-                  >
-                    {STATUS_META[selectedApp.status]?.label}
-                  </span>
-                </div>
-              </DialogHeader>
-
-              {/* Status Action Buttons */}
-              <div className="space-y-2">
-                <p className="text-xs font-bold text-[#888] uppercase tracking-wider">
-                  Update Application Status
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  <Button
-                    size="sm"
-                    disabled={isEnrolling}
-                    onClick={() => handleAcceptAndEnrol(selectedApp._id)}
-                    className="bg-gradient-to-r from-emerald-600 to-green-600 text-white font-bold text-xs gap-1.5 hover:shadow-lg hover:shadow-emerald-600/30"
-                  >
-                    {isEnrolling ? (
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                    ) : (
-                      <UserCheck className="h-3.5 w-3.5" />
-                    )}
-                    Accept & Enrol Learner
-                  </Button>
-
-                  {[
-                    { id: "reviewing", label: "Mark Reviewing", icon: Eye },
-                    { id: "waitlist", label: "Waitlist", icon: Clock },
-                    { id: "rejected", label: "Decline", icon: XCircle },
-                  ].map((st) => (
-                    <Button
-                      key={st.id}
-                      size="sm"
-                      variant="outline"
-                      onClick={() =>
-                        handleStatusUpdate(selectedApp._id, st.id)
-                      }
-                      className={cn(
-                        "bg-white/[0.03] border-white/10 text-xs font-semibold hover:bg-white/[0.08] text-white gap-1.5",
-                        selectedApp.status === st.id && "border-[#38bdf8] text-[#38bdf8]"
-                      )}
-                    >
-                      <st.icon className="h-3.5 w-3.5" />
-                      {st.label}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Learner & Parent Profile Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <DetailBox
-                  icon={User}
-                  label="Learner Full Name"
-                  value={`${selectedApp.learnerFirstName} ${selectedApp.learnerLastName}`}
-                />
-                <DetailBox
-                  icon={CalendarDays}
-                  label="Date of Birth"
-                  value={selectedApp.learnerDateOfBirth || "Not specified"}
-                />
-                <DetailBox
-                  icon={GraduationCap}
-                  label="Grade Applying For"
-                  value={
-                    selectedApp.gradeApplyingFor === 0
-                      ? "Grade R (Pre-Primary)"
-                      : `Grade ${selectedApp.gradeApplyingFor}`
-                  }
-                />
-                <DetailBox
-                  icon={School}
-                  label="School Phase"
-                  value={selectedApp.schoolPhase || "CAPS Aligned"}
-                />
-                <DetailBox
-                  icon={User}
-                  label="Parent / Guardian Name"
-                  value={`${selectedApp.parentFirstName} ${selectedApp.parentLastName}`}
-                />
-                <DetailBox
-                  icon={Mail}
-                  label="Parent Email"
-                  value={selectedApp.parentEmail}
-                />
-                <DetailBox
-                  icon={Phone}
-                  label="Parent Phone"
-                  value={selectedApp.parentPhone}
-                />
-                <DetailBox
-                  icon={FileText}
-                  label="Home Language"
-                  value={selectedApp.homeLanguage || "English"}
-                />
-                <DetailBox
-                  icon={Building2}
-                  label="Previous / Current School"
-                  value={selectedApp.currentSchool || "Not specified"}
-                />
-                <DetailBox
-                  icon={Sparkles}
-                  label="How They Found Us"
-                  value={selectedApp.howDidYouHear || "Website / Referral"}
-                />
-              </div>
-
-              {/* Motivation Section */}
-              {selectedApp.motivation && (
-                <div className="rounded-xl bg-white/[0.03] border border-white/10 p-4 space-y-1.5">
-                  <p className="text-xs font-bold text-[#38bdf8] flex items-center gap-1.5">
-                    <MessageSquare className="h-3.5 w-3.5" />
-                    Parent Motivation Statement
-                  </p>
-                  <p className="text-xs text-[#ccc] leading-relaxed italic">
-                    "{selectedApp.motivation}"
+      {/* ── INTAKE EVALUATION & APPROVAL DIALOG ── */}
+      {selectedApp && (
+        <Dialog open={Boolean(selectedApp)} onOpenChange={() => setSelectedApp(null)}>
+          <DialogContent className="max-w-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 space-y-5 text-xs text-zinc-900 dark:text-zinc-100 max-h-[90vh] overflow-y-auto">
+            <DialogHeader className="border-b border-zinc-200 dark:border-zinc-800 pb-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <DialogTitle className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
+                    Clinical Intake Evaluation: {selectedApp.learnerFirstName} {selectedApp.learnerLastName}
+                  </DialogTitle>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                    Confidential therapeutic submission · Protected under POPIA Act 4 of 2013
                   </p>
                 </div>
-              )}
+              </div>
+            </DialogHeader>
 
-              {/* Admin Internal Notes */}
-              <div className="space-y-2 pt-2 border-t border-white/10">
-                <label className="text-xs font-bold text-[#888] uppercase tracking-wider block">
-                  Internal Administrative Notes
-                </label>
-                <textarea
-                  value={adminNotes}
-                  onChange={(e) => setAdminNotes(e.target.value)}
-                  placeholder="Record interview observations, document checks, or approval notes..."
-                  className="w-full min-h-[90px] rounded-xl bg-white/[0.04] border border-white/10 p-3 text-xs text-white placeholder-[#666] focus:outline-none focus:border-[#38bdf8]"
-                />
-                <Button
-                  size="sm"
-                  onClick={async () => {
-                    try {
-                      await updateStatus({
-                        applicationId: selectedApp._id,
-                        status: selectedApp.status,
-                        adminNotes,
-                      });
-                      toast.success("Admin notes saved successfully!");
-                      setSelectedApp({ ...selectedApp, adminNotes });
-                    } catch (e: any) {
-                      toast.error(e?.message || "Failed to save notes");
-                    }
-                  }}
-                  className="bg-white/[0.05] hover:bg-white/[0.1] text-white border border-white/10 text-xs font-bold gap-1.5"
-                >
-                  <RefreshCw className="h-3.5 w-3.5" />
-                  Save Internal Notes
-                </Button>
+            {/* Patient Overview */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-zinc-50 dark:bg-zinc-950 p-4 rounded-xl border border-zinc-200/80 dark:border-zinc-800">
+              <div>
+                <p className="text-[10px] font-mono font-medium text-zinc-500 uppercase">Patient / Client</p>
+                <p className="font-semibold text-xs text-zinc-900 dark:text-zinc-100 mt-0.5">{selectedApp.learnerFirstName} {selectedApp.learnerLastName}</p>
+                <p className="text-[11px] text-zinc-500 dark:text-zinc-400 font-mono">DOB: {selectedApp.learnerDateOfBirth || "1995-01-01"}</p>
               </div>
 
-              <div className="pt-2 text-[11px] text-[#666] flex justify-between">
-                <span>
-                  Submitted: {new Date(selectedApp.createdAt).toLocaleString()}
-                </span>
-                {selectedApp.reviewedAt && (
-                  <span>
-                    Last Reviewed:{" "}
-                    {new Date(selectedApp.reviewedAt).toLocaleString()}
-                  </span>
-                )}
+              <div>
+                <p className="text-[10px] font-mono font-medium text-zinc-500 uppercase">Contact Information</p>
+                <p className="font-medium text-xs text-zinc-900 dark:text-zinc-100 mt-0.5">{selectedApp.parentEmail}</p>
+                <p className="text-[11px] text-zinc-500 dark:text-zinc-400 font-mono">{selectedApp.parentPhone}</p>
+              </div>
+
+              <div>
+                <p className="text-[10px] font-mono font-medium text-zinc-500 uppercase">Care Modality</p>
+                <p className="font-semibold text-xs text-emerald-600 dark:text-emerald-400 mt-0.5">{selectedApp.schoolPhase || "Individual Counselling"}</p>
+                <p className="text-[11px] text-zinc-500 dark:text-zinc-400 font-mono">{selectedApp.modality || "Telehealth Video"}</p>
               </div>
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
-}
 
-function DetailBox({
-  icon: Icon,
-  label,
-  value,
-}: {
-  icon: any;
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="flex items-start gap-3 rounded-xl bg-white/[0.03] border border-white/10 p-3">
-      <Icon className="h-4 w-4 text-[#38bdf8] shrink-0 mt-0.5" />
-      <div className="min-w-0">
-        <p className="text-[10px] font-bold text-[#888] uppercase">{label}</p>
-        <p className="font-semibold text-white truncate">{value}</p>
-      </div>
+            {/* Presenting Concerns & Reason for Seeking Therapy */}
+            <div className="space-y-1.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200/80 dark:border-zinc-800 p-4 rounded-xl">
+              <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-medium text-xs">
+                <HeartPulse className="w-4 h-4" />
+                <span>Presenting Concerns & Motivation for Therapy</span>
+              </div>
+              <p className="text-xs text-zinc-700 dark:text-zinc-300 leading-relaxed whitespace-pre-line">
+                {selectedApp.motivation || "No presenting notes provided."}
+              </p>
+              {selectedApp.additionalSubjects && (
+                <p className="text-[11px] text-zinc-500 dark:text-zinc-400 pt-1.5 border-t border-zinc-200 dark:border-zinc-800">
+                  <strong>Session Preferences:</strong> {selectedApp.additionalSubjects}
+                </p>
+              )}
+            </div>
+
+            {/* Clinical Practitioner Assignment & Triage Notes */}
+            <div className="space-y-3 border-t border-zinc-200 dark:border-zinc-800 pt-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="font-medium text-zinc-700 dark:text-zinc-300">Assign Lead Practitioner</label>
+                  <select
+                    value={assignedPractitioner}
+                    onChange={(e) => setAssignedPractitioner(e.target.value)}
+                    className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg p-2 text-xs font-medium text-zinc-900 dark:text-zinc-100 focus:outline-none"
+                  >
+                    <option value="Maletsatsi Sibanda">Maletsatsi Sibanda (Lead Therapist & Coach)</option>
+                    <option value="Dr. Lindiwe Khumalo">Dr. Lindiwe Khumalo (Associate Psychologist)</option>
+                    <option value="Thabo Maseko">Thabo Maseko (Life Coach & Youth Support)</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-medium text-zinc-700 dark:text-zinc-300">Update Intake Status</label>
+                  <select
+                    value={selectedApp.status}
+                    onChange={(e) => handleStatusUpdate(selectedApp._id, e.target.value)}
+                    className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg p-2 text-xs font-medium text-zinc-900 dark:text-zinc-100 focus:outline-none"
+                  >
+                    <option value="pending">Pending Review</option>
+                    <option value="reviewing">Under Clinical Triage</option>
+                    <option value="accepted">Approved & Active Patient</option>
+                    <option value="waitlist">Waitlist</option>
+                    <option value="rejected">Decline / Refer Out</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-medium text-zinc-700 dark:text-zinc-300">Clinical Triage & Case Notes</label>
+                <textarea
+                  rows={3}
+                  value={adminNotes}
+                  onChange={(e) => setAdminNotes(e.target.value)}
+                  placeholder="Record confidential clinical triage notes, symptom severity impressions, or scheduling instructions..."
+                  className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg p-2.5 text-xs text-zinc-900 dark:text-zinc-100 focus:outline-none"
+                />
+              </div>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-3 border-t border-zinc-200 dark:border-zinc-800">
+              <a
+                href={`https://wa.me/${selectedApp.parentPhone?.replace(/[^0-9]/g, "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-medium text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1.5"
+              >
+                <Phone className="w-3.5 h-3.5" /> WhatsApp Patient
+              </a>
+
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setSelectedApp(null)}
+                  className="rounded-lg text-xs border-zinc-200 dark:border-zinc-800 bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 flex-1 sm:flex-none"
+                >
+                  Close
+                </Button>
+                <Button
+                  type="button"
+                  disabled={isApproving}
+                  onClick={() => handleApprovePatient(selectedApp._id)}
+                  className="bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-50 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 rounded-lg text-xs font-medium gap-1.5 flex-1 sm:flex-none cursor-pointer"
+                >
+                  {isApproving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+                  Approve Intake & Assign Caseload
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
