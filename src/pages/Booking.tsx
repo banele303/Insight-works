@@ -76,8 +76,8 @@ const afternoonSlots = ["02:00 PM", "03:30 PM", "05:00 PM", "06:15 PM"];
 
 const faqs = [
   {
-    q: "How does the Composio AI Google Calendar & Email sync work?",
-    a: "When you book a session, Composio AI automatically reserves the event on Maletsatsi's official Google Calendar and dispatches an automated calendar invite and confirmation email to your inbox.",
+    q: "How does online session booking work?",
+    a: "When you book a session, our system automatically reserves the time slot on Maletsatsi's official calendar and dispatches an automated calendar invite and confirmation email to your inbox.",
   },
   {
     q: "What is your cancellation and rescheduling policy?",
@@ -253,7 +253,7 @@ const Booking = () => {
             <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200/80 px-4 py-1.5 rounded-full shadow-2xs">
               <Sparkles className="w-3.5 h-3.5 text-[#156e52]" />
               <span className="text-xs font-bold tracking-[0.2em] uppercase text-[#156e52]">
-                Composio AI Google Calendar &amp; Email Synced
+                Online Session Booking
               </span>
             </div>
             <h1
@@ -485,7 +485,7 @@ const Booking = () => {
                       <h3 className="text-base sm:text-lg font-bold font-serif text-[#0f2820]">
                         2. Pick Date &amp; Available Time
                       </h3>
-                      <p className="text-xs text-slate-400 mt-0.5">Live scheduling powered by Composio AI</p>
+                      <p className="text-xs text-slate-400 mt-0.5">Real-time availability & instant confirmation</p>
                     </div>
 
                     {/* Month Nav Buttons */}
