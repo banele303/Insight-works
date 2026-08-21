@@ -243,15 +243,12 @@ export default function FloatingTherapyChatbot() {
                 />
               </div>
               <div>
-                <h3 className="font-bold text-sm font-serif leading-tight text-white flex items-center gap-1.5">
-                  Insight Works AI
-                  <span className="text-[9px] font-sans uppercase tracking-wider bg-emerald-700/80 text-emerald-100 px-1.5 py-0.5 rounded-md font-bold">
-                    Live
-                  </span>
+                <h3 className="font-bold text-sm font-serif leading-tight text-white">
+                  Insight Works
                 </h3>
                 <div className="flex items-center gap-1 text-[11px] text-emerald-300">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>Streaming · Google Calendar Sync</span>
+                  <span>Online</span>
                 </div>
               </div>
             </div>

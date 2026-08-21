@@ -270,10 +270,10 @@ export default function ChatPage() {
                   <img src="/images/logo.png" alt="Insight Works" className="w-full h-full object-contain" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm font-serif leading-tight text-white">Insight Works AI Companion</h3>
+                  <h3 className="font-bold text-sm font-serif leading-tight text-white">Insight Works</h3>
                   <div className="flex items-center gap-1.5 text-xs text-emerald-300">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>Puter.js Live Streaming · Composio Google Calendar</span>
+                    <span>Online</span>
                   </div>
                 </div>
               </div>
