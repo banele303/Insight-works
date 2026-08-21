@@ -1,3 +1,5 @@
+import { CLOUDFLARE_WORKER_URL } from "./cloudflareWorker";
+
 export interface ChatMessage {
   id: string;
   role: "user" | "assistant" | "system";
@@ -57,7 +59,8 @@ export async function loadPuter(): Promise<boolean> {
     document.head.appendChild(script);
   });
 
-import { CLOUDFLARE_WORKER_URL } from "./cloudflareWorker";
+  return puterLoadingPromise;
+}
 
 /**
  * Streams AI response token-by-token for a cool, live typewriter experience using Cloudflare AI (Llama 3.3 70B)
