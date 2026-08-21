@@ -6,6 +6,7 @@ const ADMIN_EMAILS = [
   "ramadimukondi13@gmail.com",
   "alexsouthflow2@gmail.com",
   "alxsouthflow2@gmail.com",
+  "linktendpro@gmail.com",
 ];
 
 function isConvexIdLike(value: unknown) {

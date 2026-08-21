@@ -7,6 +7,7 @@ const ADMIN_EMAILS = [
   "ramadimukondi13@gmail.com",
   "alexsouthflow2@gmail.com",
   "alxsouthflow2@gmail.com",
+  "linktendpro@gmail.com",
 ];
 
 // Helper: check if caller is an authorized Admin or Practitioner
