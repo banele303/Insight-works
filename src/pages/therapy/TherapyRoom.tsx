@@ -138,16 +138,19 @@ export default function TherapyRoom() {
     };
   }, [iceServers]);
 
-  // Session timer
+  // Session timer — starts immediately for therapist so they can see duration while waiting
   useEffect(() => {
-    if (isConnected && !sessionStartMs) {
+    const shouldStart = isTherapist ? true : isConnected;
+    if (shouldStart && !sessionStartMs) {
       const now = Date.now();
       setSessionStartMs(now);
       durationInterval.current = setInterval(() => setSessionDuration(Date.now() - now), 1000);
-      updateStatus({ roomId: roomId!, status: "active" }).catch(console.error);
+      if (isConnected) {
+        updateStatus({ roomId: roomId!, status: "active" }).catch(console.error);
+      }
     }
     return () => { if (durationInterval.current) clearInterval(durationInterval.current); };
-  }, [isConnected]);
+  }, [isConnected, isTherapist]);
 
   const createPc = useCallback(() => {
     if (pcRef.current) pcRef.current.close();
@@ -497,29 +500,35 @@ export default function TherapyRoom() {
             /* MAIN STAGE: Remote Participant Video */
             <video ref={remoteVideoRef} autoPlay playsInline className="absolute inset-0 w-full h-full object-cover" />
           ) : (
-            /* MAIN STAGE: Waiting State */
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-5 p-6 bg-slate-950">
-              <div className="relative">
-                <div className="h-24 w-24 rounded-3xl bg-teal-500/10 border border-teal-500/30 flex items-center justify-center shadow-xl">
-                  <Users className="h-10 w-10 text-teal-400" />
+            /* MAIN STAGE: Local camera — host is live even while waiting */
+            <div className="absolute inset-0 w-full h-full bg-slate-950">
+              {camOn ? (
+                <video
+                  ref={localVideoRef}
+                  autoPlay
+                  playsInline
+                  muted
+                  className="w-full h-full object-cover scale-x-[-1]"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-slate-900">
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="h-24 w-24 rounded-3xl bg-teal-500/10 border border-teal-500/30 flex items-center justify-center shadow-xl">
+                      <span className="text-4xl font-bold text-teal-400">{myName.charAt(0).toUpperCase()}</span>
+                    </div>
+                    <p className="text-slate-300 font-semibold text-lg">{myName}</p>
+                    <p className="text-slate-500 text-sm">Camera is off</p>
+                  </div>
                 </div>
-                <span className="absolute inset-0 rounded-3xl border-2 border-teal-400/40 animate-ping" />
-              </div>
-              <div className="text-center max-w-sm">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-300 text-xs font-semibold mb-2">
-                  {isTherapist ? "👑 You are the Host · Room Live" : "Telehealth Waiting Room"}
-                </div>
-                <h3 className="text-xl font-bold text-white">
-                  {isTherapist ? "Waiting for Client to Connect" : "Waiting for Practitioner"}
-                </h3>
-                <p className="text-slate-400 text-xs mt-1 leading-relaxed">
-                  {isTherapist
-                    ? "Your video room and clinical note canvas are ready. Share this invite link with your client."
-                    : "Your practitioner will connect momentarily. Please stay on this screen."}
-                </p>
-              </div>
+              )}
+
+              {/* Non-blocking waiting badge — top left */}
               {isTherapist && (
-                <div className="flex flex-col sm:flex-row items-center gap-2">
+                <div className="absolute top-4 left-4 flex flex-col gap-2 z-20">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-950/85 backdrop-blur-md border border-teal-500/30 shadow-xl">
+                    <span className="h-2 w-2 rounded-full bg-teal-400 animate-pulse" />
+                    <span className="text-teal-300 text-xs font-bold">👑 Room Live · Waiting for client</span>
+                  </div>
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(
@@ -531,18 +540,10 @@ export default function TherapyRoom() {
                       );
                       toast.success("Client invite link copied to clipboard!");
                     }}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-sm font-semibold shadow-lg shadow-teal-600/20 transition-all active:scale-95 cursor-pointer"
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-teal-600/90 hover:bg-teal-500 backdrop-blur-md text-white text-xs font-semibold shadow-lg transition-all active:scale-95 cursor-pointer"
                   >
-                    <Copy className="h-4 w-4" /> Copy Client Invite Link
+                    <Copy className="h-3.5 w-3.5" /> Copy Client Invite Link
                   </button>
-                  <Button
-                    onClick={initiateCall}
-                    variant="outline"
-                    size="sm"
-                    className="border-slate-700 text-slate-300 hover:bg-slate-800"
-                  >
-                    <RotateCcw className="h-3.5 w-3.5 mr-1.5" /> Reconnect
-                  </Button>
                 </div>
               )}
             </div>
@@ -555,17 +556,19 @@ export default function TherapyRoom() {
             </div>
           )}
 
-          {/* Local Camera Picture-in-Picture */}
-          <div className="absolute bottom-6 right-6 w-36 h-24 md:w-48 md:h-32 rounded-2xl overflow-hidden border-2 border-white/20 dark:border-slate-700/60 shadow-2xl bg-slate-900 z-20">
-            {camOn ? (
-              <video ref={localVideoRef} autoPlay playsInline muted className="w-full h-full object-cover scale-x-[-1]" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center bg-slate-800">
-                <VideoOff className="h-6 w-6 text-slate-600" />
-              </div>
-            )}
-            <div className="absolute bottom-1.5 left-2 text-[10px] text-white/80 font-medium px-1.5 py-0.5 bg-black/50 backdrop-blur-xs rounded">You</div>
-          </div>
+          {/* Local Camera Picture-in-Picture — only show when connected (we're already full screen when alone) */}
+          {isConnected && (
+            <div className="absolute bottom-6 right-6 w-36 h-24 md:w-48 md:h-32 rounded-2xl overflow-hidden border-2 border-white/20 dark:border-slate-700/60 shadow-2xl bg-slate-900 z-20">
+              {camOn ? (
+                <video ref={localVideoRef} autoPlay playsInline muted className="w-full h-full object-cover scale-x-[-1]" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-slate-800">
+                  <VideoOff className="h-6 w-6 text-slate-600" />
+                </div>
+              )}
+              <div className="absolute bottom-1.5 left-2 text-[10px] text-white/80 font-medium px-1.5 py-0.5 bg-black/50 backdrop-blur-xs rounded">You</div>
+            </div>
+          )}
 
           {generatingNotes && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-20">
