@@ -223,7 +223,7 @@ export default function AppointmentsCRM() {
         <div className="flex flex-wrap items-center gap-2">
           <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-xs font-mono text-zinc-600 dark:text-zinc-300">
             <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-            Google Calendar Synced
+            Composio AI Google Calendar Synced
           </div>
           <Button
             onClick={handleOpenAdd}
