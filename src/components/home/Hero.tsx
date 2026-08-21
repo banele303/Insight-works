@@ -109,7 +109,7 @@ const Hero = () => {
                 <Link
                   to="/booking"
                   id="hero-apply-btn"
-                  className="group inline-flex items-center justify-center gap-3 px-8 py-4 text-white font-bold text-base rounded-xl btn-dual-gradient cursor-pointer"
+                  className="group inline-flex items-center justify-center gap-3 px-8 py-4 text-white font-bold text-base rounded-xl btn-emerald-gradient cursor-pointer shadow-md"
                   style={{ fontFamily: "'DM Sans', sans-serif" }}
                 >
                   Book a Session
@@ -118,7 +118,7 @@ const Hero = () => {
                 <Link
                   to="/services"
                   id="hero-programs-btn"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold text-base text-white rounded-xl btn-orange-gradient cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold text-base text-white rounded-xl btn-orange-gradient cursor-pointer shadow-md"
                   style={{ fontFamily: "'DM Sans', sans-serif" }}
                 >
                   Explore Services
