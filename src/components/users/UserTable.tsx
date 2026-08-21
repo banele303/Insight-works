@@ -92,7 +92,7 @@ const UserTable = ({
     <div className="border-0">
       <Table>
         <TableHeader>
-          <TableRow className="bg-slate-50/70 dark:bg-slate-800/50 hover:bg-slate-50/70">
+          <TableRow className="bg-slate-50/70 hover:bg-slate-50/70">
             <TableHead className="font-bold text-xs uppercase tracking-wider text-slate-500">
               {role === "student" ? "Client Name" : role === "teacher" ? "Practitioner" : role === "parent" ? "Contact Name" : "Administrator"}
             </TableHead>
@@ -144,22 +144,22 @@ const UserTable = ({
             </TableRow>
           ) : (
             users.map((user: any) => (
-              <TableRow key={user._id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
+              <TableRow key={user._id} className="hover:bg-slate-50/60 transition-colors">
                 {/* Name & Avatar */}
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200/80 dark:border-emerald-800 flex items-center justify-center text-[#156e52] dark:text-emerald-400 font-bold text-xs shadow-2xs">
+                    <div className="h-9 w-9 rounded-xl bg-emerald-50 border border-emerald-200/80 flex items-center justify-center text-[#156e52] font-bold text-xs shadow-2xs">
                       {user.name?.charAt(0)?.toUpperCase() || "U"}
                     </div>
                     <div>
-                      <p className="font-bold text-xs sm:text-sm text-[#0f2820] dark:text-white">{user.name}</p>
+                      <p className="font-bold text-xs sm:text-sm text-[#0f2820]">{user.name}</p>
                       <p className="text-[11px] text-slate-400">POPIA Consent On File</p>
                     </div>
                   </div>
                 </TableCell>
 
                 {/* Email / WhatsApp */}
-                <TableCell className="text-xs text-slate-600 dark:text-slate-300">
+                <TableCell className="text-xs text-slate-600">
                   <p className="font-medium">{user.email}</p>
                   <p className="text-[11px] text-slate-400">{user.phone || "+27 (Confidential)"}</p>
                 </TableCell>
@@ -168,7 +168,7 @@ const UserTable = ({
                 {role === "student" && (
                   <>
                     <TableCell>
-                      <Badge variant="outline" className="bg-emerald-50/80 dark:bg-emerald-950/40 text-[#156e52] dark:text-emerald-300 border-emerald-200/80 text-[11px] font-bold">
+                      <Badge variant="outline" className="bg-emerald-50/80 text-[#156e52] border-emerald-200/80 text-[11px] font-bold">
                         Individual &amp; Growth
                       </Badge>
                     </TableCell>
@@ -188,7 +188,7 @@ const UserTable = ({
                         CBT · Gottman · EMDR
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-xs text-slate-600 dark:text-slate-400">
+                    <TableCell className="text-xs text-slate-600">
                       HPCSA Registered
                     </TableCell>
                   </>
@@ -215,15 +215,15 @@ const UserTable = ({
                 {/* Care Status */}
                 <TableCell>
                   {user.isApproved === false ? (
-                    <Badge variant="outline" className="border-amber-400 text-amber-700 bg-amber-50 dark:bg-amber-950/20 text-[10px] font-bold">
+                    <Badge variant="outline" className="border-amber-400 text-amber-700 bg-amber-50 text-[10px] font-bold">
                       Pending Intake Review
                     </Badge>
                   ) : user.isActive === false ? (
-                    <Badge variant="outline" className="border-slate-300 text-slate-500 bg-slate-100 dark:bg-slate-800 text-[10px] font-bold">
+                    <Badge variant="outline" className="border-slate-300 text-slate-500 bg-slate-100 text-[10px] font-bold">
                       Discharged / Inactive
                     </Badge>
                   ) : (
-                    <Badge variant="outline" className="border-emerald-300 text-[#156e52] bg-emerald-50 dark:bg-emerald-950/40 text-[10px] font-bold">
+                    <Badge variant="outline" className="border-emerald-300 text-[#156e52] bg-emerald-50 text-[10px] font-bold">
                       ● Active in Care
                     </Badge>
                   )}

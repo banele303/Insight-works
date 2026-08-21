@@ -173,7 +173,7 @@ export default function UserManagementPage({
       : "Practice managers, clinical directors, and data protection officers.";
 
   return (
-    <div className="p-4 md:p-8 space-y-6 bg-[#fbfdfc] min-h-screen text-[#0f2820]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="light p-4 md:p-8 space-y-6 bg-[#fbfdfc] min-h-screen text-[#0f2820]" style={{ fontFamily: "'DM Sans', sans-serif", colorScheme: "light" }}>
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 border-b border-slate-200/80 pb-6">
         <div>
