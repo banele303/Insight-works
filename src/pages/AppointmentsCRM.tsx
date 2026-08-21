@@ -500,6 +500,8 @@ export default function AppointmentsCRM() {
                       </td>
 
                       {/* Actions */}
+                      <td className="py-3.5 px-4 text-right">
+                        <div className="flex items-center justify-end gap-1">
                           {/* 1-Click Sync to Google Calendar */}
                           <Button
                             size="sm"
