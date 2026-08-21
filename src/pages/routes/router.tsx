@@ -78,6 +78,7 @@ import AppointmentsCRM from "@/pages/AppointmentsCRM";
 
 import ScrollToTop from "@/components/global/ScrollToTop";
 import { Outlet } from "react-router";
+import AdminOnlyRoute from "@/pages/routes/AdminOnlyRoute";
 
 function RootLayout() {
   return (
@@ -120,83 +121,94 @@ export const router = createBrowserRouter([
         element: <PrivateRoutes />,
         errorElement: <RouteErrorBoundary />,
         children: [
-      { path: "dashboard", element: <Dashboard /> },
-      { path: "appointments", element: <AppointmentsCRM /> },
-      { path: "activities-log", element: <Dashboard /> },
-      { path: "analytics", element: <AnalyticsPage /> },
-      { path: "parent-portal", element: <ParentPortal /> },
-      { path: "student-portal", element: <StudentPortal /> },
-      { path: "study-buddy", element: <StudyBuddyPage /> },
-      { path: "profile", element: <ProfileSettings /> },
-      { path: "resources", element: <ResourceLibrary /> },
-      { path: "admin/resources", element: <AdminResources /> },
-      { path: "admin/applications", element: <ApplicationsAdmin /> },
-      { path: "admin/pipeline", element: <CRMPipeline /> },
-      { path: "admin/blogs", element: <BlogManagement /> },
+          // ── Routes accessible to ALL logged-in users ──────────────────
+          { path: "dashboard", element: <Dashboard /> },
+          { path: "appointments", element: <AppointmentsCRM /> },
+          { path: "activities-log", element: <Dashboard /> },
+          { path: "profile", element: <ProfileSettings /> },
+          { path: "resources", element: <ResourceLibrary /> },
+          { path: "messages", element: <MessagesPage /> },
+          { path: "events", element: <EventsCalendar /> },
+          { path: "announcements", element: <AnnouncementsPage /> },
+          { path: "parent-portal", element: <ParentPortal /> },
+          { path: "student-portal", element: <StudentPortal /> },
+          { path: "study-buddy", element: <StudyBuddyPage /> },
 
-      // Live Classes
-      { path: "lives", element: <LiveClassesPage /> },
-      { path: "lives/room/:id", element: <LiveRoomPage /> },
-      { path: "videos", element: <VideoLibraryPage /> },
+          // Therapy video room (authenticated users only)
+          { path: "therapy-room/:roomId", element: <TherapyRoom /> },
 
-      // Therapy & Coaching Video Sessions
-      { path: "therapy-room/:roomId", element: <TherapyRoom /> },
+          // AI tools (all roles)
+          { path: "ai/homework", element: <HomeworkStudioPage /> },
+          { path: "ai/homework-checker", element: <HomeworkCheckerPage /> },
+          { path: "ai/marking", element: <AIMarkingPage /> },
 
-      // Communication
-      { path: "announcements", element: <AnnouncementsPage /> },
-      { path: "messages", element: <MessagesPage /> },
-      { path: "events", element: <EventsCalendar /> },
+          // ── Admin-only routes (role === "admin" required) ─────────────
+          {
+            element: <AdminOnlyRoute />,
+            children: [
+              // People & Caseload — admin only
+              { path: "users", element: <UserManagementPage role="student" title="Client Caseload Directory" description="Manage active clinical caseload, therapy disciplines, session modalities, and POPIA consent records." /> },
+              { path: "users/students", element: <UserManagementPage role="student" title="Client Caseload Directory" description="Manage active clinical caseload, therapy disciplines, session modalities, and POPIA consent records." /> },
+              { path: "users/teachers", element: <UserManagementPage role="teacher" title="Practitioners & Coaches" description="Manage counselling therapists, psychologists, and life coaches." /> },
+              { path: "users/parents", element: <UserManagementPage role="parent" title="Partners & Family" description="Manage partner, guardian, and family contacts." /> },
+              { path: "users/admins", element: <UserManagementPage role="admin" title="Practice Administrators" description="Manage practice administrative access." /> },
 
-      // Settings
-      { path: "settings/academic-years", element: <AcademicYear /> },
-      { path: "settings/general", element: <GeneralSettings /> },
-      { path: "settings/roles", element: <RolesPermissions /> },
+              // Admin tools
+              { path: "admin/resources", element: <AdminResources /> },
+              { path: "admin/applications", element: <ApplicationsAdmin /> },
+              { path: "admin/pipeline", element: <CRMPipeline /> },
+              { path: "admin/blogs", element: <BlogManagement /> },
+              { path: "admin/onboarding", element: <SchoolOnboarding /> },
 
-      // People & Caseload
-      { path: "users", element: <UserManagementPage role="student" title="Client Caseload Directory" description="Manage active clinical caseload, therapy disciplines, session modalities, and POPIA consent records." /> },
-      { path: "users/students", element: <UserManagementPage role="student" title="Client Caseload Directory" description="Manage active clinical caseload, therapy disciplines, session modalities, and POPIA consent records." /> },
-      { path: "users/teachers", element: <UserManagementPage role="teacher" title="Practitioners & Coaches" description="Manage counselling therapists, psychologists, and life coaches." /> },
-      { path: "users/parents", element: <UserManagementPage role="parent" title="Partners & Family" description="Manage partner, guardian, and family contacts." /> },
-      { path: "users/admins", element: <UserManagementPage role="admin" title="Practice Administrators" description="Manage practice administrative access." /> },
-      { path: "badges", element: <BadgesPage /> },
+              // Analytics & Reporting
+              { path: "analytics", element: <AnalyticsPage /> },
+              { path: "badges", element: <BadgesPage /> },
 
-      // Academics
-      { path: "classes", element: <Classes /> },
-      { path: "subjects", element: <Subjects /> },
-      { path: "timetable", element: <Timetable /> },
-      { path: "attendance", element: <AttendancePage /> },
-      { path: "learning-paths", element: <LearningPathsPage /> },
-      { path: "report-cards", element: <ReportCardGenerator /> },
+              // Settings
+              { path: "settings/academic-years", element: <AcademicYear /> },
+              { path: "settings/general", element: <GeneralSettings /> },
+              { path: "settings/roles", element: <RolesPermissions /> },
 
-      // LMS
-      { path: "lms/assignments", element: <AssignmentsPage /> },
-      { path: "lms/assignments/:id", element: <AssignmentDetails /> },
-      { path: "lms/exams", element: <Exams /> },
-      { path: "lms/exams/:id", element: <Exam /> },
-      { path: "lms/exams/:id/arena", element: <ExamArena /> },
-      { path: "lms/exam-arena", element: <ExamArena /> },
-      { path: "lms/question-bank", element: <QuestionBank /> },
-      { path: "lms/materials", element: <MaterialsPage /> },
+              // Academics management
+              { path: "classes", element: <Classes /> },
+              { path: "subjects", element: <Subjects /> },
+              { path: "timetable", element: <Timetable /> },
+              { path: "attendance", element: <AttendancePage /> },
+              { path: "learning-paths", element: <LearningPathsPage /> },
+              { path: "report-cards", element: <ReportCardGenerator /> },
 
-      // Finance
-      { path: "command-center", element: <PremiumSuite /> },
-        { path: "whiteboard", element: <WhiteboardList /> },
-        { path: "whiteboard/:id", element: <WhiteboardPage /> },
-      { path: "lesson-studio", element: <PremiumSuite /> },
-      { path: "student-timeline", element: <PremiumSuite /> },
-      { path: "parent-reports", element: <PremiumSuite /> },
-      { path: "class-engagement", element: <PremiumSuite /> },
-      { path: "recording-studio", element: <PremiumSuite /> },
-      { path: "teacher-marketplace", element: <PremiumSuite /> },
-      { path: "offline-mode", element: <PremiumSuite /> },
-      { path: "white-label", element: <PremiumSuite /> },
-      { path: "ai-tutor-memory", element: <PremiumSuite /> },
-      // AI Homework Studio — create/deliver/mark homework (all roles)
-      { path: "ai/homework", element: <HomeworkStudioPage /> },
-      { path: "ai/homework-checker", element: <HomeworkCheckerPage /> },
-      { path: "ai/marking", element: <AIMarkingPage /> },
-    ],
-  },
+              // LMS management
+              { path: "lms/assignments", element: <AssignmentsPage /> },
+              { path: "lms/assignments/:id", element: <AssignmentDetails /> },
+              { path: "lms/exams", element: <Exams /> },
+              { path: "lms/exams/:id", element: <Exam /> },
+              { path: "lms/exams/:id/arena", element: <ExamArena /> },
+              { path: "lms/exam-arena", element: <ExamArena /> },
+              { path: "lms/question-bank", element: <QuestionBank /> },
+              { path: "lms/materials", element: <MaterialsPage /> },
+
+              // Live & Media
+              { path: "lives", element: <LiveClassesPage /> },
+              { path: "lives/room/:id", element: <LiveRoomPage /> },
+              { path: "videos", element: <VideoLibraryPage /> },
+              { path: "whiteboard", element: <WhiteboardList /> },
+              { path: "whiteboard/:id", element: <WhiteboardPage /> },
+
+              // Premium / Command center
+              { path: "command-center", element: <PremiumSuite /> },
+              { path: "lesson-studio", element: <PremiumSuite /> },
+              { path: "student-timeline", element: <PremiumSuite /> },
+              { path: "parent-reports", element: <PremiumSuite /> },
+              { path: "class-engagement", element: <PremiumSuite /> },
+              { path: "recording-studio", element: <PremiumSuite /> },
+              { path: "teacher-marketplace", element: <PremiumSuite /> },
+              { path: "offline-mode", element: <PremiumSuite /> },
+              { path: "white-label", element: <PremiumSuite /> },
+              { path: "ai-tutor-memory", element: <PremiumSuite /> },
+            ],
+          },
+        ],
+      },
     ],
   },
 ]);
