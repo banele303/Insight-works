@@ -173,18 +173,18 @@ export default function UserManagementPage({
       : "Practice managers, clinical directors, and data protection officers.";
 
   return (
-    <div className="light p-4 md:p-8 space-y-6 bg-[#fbfdfc] min-h-screen text-[#0f2820]" style={{ fontFamily: "'DM Sans', sans-serif", colorScheme: "light" }}>
+    <div className="p-4 md:p-8 space-y-6 bg-slate-50 dark:bg-slate-950 min-h-screen text-[#0f2820] dark:text-slate-100" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 border-b border-slate-200/80 pb-6">
+      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
         <div>
-          <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-[#156e52] mb-2">
+          <div className="inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-[#156e52] dark:text-emerald-400 mb-2">
             <HeartPulse className="w-3.5 h-3.5" />
             Insight Works Directory
           </div>
-          <h1 className="text-3xl font-black font-serif tracking-tight text-[#0f2820]">
+          <h1 className="text-3xl font-black font-serif tracking-tight text-[#0f2820] dark:text-white">
             {pageTitle}
           </h1>
-          <p className="text-slate-500 text-sm mt-1">{pageDescription}</p>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{pageDescription}</p>
         </div>
         <Button onClick={handleCreate} className="bg-[#156e52] hover:bg-[#0f5940] text-white font-bold text-xs gap-1.5 shadow-2xs cursor-pointer">
           <UserPlus className="h-4 w-4" /> Add {roleLabel}
@@ -192,7 +192,7 @@ export default function UserManagementPage({
       </div>
 
       {/* Filter & Toolbar Row */}
-      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-200/90 shadow-2xs">
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs">
         <div className="flex flex-wrap items-center gap-3 flex-1">
           <div className="min-w-[240px]">
             <Search search={search} setSearch={setSearch} title={`Search ${roleLabel.toLowerCase()}s by name or email...`} />
@@ -202,7 +202,7 @@ export default function UserManagementPage({
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-slate-400" />
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px] text-xs font-medium bg-slate-50 rounded-xl border-slate-200">
+              <SelectTrigger className="w-[180px] text-xs font-medium bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 rounded-xl border-slate-200">
                 <SelectValue placeholder="Care Status" />
               </SelectTrigger>
               <SelectContent>
@@ -217,7 +217,7 @@ export default function UserManagementPage({
           {/* Discipline Filter Dropdown for Clients */}
           {role === "student" && (
             <Select value={disciplineFilter} onValueChange={setDisciplineFilter}>
-              <SelectTrigger className="w-[190px] text-xs font-medium bg-slate-50 rounded-xl border-slate-200">
+              <SelectTrigger className="w-[190px] text-xs font-medium bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 rounded-xl border-slate-200">
                 <SelectValue placeholder="Discipline Filter" />
               </SelectTrigger>
               <SelectContent>
@@ -246,9 +246,9 @@ export default function UserManagementPage({
         </div>
 
         {/* Rows per page selector & Total Count */}
-        <div className="flex items-center justify-between lg:justify-end gap-3 text-xs text-slate-500">
+        <div className="flex items-center justify-between lg:justify-end gap-3 text-xs text-slate-500 dark:text-slate-400">
           {convexUsers && (
-            <Badge variant="secondary" className="font-bold text-xs px-2.5 py-1 bg-emerald-50 text-[#156e52] border border-emerald-200/60">
+            <Badge variant="secondary" className="font-bold text-xs px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/40 text-[#156e52] dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800">
               {filteredUsers.length} {roleLabel.toLowerCase()}(s)
             </Badge>
           )}
@@ -259,7 +259,7 @@ export default function UserManagementPage({
               value={String(itemsPerPage)}
               onValueChange={(v) => setItemsPerPage(Number(v))}
             >
-              <SelectTrigger className="w-[70px] h-8 text-xs rounded-lg">
+              <SelectTrigger className="w-[70px] h-8 text-xs rounded-lg dark:bg-slate-800 dark:border-slate-700">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -274,7 +274,7 @@ export default function UserManagementPage({
       </div>
 
       {/* Scrollable Table Container */}
-      <div className="overflow-x-auto rounded-2xl border border-slate-200/90 shadow-2xs bg-white">
+      <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs bg-white dark:bg-slate-900">
         <UserTable
           role={role}
           loading={convexUsers === undefined}
