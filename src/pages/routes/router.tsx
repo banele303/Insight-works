@@ -76,36 +76,50 @@ import TherapyLobby from "@/pages/therapy/TherapyLobby";
 import TherapyRoom from "@/pages/therapy/TherapyRoom";
 import AppointmentsCRM from "@/pages/AppointmentsCRM";
 
-export const router = createBrowserRouter([
-  { path: "/", element: <Home />, errorElement: <RouteErrorBoundary /> },
-  { path: "login", element: <Login />, errorElement: <RouteErrorBoundary /> },
-  { path: "about", element: <About />, errorElement: <RouteErrorBoundary /> },
-  { path: "contact", element: <Contact />, errorElement: <RouteErrorBoundary /> },
-  { path: "apply", element: <IntakePage />, errorElement: <RouteErrorBoundary /> },
-  { path: "programs", element: <ServicesPage />, errorElement: <RouteErrorBoundary /> },
-  { path: "faq", element: <FAQ />, errorElement: <RouteErrorBoundary /> },
-  // Therapy practice routes
-  { path: "services", element: <ServicesPage />, errorElement: <RouteErrorBoundary /> },
-  { path: "services/individual-counselling", element: <IndividualCounsellingPage />, errorElement: <RouteErrorBoundary /> },
-  { path: "services/couples-counselling", element: <CouplesCounsellingPage />, errorElement: <RouteErrorBoundary /> },
-  { path: "services/life-coaching", element: <LifeCoachingPage />, errorElement: <RouteErrorBoundary /> },
-  { path: "services/trauma-recovery", element: <TraumaRecoveryPage />, errorElement: <RouteErrorBoundary /> },
-  { path: "services/youth-support", element: <YouthSupportPage />, errorElement: <RouteErrorBoundary /> },
-  { path: "services/substance-support", element: <SubstanceSupportPage />, errorElement: <RouteErrorBoundary /> },
-  { path: "booking", element: <BookingPage />, errorElement: <RouteErrorBoundary /> },
-  { path: "intake", element: <IntakePage />, errorElement: <RouteErrorBoundary /> },
-  { path: "chat", element: <ChatPage />, errorElement: <RouteErrorBoundary /> },
-  { path: "privacy", element: <PrivacyPage />, errorElement: <RouteErrorBoundary /> },
-  { path: "blog", element: <BlogPage />, errorElement: <RouteErrorBoundary /> },
-  { path: "blog/:slug", element: <BlogPostPage />, errorElement: <RouteErrorBoundary /> },
-  { path: "wellness-insights", element: <WellnessDashboard />, errorElement: <RouteErrorBoundary /> },
-  // ─── THERAPY VIDEO CALL (public lobby, clients join without auth) ─────────
-  { path: "therapy-lobby/:roomId", element: <TherapyLobby />, errorElement: <RouteErrorBoundary /> },
-  {
+import ScrollToTop from "@/components/global/ScrollToTop";
+import { Outlet } from "react-router";
 
-    element: <PrivateRoutes />,
-    errorElement: <RouteErrorBoundary />,
+function RootLayout() {
+  return (
+    <>
+      <ScrollToTop />
+      <Outlet />
+    </>
+  );
+}
+
+export const router = createBrowserRouter([
+  {
+    element: <RootLayout />,
     children: [
+      { path: "/", element: <Home />, errorElement: <RouteErrorBoundary /> },
+      { path: "login", element: <Login />, errorElement: <RouteErrorBoundary /> },
+      { path: "about", element: <About />, errorElement: <RouteErrorBoundary /> },
+      { path: "contact", element: <Contact />, errorElement: <RouteErrorBoundary /> },
+      { path: "apply", element: <IntakePage />, errorElement: <RouteErrorBoundary /> },
+      { path: "programs", element: <ServicesPage />, errorElement: <RouteErrorBoundary /> },
+      { path: "faq", element: <FAQ />, errorElement: <RouteErrorBoundary /> },
+      // Therapy practice routes
+      { path: "services", element: <ServicesPage />, errorElement: <RouteErrorBoundary /> },
+      { path: "services/individual-counselling", element: <IndividualCounsellingPage />, errorElement: <RouteErrorBoundary /> },
+      { path: "services/couples-counselling", element: <CouplesCounsellingPage />, errorElement: <RouteErrorBoundary /> },
+      { path: "services/life-coaching", element: <LifeCoachingPage />, errorElement: <RouteErrorBoundary /> },
+      { path: "services/trauma-recovery", element: <TraumaRecoveryPage />, errorElement: <RouteErrorBoundary /> },
+      { path: "services/youth-support", element: <YouthSupportPage />, errorElement: <RouteErrorBoundary /> },
+      { path: "services/substance-support", element: <SubstanceSupportPage />, errorElement: <RouteErrorBoundary /> },
+      { path: "booking", element: <BookingPage />, errorElement: <RouteErrorBoundary /> },
+      { path: "intake", element: <IntakePage />, errorElement: <RouteErrorBoundary /> },
+      { path: "chat", element: <ChatPage />, errorElement: <RouteErrorBoundary /> },
+      { path: "privacy", element: <PrivacyPage />, errorElement: <RouteErrorBoundary /> },
+      { path: "blog", element: <BlogPage />, errorElement: <RouteErrorBoundary /> },
+      { path: "blog/:slug", element: <BlogPostPage />, errorElement: <RouteErrorBoundary /> },
+      { path: "wellness-insights", element: <WellnessDashboard />, errorElement: <RouteErrorBoundary /> },
+      // ─── THERAPY VIDEO CALL (public lobby, clients join without auth) ─────────
+      { path: "therapy-lobby/:roomId", element: <TherapyLobby />, errorElement: <RouteErrorBoundary /> },
+      {
+        element: <PrivateRoutes />,
+        errorElement: <RouteErrorBoundary />,
+        children: [
       { path: "dashboard", element: <Dashboard /> },
       { path: "appointments", element: <AppointmentsCRM /> },
       { path: "activities-log", element: <Dashboard /> },
@@ -181,6 +195,8 @@ export const router = createBrowserRouter([
       { path: "ai/homework", element: <HomeworkStudioPage /> },
       { path: "ai/homework-checker", element: <HomeworkCheckerPage /> },
       { path: "ai/marking", element: <AIMarkingPage /> },
+    ],
+  },
     ],
   },
 ]);

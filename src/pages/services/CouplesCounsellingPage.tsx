@@ -1,5 +1,6 @@
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
+import Blog from "@/components/home/Blog";
 import {
   Heart, CheckCircle2, Clock, Calendar, ArrowRight,
   Shield, Sparkles, HeartPulse, HelpCircle, Users, MessageSquare
@@ -254,6 +255,7 @@ export default function CouplesCounsellingPage() {
         </section>
       </main>
 
+      <Blog />
       <Footer />
     </div>
   );

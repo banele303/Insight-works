@@ -1,5 +1,6 @@
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
+import Blog from "@/components/home/Blog";
 import {
   ShieldAlert, CheckCircle2, Clock, Calendar, ArrowRight,
   Shield, Sparkles, HeartPulse, HelpCircle, Activity
@@ -239,6 +240,7 @@ export default function SubstanceSupportPage() {
         </section>
       </main>
 
+      <Blog />
       <Footer />
     </div>
   );

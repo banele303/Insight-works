@@ -1,5 +1,6 @@
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
+import Blog from "@/components/home/Blog";
 import {
   Sparkles, CheckCircle2, Clock, Calendar, ArrowRight,
   Shield, HeartPulse, HelpCircle, Activity
@@ -239,6 +240,7 @@ export default function TraumaRecoveryPage() {
         </section>
       </main>
 
+      <Blog />
       <Footer />
     </div>
   );

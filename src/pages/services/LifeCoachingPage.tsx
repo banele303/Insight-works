@@ -1,5 +1,6 @@
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
+import Blog from "@/components/home/Blog";
 import {
   Target, CheckCircle2, Clock, Calendar, ArrowRight,
   Shield, Sparkles, Zap, HelpCircle, Compass
@@ -242,6 +243,7 @@ export default function LifeCoachingPage() {
         </section>
       </main>
 
+      <Blog />
       <Footer />
     </div>
   );
