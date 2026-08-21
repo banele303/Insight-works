@@ -57,11 +57,10 @@ export async function loadPuter(): Promise<boolean> {
     document.head.appendChild(script);
   });
 
-  return puterLoadingPromise;
-}
+import { CLOUDFLARE_WORKER_URL } from "./cloudflareWorker";
 
 /**
- * Streams AI response token-by-token for a cool, live typewriter experience
+ * Streams AI response token-by-token for a cool, live typewriter experience using Cloudflare AI (Llama 3.3 70B)
  */
 export async function streamPuterChat(
   userMessage: string,
@@ -71,51 +70,26 @@ export async function streamPuterChat(
   let fullReply = "";
 
   try {
-    const isLoaded = await loadPuter();
-    const puter = (window as any).puter;
+    const formattedMessages = [
+      ...history.slice(-6).map((m) => ({
+        role: m.role === "user" ? "user" : "assistant",
+        content: m.content,
+      })),
+      { role: "user", content: userMessage },
+    ];
 
-    if (isLoaded && puter && puter.ai) {
-      const formattedHistory = history
-        .slice(-6)
-        .map((m) => `${m.role === "user" ? "Client" : "Assistant"}: ${m.content}`)
-        .join("\n");
+    const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/therapy-chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: formattedMessages }),
+    });
 
-      const fullPrompt = `${THERAPY_SYSTEM_PROMPT}\n\nRecent Conversation:\n${formattedHistory}\n\nClient: ${userMessage}\nAssistant:`;
-
-      // Try Puter streaming API
-      try {
-        const stream = await puter.ai.chat(fullPrompt, {
-          model: "claude-3-5-sonnet",
-          stream: true,
-        });
-
-        if (stream && (stream as any)[Symbol.asyncIterator]) {
-          for await (const part of stream as any) {
-            const text = part?.text || part?.message?.content || (typeof part === "string" ? part : "");
-            if (text) {
-              fullReply += text;
-              onChunk(fullReply);
-            }
-          }
-          if (fullReply.trim().length > 0) {
-            return fullReply;
-          }
-        }
-      } catch (streamErr) {
-        console.warn("Direct Puter stream error, trying standard call:", streamErr);
-      }
-
-      // Standard call with client typewriter fallback
-      const response = await puter.ai.chat(fullPrompt, {
-        model: "claude-3-5-sonnet",
-      });
-
-      if (typeof response === "string") fullReply = response;
-      else if (response?.message?.content) fullReply = response.message.content;
-      else if (response?.text) fullReply = response.text;
+    if (res.ok) {
+      const data = await res.json();
+      fullReply = data.response || "";
     }
   } catch (error) {
-    console.warn("Puter.js request failed, falling back:", error);
+    console.warn("Cloudflare AI therapy chat request failed, using fallback:", error);
   }
 
   // Fallback intelligent responses if offline

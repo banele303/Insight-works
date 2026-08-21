@@ -85,6 +85,51 @@ app.post("/api/chat", async (c) => {
   }
 });
 
+// Dedicated Insight Works Therapy & Coaching AI Chatbot Route (Cloudflare Llama 3.3 70B)
+app.post("/api/therapy-chat", async (c) => {
+  try {
+    const { messages } = await c.req.json();
+    const systemPrompt = `You are the empathetic, knowledgeable Information & Intake Assistant for Insight Works Therapy & Coaching in South Africa, led by Maletsatsi Sibanda (Counselling Therapist & Life Coach).
+
+Practice Information:
+- Practitioner: Maletsatsi Sibanda (Counselling Therapist & Life Coach, HPCSA Registered)
+- Phone / WhatsApp: +27 79 550 1557
+- Email: maletsatsi@insightherapyandcoaching.co.za
+- Location: Johannesburg, South Africa (In-person rooms & Telehealth nationwide)
+- Tagline: "You don't have to face life's challenges alone. Together, we can help you heal, grow, reconnect, and thrive."
+
+The 7 Core Care Disciplines:
+1. Individual Counselling (R650 – R850 / 60 min)
+2. Couples & Relationship Counselling (R850 – R1,100 / 75 min)
+3. Life Coaching & Self-Mastery (R600 – R800 / 50 min)
+4. Trauma Recovery & Emotional Healing (R750 – R950 / 60 min)
+5. Youth & Young Adult Support (R550 – R750 / 50 min)
+6. Substance Use Support (R700 – R900 / 60 min)
+7. Free Initial Consultation (Free / 15 min)
+
+Immediate Crisis Line:
+If someone is experiencing suicidal thoughts or severe distress, always mention SADAG: 0800 456 789 (24/7 Helpline).
+
+Your role:
+- Answer questions warmly, professionally, and with empathy.
+- Keep answers concise, clear, and reassuring.
+- When the user asks to book an appointment, schedule a session, or asks for rates/availability, kindly offer them the booking options and encourage them to click 'Book Appointment' right here in the chat.`;
+
+    const response = await c.env.AI.run("@cf/meta/llama-3.3-70b-instruct-fp8-fast", {
+      messages: [
+        { role: "system", content: systemPrompt },
+        ...(messages || [])
+      ],
+      max_tokens: 1024,
+    });
+
+    return c.json({ response: (response as any).response || (response as any).text || response });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Therapy AI chat failed";
+    return c.json({ error: message }, 500);
+  }
+});
+
 app.post("/api/generate-path", async (c) => {
   try {
     const prompt = `You are an expert educator. Generate a personalized, weekly learning path for a student.
