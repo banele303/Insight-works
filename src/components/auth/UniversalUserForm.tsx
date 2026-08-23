@@ -178,7 +178,7 @@ const UniversalUserForm = ({ type, initialData, onSuccess, role }: Props) => {
   const isClient = selectedRole === "student";
 
   return (
-    <div className="space-y-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="space-y-6" style={{ fontFamily: "'Poppins', sans-serif" }}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FieldGroup>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">

@@ -77,7 +77,7 @@ const Hero = () => {
               {/* Sub-copy from Flyer */}
               <p
                 className="text-[#334155] leading-relaxed max-w-xl text-base sm:text-lg"
-                style={{ fontFamily: "'DM Sans', sans-serif" }}
+                style={{ fontFamily: "'Poppins', sans-serif" }}
               >
                 You don't have to face life's challenges alone. Together, we can help you <strong className="text-[#156e52]">heal, grow, reconnect, and thrive</strong> through compassionate counselling and transformational life coaching.
               </p>
@@ -110,7 +110,7 @@ const Hero = () => {
                   to="/booking"
                   id="hero-apply-btn"
                   className="group inline-flex items-center justify-center gap-3 px-8 py-4 text-white font-bold text-base rounded-xl btn-emerald-gradient cursor-pointer shadow-md"
-                  style={{ fontFamily: "'DM Sans', sans-serif" }}
+                  style={{ fontFamily: "'Poppins', sans-serif" }}
                 >
                   Book a Session
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -119,7 +119,7 @@ const Hero = () => {
                   to="/services"
                   id="hero-programs-btn"
                   className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold text-base text-white rounded-xl btn-orange-gradient cursor-pointer shadow-md"
-                  style={{ fontFamily: "'DM Sans', sans-serif" }}
+                  style={{ fontFamily: "'Poppins', sans-serif" }}
                 >
                   Explore Services
                   <ArrowRight className="h-4 w-4" />
@@ -156,7 +156,7 @@ const Hero = () => {
                   </div>
                   <p
                     className="text-[#64748b] text-xs font-medium mt-0.5"
-                    style={{ fontFamily: "'DM Sans', sans-serif" }}
+                    style={{ fontFamily: "'Poppins', sans-serif" }}
                   >
                     Trusted by clients across South Africa
                   </p>
@@ -189,7 +189,7 @@ const Hero = () => {
                     >
                       Maletsatsi Sibanda
                     </p>
-                    <p className="text-emerald-200 text-xs mt-0.5" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    <p className="text-emerald-200 text-xs mt-0.5" style={{ fontFamily: "'Poppins', sans-serif" }}>
                       Counselling Therapist & Life Coach
                     </p>
                   </div>
@@ -228,7 +228,7 @@ const Hero = () => {
                     </div>
                     <p
                       className="text-[#ea7627] text-xs font-bold mt-0.5 leading-tight"
-                      style={{ fontFamily: "'DM Sans', sans-serif" }}
+                      style={{ fontFamily: "'Poppins', sans-serif" }}
                     >
                       Coaching & Therapy
                     </p>
@@ -301,7 +301,7 @@ const Hero = () => {
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
               <p
                 className="text-[#475569] text-xs font-bold tracking-widest uppercase"
-                style={{ fontFamily: "'DM Sans', sans-serif" }}
+                style={{ fontFamily: "'Poppins', sans-serif" }}
               >
                 Accepting New Clients This Month
               </p>
@@ -316,11 +316,11 @@ const Hero = () => {
                 <div key={s.label} className="flex items-center gap-2">
                   <span
                     className="font-black text-[#0f172a] text-sm"
-                    style={{ fontFamily: "'DM Sans', sans-serif" }}
+                    style={{ fontFamily: "'Poppins', sans-serif" }}
                   >
                     {s.num}
                   </span>
-                  <span className="text-[#64748b] text-xs font-medium" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                  <span className="text-[#64748b] text-xs font-medium" style={{ fontFamily: "'Poppins', sans-serif" }}>
                     {s.label}
                   </span>
                 </div>

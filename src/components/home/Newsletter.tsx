@@ -22,7 +22,7 @@ const Newsletter = () => {
     <section
       id="newsletter"
       className="py-24 lg:py-32 relative overflow-hidden bg-[#fbfdfc]"
-      style={{ fontFamily: "'DM Sans', sans-serif" }}
+      style={{ fontFamily: "'Poppins', sans-serif" }}
     >
       {/* Background ambient lighting */}
       <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-emerald-100/40 rounded-full blur-3xl pointer-events-none" />

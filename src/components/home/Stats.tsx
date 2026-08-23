@@ -32,7 +32,7 @@ const Stats = () => {
     <section
       id="stats"
       className="relative overflow-hidden bg-white py-24 lg:py-32"
-      style={{ fontFamily: "'DM Sans', sans-serif" }}
+      style={{ fontFamily: "'Poppins', sans-serif" }}
     >
       {/* Background ambient lighting */}
       <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-emerald-50/80 rounded-full blur-3xl pointer-events-none" />

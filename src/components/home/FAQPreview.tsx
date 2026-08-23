@@ -25,7 +25,7 @@ const FAQPreview = () => {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq-preview" className="py-24 lg:py-32 bg-[#fbfdfc] relative overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <section id="faq-preview" className="py-24 lg:py-32 bg-[#fbfdfc] relative overflow-hidden" style={{ fontFamily: "'Poppins', sans-serif" }}>
       {/* Ambient glows */}
       <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-emerald-100/40 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-amber-100/30 rounded-full blur-3xl pointer-events-none" />

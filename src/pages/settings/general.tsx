@@ -65,7 +65,7 @@ export default function GeneralSettings() {
   };
 
   return (
-    <div className="p-4 md:p-8 max-w-5xl mx-auto space-y-6 bg-[#fbfdfc] dark:bg-slate-950 min-h-screen text-[#0f2820] dark:text-slate-100" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="p-4 md:p-8 max-w-5xl mx-auto space-y-6 bg-[#fbfdfc] dark:bg-slate-950 min-h-screen text-[#0f2820] dark:text-slate-100" style={{ fontFamily: "'Poppins', sans-serif" }}>
       {/* Header */}
       <div className="border-b border-slate-200/80 dark:border-slate-800 pb-5">
         <div className="inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-[#156e52] dark:text-emerald-400 mb-2">

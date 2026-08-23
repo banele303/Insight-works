@@ -174,7 +174,7 @@ const tooltipStyle = {
   border: "1px solid #e2e8f0",
   borderRadius: "12px",
   boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.08)",
-  fontFamily: "'DM Sans', sans-serif",
+  fontFamily: "'Poppins', sans-serif",
   fontSize: "12px",
   color: "#0f2820",
 };
@@ -222,7 +222,7 @@ const WellnessDashboard = () => {
   ];
 
   return (
-    <div className="bg-[#f8fafc] min-h-screen text-[#0f2820]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="bg-[#f8fafc] min-h-screen text-[#0f2820]" style={{ fontFamily: "'Poppins', sans-serif" }}>
       <Navbar />
       
       <main className="pt-32 pb-24">

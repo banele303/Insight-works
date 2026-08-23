@@ -33,7 +33,7 @@ const HowItWorks = () => {
     <section
       id="how-it-works"
       className="py-24 lg:py-32 relative overflow-hidden bg-[#fbfdfc]"
-      style={{ fontFamily: "'DM Sans', sans-serif" }}
+      style={{ fontFamily: "'Poppins', sans-serif" }}
     >
       {/* Background ambient accents */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-100/40 rounded-full blur-3xl pointer-events-none" />

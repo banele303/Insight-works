@@ -226,7 +226,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="bg-white min-h-screen text-[#0f2820] flex flex-col justify-between" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="bg-white min-h-screen text-[#0f2820] flex flex-col justify-between" style={{ fontFamily: "'Poppins', sans-serif" }}>
       <Navbar />
 
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-16">

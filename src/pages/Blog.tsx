@@ -43,7 +43,7 @@ export default function BlogPage() {
   const remainingPosts = filteredPosts.slice(1);
 
   return (
-    <div className="min-h-screen bg-slate-50/50 dark:bg-black text-slate-900 dark:text-zinc-100" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="min-h-screen bg-slate-50/50 dark:bg-black text-slate-900 dark:text-zinc-100" style={{ fontFamily: "'Poppins', sans-serif" }}>
       <Navbar />
 
       <main className="pt-28 sm:pt-36 pb-24">

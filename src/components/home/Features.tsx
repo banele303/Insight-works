@@ -45,7 +45,7 @@ const Features = () => {
     <section
       id="features"
       className="py-24 lg:py-32 relative overflow-hidden bg-white"
-      style={{ fontFamily: "'DM Sans', sans-serif" }}
+      style={{ fontFamily: "'Poppins', sans-serif" }}
     >
       {/* Subtle ambient light mesh */}
       <div className="absolute top-1/2 left-0 w-[450px] h-[450px] bg-emerald-50/70 rounded-full blur-3xl -translate-y-1/2 pointer-events-none" />

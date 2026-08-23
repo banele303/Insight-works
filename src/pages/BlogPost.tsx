@@ -57,7 +57,7 @@ When anxiety becomes clinical, the body manifests the struggle before the consci
 Healing from chronic anxiety is not about eliminating all stress; it is about building somatic safety and self-compassion. In therapy, we combine cognitive reframing with nervous system regulation—helping you disarm catastrophic thought loops and inhabit your present moment with calm confidence.`;
 
   return (
-    <div className="min-h-screen bg-white text-[#0f172a]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="min-h-screen bg-white text-[#0f172a]" style={{ fontFamily: "'Poppins', sans-serif" }}>
       <Navbar />
       
       <main className="pt-28 sm:pt-36 pb-24">

@@ -94,7 +94,7 @@ export default function MultistepSignupForm() {
   };
 
   return (
-    <div className="space-y-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="space-y-6" style={{ fontFamily: "'Poppins', sans-serif" }}>
       {/* Progress Indicators */}
       <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-4">
         {[

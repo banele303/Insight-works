@@ -93,7 +93,7 @@ const Services = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white text-[#0f2820]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="min-h-screen bg-white text-[#0f2820]" style={{ fontFamily: "'Poppins', sans-serif" }}>
       <Navbar />
       
       <main className="pt-32 pb-24">

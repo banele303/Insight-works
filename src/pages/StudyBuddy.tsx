@@ -210,7 +210,7 @@ export default function StudyBuddyPage() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] bg-[#fbfdfc] dark:bg-slate-950 p-4 md:p-6 space-y-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="flex flex-col h-[calc(100vh-4rem)] bg-[#fbfdfc] dark:bg-slate-950 p-4 md:p-6 space-y-4" style={{ fontFamily: "'Poppins', sans-serif" }}>
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-200/80 dark:border-slate-800 pb-4">
         <div className="flex items-center gap-3">

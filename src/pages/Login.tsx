@@ -16,7 +16,7 @@ const Login = () => {
   }
 
   return (
-    <div className="grid min-h-svh lg:grid-cols-2 bg-white text-[#0f2820]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="grid min-h-svh lg:grid-cols-2 bg-white text-[#0f2820]" style={{ fontFamily: "'Poppins', sans-serif" }}>
       {/* Left Panel */}
       <div className="flex flex-col gap-6 p-6 sm:p-10 justify-between">
         <div className="flex items-center justify-between">

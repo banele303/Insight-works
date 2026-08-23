@@ -181,7 +181,7 @@ export default function AdminResources() {
   });
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-5 text-zinc-900 dark:text-zinc-100 bg-white dark:bg-black min-h-screen overflow-x-hidden" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-5 text-zinc-900 dark:text-zinc-100 bg-white dark:bg-black min-h-screen overflow-x-hidden" style={{ fontFamily: "'Poppins', sans-serif" }}>
       {/* ── TOP HEADER (Responsive & Clean) ── */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800/80 pb-5">
         <div className="space-y-1 max-w-2xl min-w-0">

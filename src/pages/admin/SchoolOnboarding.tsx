@@ -171,7 +171,7 @@ export default function SchoolOnboardingPage() {
   ];
 
   return (
-    <div className="max-w-3xl mx-auto p-4 md:p-8 space-y-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="max-w-3xl mx-auto p-4 md:p-8 space-y-6" style={{ fontFamily: "'Poppins', sans-serif" }}>
       {/* Steps Navigation Bar */}
       <div className="flex items-center justify-between border-b pb-4">
         {STEPS.map((step, idx) => {

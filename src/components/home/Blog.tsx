@@ -56,7 +56,7 @@ const Blog = () => {
     <section
       id="blog"
       className="py-24 lg:py-32 bg-white dark:bg-black relative overflow-hidden"
-      style={{ fontFamily: "'DM Sans', sans-serif" }}
+      style={{ fontFamily: "'Poppins', sans-serif" }}
     >
       {/* Decorative background glows */}
       <div className="absolute top-1/3 left-0 w-[500px] h-[500px] bg-emerald-50/60 dark:bg-emerald-950/20 rounded-full blur-3xl pointer-events-none" />

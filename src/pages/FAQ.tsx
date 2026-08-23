@@ -98,7 +98,7 @@ const FAQ = () => {
   }, [selectedCategory, searchQuery]);
 
   return (
-    <div className="bg-white min-h-screen text-[#0f2820]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="bg-white min-h-screen text-[#0f2820]" style={{ fontFamily: "'Poppins', sans-serif" }}>
       <Navbar />
       
       <main className="pt-32 pb-24">
