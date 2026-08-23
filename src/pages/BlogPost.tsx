@@ -3,9 +3,10 @@ import Navbar from '@/components/home/Navbar';
 import Footer from '@/components/home/Footer';
 import { Link, useParams } from 'react-router';
 import {
-  Calendar, Clock, User, Facebook, Twitter, Linkedin,
+  Calendar, Clock, User,
   ArrowRight, Bookmark, Share2, Sparkles, CheckCircle2, ChevronLeft, Eye
 } from 'lucide-react';
+import { TwitterIcon, FacebookIcon, LinkedinIcon, WhatsappIcon } from '@/components/global/SocialIcons';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { toast } from 'sonner';
@@ -314,37 +315,51 @@ Healing from chronic anxiety is not about eliminating all stress; it is about bu
                 <h3 className="font-serif font-bold text-base text-[#0f2820] flex items-center gap-2">
                   <Share2 size={16} className="text-[#156e52]" /> Share This Article
                 </h3>
-                <div className="flex gap-2.5">
+                <div className="flex flex-wrap gap-2">
                   <button
                     onClick={handleCopyLink}
-                    className="flex-1 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                    className="w-full py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 transition-colors flex items-center justify-center gap-1.5 cursor-pointer mb-1"
                   >
-                    <Bookmark size={14} /> Copy Link
+                    <Bookmark size={14} /> Copy Article Link
                   </button>
-                  <a
-                    href="https://twitter.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="w-10 h-10 rounded-xl bg-slate-50 hover:bg-[#156e52] hover:text-white border border-slate-200 flex items-center justify-center text-slate-600 transition-all"
-                  >
-                    <Twitter size={15} />
-                  </a>
-                  <a
-                    href="https://linkedin.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="w-10 h-10 rounded-xl bg-slate-50 hover:bg-[#156e52] hover:text-white border border-slate-200 flex items-center justify-center text-slate-600 transition-all"
-                  >
-                    <Linkedin size={15} />
-                  </a>
-                  <a
-                    href="https://facebook.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="w-10 h-10 rounded-xl bg-slate-50 hover:bg-[#156e52] hover:text-white border border-slate-200 flex items-center justify-center text-slate-600 transition-all"
-                  >
-                    <Facebook size={15} />
-                  </a>
+                  <div className="grid grid-cols-4 gap-2 w-full">
+                    <a
+                      href={`https://wa.me/?text=${encodeURIComponent(`${title} - Read more at: ` + window.location.href)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      title="Share to WhatsApp"
+                      className="py-2 rounded-xl bg-slate-50 hover:bg-[#25D366] hover:text-white border border-slate-200 flex items-center justify-center text-slate-600 transition-all cursor-pointer"
+                    >
+                      <WhatsappIcon className="w-4 h-4" />
+                    </a>
+                    <a
+                      href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(window.location.href)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      title="Share to Twitter / X"
+                      className="py-2 rounded-xl bg-slate-50 hover:bg-black hover:text-white border border-slate-200 flex items-center justify-center text-slate-600 transition-all cursor-pointer"
+                    >
+                      <TwitterIcon className="w-4 h-4" />
+                    </a>
+                    <a
+                      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      title="Share to LinkedIn"
+                      className="py-2 rounded-xl bg-slate-50 hover:bg-[#0A66C2] hover:text-white border border-slate-200 flex items-center justify-center text-slate-600 transition-all cursor-pointer"
+                    >
+                      <LinkedinIcon className="w-4 h-4" />
+                    </a>
+                    <a
+                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      title="Share to Facebook"
+                      className="py-2 rounded-xl bg-slate-50 hover:bg-[#1877F2] hover:text-white border border-slate-200 flex items-center justify-center text-slate-600 transition-all cursor-pointer"
+                    >
+                      <FacebookIcon className="w-4 h-4" />
+                    </a>
+                  </div>
                 </div>
               </div>
 

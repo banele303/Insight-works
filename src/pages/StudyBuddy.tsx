@@ -51,7 +51,7 @@ export default function StudyBuddyPage() {
       id: "welcome",
       role: "assistant",
       content:
-        "Welcome to the Insight Works AI Companion 🌿. Powered by Puter.js, I am here to support your therapeutic journey, discuss grounding techniques, explore our 7 care disciplines, or help you schedule a session with Maletsatsi Sibanda.",
+        "Welcome to the Insight Works AI Companion 🌿. Powered by Cloudflare AI, I am here to support your therapeutic journey, discuss grounding techniques, explore our 7 care disciplines, or help you schedule a session with Maletsatsi Sibanda.",
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     },
   ]);
@@ -168,7 +168,7 @@ export default function StudyBuddyPage() {
           parentPhone: clientPhone.trim(),
           relationship: "Self",
           motivation: `Service: ${selectedService.name} (${selectedService.rate}) | Format: ${formatLabel} | Date: ${bookingDate} | Time: ${bookingTime}`,
-          additionalSubjects: "Booked via Puter.js AI Assistant with Composio Google Calendar sync",
+          additionalSubjects: "Booked via Cloudflare AI Assistant with Composio Google Calendar sync",
           howDidYouHear: "Dashboard AI Companion",
         });
       }
@@ -223,7 +223,7 @@ export default function StudyBuddyPage() {
                 Insight Works AI Companion
               </h1>
               <Badge variant="outline" className="text-[10px] bg-emerald-50 dark:bg-emerald-950 text-[#156e52] dark:text-emerald-400 border-emerald-200">
-                Puter.js Powered
+                Cloudflare AI Powered
               </Badge>
             </div>
             <p className="text-xs text-slate-500">
@@ -317,7 +317,7 @@ export default function StudyBuddyPage() {
                 <Sparkles className="w-4 h-4 animate-spin" />
               </div>
               <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 rounded-2xl text-xs text-slate-500">
-                Puter.js AI thinking...
+                Insight Works AI thinking...
               </div>
             </div>
           )}

@@ -230,7 +230,7 @@ const Navbar = () => {
         )}
       </nav>
 
-      {/* Floating Interactive Puter.js AI Sanctuary Chatbot Widget */}
+      {/* Floating Interactive Cloudflare AI Sanctuary Chatbot Widget */}
       <FloatingTherapyChatbot />
     </>
   );

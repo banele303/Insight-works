@@ -30,7 +30,7 @@ export default function GeneralSettings() {
     resolver: zodResolver(schema),
     defaultValues: {
       name: "Insight Works Therapy & Coaching",
-      address: "Johannesburg, Gauteng, South Africa (In-person & Telehealth)",
+      address: "9 Moray Drive, Bryanston, Sandton, 2091",
       phone: "+27 79 550 1557",
       email: "maletsatsi@insightherapyandcoaching.co.za",
       motto: "Where Healing Begins with Connection · HPCSA Registered",
@@ -41,7 +41,7 @@ export default function GeneralSettings() {
     if (settings) {
       form.reset({
         name: settings.name || "Insight Works Therapy & Coaching",
-        address: settings.address || "Johannesburg, Gauteng, South Africa",
+        address: settings.address || "9 Moray Drive, Bryanston, Sandton, 2091",
         phone: settings.phone || "+27 79 550 1557",
         email: settings.email || "maletsatsi@insightherapyandcoaching.co.za",
         motto: settings.motto || "Where Healing Begins with Connection",

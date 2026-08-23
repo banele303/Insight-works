@@ -1,5 +1,6 @@
-import { Twitter, Facebook, Linkedin, ArrowUp, Phone, Mail, MapPin, HeartPulse, ArrowRight, ShieldCheck } from "lucide-react";
+import { ArrowUp, Phone, Mail, MapPin, HeartPulse, ArrowRight, ShieldCheck } from "lucide-react";
 import { Link } from "react-router";
+import SocialLinks from "@/components/global/SocialIcons";
 
 const Footer = () => {
   return (
@@ -32,19 +33,13 @@ const Footer = () => {
               <span>POPIA Compliant · Confidential Care</span>
             </div>
 
-            <div className="flex space-x-2.5 pt-2">
-              {[Twitter, Facebook, Linkedin].map((Icon, i) => (
-                <a
-                  key={i}
-                  href="https://instagram.com/insightworks_therapy"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="w-9 h-9 rounded-xl bg-white border border-slate-200/80 flex items-center justify-center hover:bg-[#156e52] hover:text-white hover:border-[#156e52] transition-all text-slate-600 shadow-2xs cursor-pointer"
-                  aria-label="Social link"
-                >
-                  <Icon className="w-4 h-4" />
-                </a>
-              ))}
+            <div className="pt-2">
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Connect With Us</p>
+              <SocialLinks
+                className="flex flex-wrap items-center gap-2"
+                itemClassName="w-9 h-9 rounded-xl bg-white border border-slate-200/80 flex items-center justify-center text-slate-600 shadow-2xs hover:bg-[#156e52] hover:text-white hover:border-[#156e52] transition-all cursor-pointer"
+                iconClassName="w-4 h-4"
+              />
             </div>
           </div>
 
@@ -101,7 +96,7 @@ const Footer = () => {
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-[#156e52] mt-0.5 shrink-0" />
-                <span className="text-[#475569]">Johannesburg, Gauteng & Telehealth Nationwide</span>
+                <span className="text-[#475569]">9 Moray Drive, Bryanston, Sandton, 2091</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#156e52] shrink-0" />

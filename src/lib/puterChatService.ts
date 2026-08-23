@@ -9,78 +9,57 @@ export interface ChatMessage {
   bookingData?: any;
 }
 
-const THERAPY_SYSTEM_PROMPT = `You are the empathetic, knowledgeable Information & Intake Assistant for Insight Works Therapy & Coaching in South Africa, led by Maletsatsi Sibanda (Counselling Therapist & Life Coach).
+const THERAPY_SYSTEM_PROMPT = `You are the empathetic, knowledgeable Information & Intake AI Assistant for Insight Works Therapy & Coaching in South Africa, founded by Maletsatsi Sibanda (Counselling Therapist & Life Coach).
 
 Practice Information:
 - Practitioner: Maletsatsi Sibanda (Counselling Therapist & Life Coach, HPCSA Registered)
 - Phone / WhatsApp: +27 79 550 1557
 - Email: maletsatsi@insightherapyandcoaching.co.za
-- Location: Johannesburg, South Africa (In-person rooms & Telehealth nationwide)
+- Location: 9 Moray Drive, Bryanston, Sandton, 2091 (In-person rooms & Telehealth video nationwide & international)
 - Tagline: "You don't have to face life's challenges alone. Together, we can help you heal, grow, reconnect, and thrive."
 
-The 7 Core Disciplines:
-1. Individual Counselling (R650 – R850 / 60 min)
-2. Couples & Relationship Counselling (R850 – R1,100 / 75 min)
-3. Life Coaching & Self-Mastery (R600 – R800 / 50 min)
-4. Trauma Recovery & Emotional Healing (R750 – R950 / 60 min)
-5. Youth & Young Adult Support (R550 – R750 / 50 min)
-6. Substance Use Support (R700 – R900 / 60 min)
-7. Free Initial Consultation (Free / 15 min)
+Operating & Consulting Hours:
+- Monday to Friday: 08:00 – 18:00 (8:00 AM – 6:00 PM) -> Closing time is 18:00 (6:00 PM) on weekdays.
+- Saturday: 09:00 – 13:00 (9:00 AM – 1:00 PM) -> Closing time is 13:00 (1:00 PM) on Saturdays.
+- Sunday: Closed (Urgent inquiries via WhatsApp or 24/7 SADAG helpline).
+
+The 7 Core Care Disciplines & Rates:
+1. Individual Counselling (R650 – R850 / 60 min) - Anxiety, depression, stress, life transitions.
+2. Couples & Relationship Counselling (R850 – R1,100 / 75 min) - Communication, conflict resolution, intimacy rebuild.
+3. Life Coaching & Self-Mastery (R600 – R800 / 50 min) - Goal alignment, mindset breakthroughs, habit mastery.
+4. Trauma Recovery & Emotional Healing (R750 – R950 / 60 min) - PTSD, EMDR techniques, somatic emotional processing.
+5. Youth & Young Adult Support (R550 – R750 / 50 min) - Academic burnout, peer pressure, identity.
+6. Substance Use Support (R700 – R900 / 60 min) - Relapse prevention, recovery scaffolding, harm reduction.
+7. Free Initial Consultation (Free / 15 min) - Discover the right therapeutic fit.
 
 Immediate Crisis Line:
-If someone is experiencing suicidal thoughts or severe distress, always mention SADAG: 0800 456 789 (24/7 Helpline).
+If someone is in acute distress or experiencing suicidal thoughts, provide SADAG: 0800 456 789 (24/7 Helpline) or Suicide Crisis Line: 0800 567 567.
 
 Your role:
-- Answer questions warmly, professionally, and with empathy.
-- Keep answers concise, clear, and reassuring.
-- When the user asks to book an appointment, schedule a session, or asks for rates/availability, kindly offer them the booking options and encourage them to click 'Book Appointment' right here in the chat.`;
-
-let puterLoaded = false;
-let puterLoadingPromise: Promise<boolean> | null = null;
-
-export async function loadPuter(): Promise<boolean> {
-  if (typeof window === "undefined") return false;
-  if ((window as any).puter) return true;
-  if (puterLoaded) return true;
-  if (puterLoadingPromise) return puterLoadingPromise;
-
-  puterLoadingPromise = new Promise((resolve) => {
-    const script = document.createElement("script");
-    script.src = "https://js.puter.com/v2/";
-    script.async = true;
-    script.onload = () => {
-      puterLoaded = true;
-      resolve(true);
-    };
-    script.onerror = () => {
-      console.warn("Could not load external Puter.js CDN, using fallback.");
-      resolve(false);
-    };
-    document.head.appendChild(script);
-  });
-
-  return puterLoadingPromise;
-}
+- Answer user questions warmly, accurately, and empathetically.
+- If asked about hours or when we close, state clearly: Monday–Friday 08:00–18:00 (closes at 6 PM), and Saturday 09:00–13:00 (closes at 1 PM).
+- If asked about booking or scheduling, encourage clicking the 'Book Appointment' button directly in the chat.`;
 
 /**
- * Streams AI response token-by-token for a cool, live typewriter experience using Cloudflare AI (Llama 3.3 70B)
+ * Streams AI response using Cloudflare Workers AI (Llama 3.3 70B) with smooth typewriter playback.
  */
-export async function streamPuterChat(
+export async function streamTherapyChat(
   userMessage: string,
   history: ChatMessage[] = [],
   onChunk: (accumulatedText: string) => void
 ): Promise<string> {
   let fullReply = "";
 
-  try {
-    const formattedMessages = [
-      ...history.slice(-6).map((m) => ({
-        role: m.role === "user" ? "user" : "assistant",
-        content: m.content,
-      })),
-      { role: "user", content: userMessage },
-    ];
+  const formattedMessages = [
+    ...history.slice(-6).map((m) => ({
+      role: m.role === "user" ? "user" : "assistant",
+      content: m.content,
+    })),
+    { role: "user", content: userMessage },
+  ];
 
+  // Call Cloudflare Workers AI API (Llama 3.3 70B)
+  try {
     const res = await fetch(`${CLOUDFLARE_WORKER_URL}/api/therapy-chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -92,39 +71,34 @@ export async function streamPuterChat(
       fullReply = data.response || "";
     }
   } catch (error) {
-    console.warn("Cloudflare AI therapy chat request failed, using fallback:", error);
+    console.warn("Cloudflare Workers AI request failed, falling back:", error);
   }
 
-  // Fallback intelligent responses if offline
+  // If network is offline or request failed, use smart local clinical knowledge
   if (!fullReply) {
-    const lower = userMessage.toLowerCase();
-    if (lower.includes("book") || lower.includes("appointment") || lower.includes("schedule") || lower.includes("session")) {
-      fullReply = "I would be delighted to help you book a session with Maletsatsi Sibanda. You can choose between In-Person consulting in Johannesburg or Telehealth video nationwide. Click the 'Book Appointment' button below to schedule instantly with Google Calendar sync!";
-    } else if (lower.includes("price") || lower.includes("cost") || lower.includes("fee") || lower.includes("rate")) {
-      fullReply = "Our session rates range from R650–R850 for Individual Counselling (60 min), R850–R1,100 for Couples Counselling (75 min), and R600–R800 for Life Coaching. We also offer a complimentary 15-minute initial consultation. You can schedule directly using the 'Book Appointment' button below!";
-    } else if (lower.includes("anxiety") || lower.includes("depress") || lower.includes("stress") || lower.includes("overwhelm")) {
-      fullReply = "Thank you for opening up. Experiencing emotional overwhelm or anxiety can feel isolating, but you do not have to walk this path alone. Maletsatsi provides compassionate, evidence-based guidance in a safe sanctuary. Would you like to schedule an introductory session?";
-    } else {
-      fullReply = "Welcome to Insight Works Therapy & Coaching. I can help guide you through our therapeutic disciplines, rates, and scheduling options. How may I best support you today?";
-    }
+    fullReply = getSmartTherapyFallback(userMessage);
   }
 
-  // Smooth typewriter streaming output
+  // Smooth typewriter playback for live conversational experience
   const words = fullReply.split(" ");
   let currentAccumulated = "";
   for (let i = 0; i < words.length; i++) {
     currentAccumulated += (i > 0 ? " " : "") + words[i];
     onChunk(currentAccumulated);
-    await new Promise((r) => setTimeout(r, 18)); // 18ms per token
+    await new Promise((r) => setTimeout(r, 14)); // 14ms per word chunk
   }
 
   return fullReply;
 }
 
+// Backwards-compatible alias for existing imports
+export const streamPuterChat = streamTherapyChat;
+
 export async function sendPuterChat(
   userMessage: string,
   history: ChatMessage[] = []
 ): Promise<string> {
-  return streamPuterChat(userMessage, history, () => {});
+  return streamTherapyChat(userMessage, history, () => {});
 }
+
 

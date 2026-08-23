@@ -228,7 +228,7 @@ export default function FloatingTherapyChatbot() {
   };
 
   return (
-    <aside aria-label="AI Sanctuary Chatbot Widget" className="fixed bottom-5 right-5 z-50 flex flex-col items-end" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <aside aria-label="AI Sanctuary Chatbot Widget" className="fixed bottom-5 right-5 z-50 flex flex-col items-end" style={{ fontFamily: "'Poppins', sans-serif" }}>
       {/* Floating Chat Window */}
       {isOpen && (
         <div className="w-[360px] sm:w-[410px] h-[580px] bg-white rounded-3xl shadow-2xl border border-slate-200/90 flex flex-col overflow-hidden mb-3 animate-in fade-in-50 zoom-in-95 duration-200">
@@ -349,7 +349,7 @@ export default function FloatingTherapyChatbot() {
                 </div>
                 <div className="bg-white border border-slate-200 p-2.5 rounded-2xl text-[11px] text-slate-500 flex items-center gap-1.5 shadow-2xs">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                  Streaming reply with Puter.js...
+                  Insight Works AI is replying...
                 </div>
               </div>
             )}

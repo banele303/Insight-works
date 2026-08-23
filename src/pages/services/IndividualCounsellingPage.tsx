@@ -58,7 +58,7 @@ export default function IndividualCounsellingPage() {
     },
     {
       q: "Are individual sessions available online via telehealth?",
-      a: "Yes. We offer fully encrypted, POPIA-compliant video sessions across South Africa, as well as in-person consultations at our private practice in Glenanda, Johannesburg South."
+      a: "Yes. We offer fully encrypted, POPIA-compliant video sessions across South Africa and internationally, as well as in-person consultations at our private practice at 9 Moray Drive, Bryanston, Sandton, 2091."
     },
     {
       q: "Can I claim session fees from my Medical Aid?",

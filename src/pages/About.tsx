@@ -3,40 +3,21 @@ import Footer from "@/components/home/Footer";
 import { Shield, Users, Heart, Brain, Star, Award, CheckCircle2, ArrowRight, Sparkles, MapPin } from "lucide-react";
 import { Link } from "react-router";
 
-const team = [
-  {
-    name: "Maletsatsi Sibanda",
-    role: "Counselling Therapist & Life Coach",
-    creds: "Counselling Practitioner & Certified Life Coach",
-    specialties: ["Individual & Couples Counselling", "Trauma Recovery & Emotional Healing", "Personal Growth & Life Coaching", "Youth & Substance Use Support"],
-    bio: "Passionate about creating a safe, non-judgmental sanctuary where clients can process challenges, heal emotional wounds, reconnect with their authentic selves, and master their personal goals.",
-    img: "/images/therapist-portrait.jpg",
-  },
-  {
-    name: "Dr. James Mokoena",
-    role: "Counselling Psychologist",
-    creds: "M.Ed Psych, B.Psych (Hons) · HPCSA PS 0159482",
-    specialties: ["Couples & Relationship Therapy", "Men's Mental Health", "Grief & Loss"],
-    bio: "Gottman-trained couples specialist dedicated to helping partners repair relational trust, dismantle communication barriers, and navigate profound grief.",
-    img: "https://images.unsplash.com/photo-1537368910025-7028ba1ea9b4?auto=format&fit=crop&q=80&w=600&h=600",
-  },
-  {
-    name: "Ms. Fatima Adams",
-    role: "Family Therapist & Youth Specialist",
-    creds: "MSW (Clinical), BSW · SACSSP 10-29481",
-    specialties: ["Family Dynamics", "Youth & Young Adult Support", "Trauma-Informed Care"],
-    bio: "Focuses on systemic family therapy and adolescent resilience, fostering open communication channels within households during turbulent life stages.",
-    img: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=600&h=600",
-  },
-  {
-    name: "Mr. Thabo Ndlovu",
-    role: "Executive & Mindset Coach",
-    creds: "ICF Professional Certified Coach (PCC), B.Com",
-    specialties: ["Executive Career Transitions", "Work-Life Boundaries", "Mindset Shift"],
-    bio: "Partnering with ambitious professionals and leaders to conquer imposter syndrome, design sustainable career roadmaps, and achieve high performance without burnout.",
-    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600&h=600",
-  },
-];
+const maletsatsiProfile = {
+  name: "Maletsatsi Sibanda",
+  role: "Counselling Therapist & Life Coach",
+  creds: "Counselling Practitioner & Certified Life Coach",
+  specialties: [
+    "Individual Counselling",
+    "Couples & Relationship Counselling",
+    "Trauma Recovery & Emotional Healing",
+    "Personal Growth & Life Coaching",
+    "Youth & Young Adult Support",
+    "Substance Use Support",
+  ],
+  bio: "Passionate about creating a safe, non-judgmental sanctuary where clients can process challenges, heal emotional wounds, reconnect with their authentic selves, and master their personal goals.",
+  img: "/images/therapist-seated-plant.jpg",
+};
 
 const values = [
   {
@@ -63,7 +44,7 @@ const values = [
 
 const About = () => {
   return (
-    <div className="bg-white min-h-screen text-[#0f2820]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="bg-white min-h-screen text-[#0f2820]" style={{ fontFamily: "'Poppins', sans-serif" }}>
       <Navbar />
       
       <main>
@@ -112,18 +93,24 @@ const About = () => {
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> POPIA Protected & Safe
                   </span>
                   <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 shadow-2xs">
-                    <MapPin className="w-3.5 h-3.5 text-[#156e52]" /> Johannesburg & Telehealth Nationwide
+                    <MapPin className="w-3.5 h-3.5 text-[#156e52]" /> Telehealth Nationwide & International
                   </span>
                 </div>
               </div>
 
-              {/* Right Column Image Collage */}
+              {/* Right Column Image */}
               <div className="lg:col-span-5 relative">
                 <div className="relative rounded-3xl overflow-hidden bg-white border border-slate-200/90 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.08)] group">
                   <img 
-                    src="/images/how-we-help-flyer.jpg" 
-                    alt="Maletsatsi Sibanda - Insight Works Therapy & Coaching" 
-                    className="w-full h-[460px] object-cover object-top group-hover:scale-105 transition-transform duration-700"
+                    src="/images/therapist-seated-room.jpg" 
+                    alt="Maletsatsi Sibanda - Counselling Therapist & Life Coach" 
+                    className="w-full h-[460px] object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                    onError={(e) => {
+                      const img = e.currentTarget;
+                      if (!img.src.includes('therapist-portrait.jpg')) {
+                        img.src = "/images/therapist-portrait.jpg";
+                      }
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/10 to-transparent" />
                   
@@ -132,8 +119,8 @@ const About = () => {
                       <Sparkles className="w-4 h-4 text-amber-300" />
                       <span className="text-xs font-bold uppercase tracking-wider text-emerald-200">Warm & Confidential</span>
                     </div>
-                    <p className="font-bold text-lg font-serif">A Sanctuary for Healing & Growth</p>
-                    <p className="text-xs text-slate-200 mt-0.5">Together, we help you heal, grow, reconnect, and thrive.</p>
+                    <p className="font-bold text-lg font-serif">Maletsatsi Sibanda</p>
+                    <p className="text-xs text-slate-200 mt-0.5">Counselling Therapist & Life Coach</p>
                   </div>
                 </div>
               </div>
@@ -200,72 +187,94 @@ const About = () => {
           </div>
         </section>
 
-        {/* ── CLINICAL TEAM SECTION ── */}
+        {/* ── CLINICIAN PROFILE SECTION ── */}
         <section className="py-24 bg-white relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16 space-y-4 max-w-2xl mx-auto">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-rose-50 border border-rose-200 text-xs font-bold uppercase tracking-widest text-[#9f1239]">
-                Expert Practitioners
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-bold uppercase tracking-widest text-[#156e52]">
+                <Sparkles className="w-3.5 h-3.5 text-[#ea7627]" />
+                Therapist & Life Coach
               </div>
               <h2
-                className="text-3xl sm:text-4xl md:text-5xl font-extrabold font-serif text-[#0f172a]"
+                className="text-3xl sm:text-4xl md:text-5xl font-extrabold font-serif text-[#0f2820]"
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
-                Our Multidisciplinary Clinical Team
+                Meet Maletsatsi Sibanda
               </h2>
               <p className="text-[#64748b] text-base leading-relaxed">
-                Meet our dedicated, HPCSA-registered psychologists and registered counselors committed to supporting your unique journey.
+                Dedicated to helping individuals, couples, and youth navigate life's complexities with empathy, clinical depth, and transformational life coaching.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {team.map((member) => (
-                <div
-                  key={member.name}
-                  className="group bg-white border border-slate-200/90 rounded-3xl p-6 shadow-xs hover:shadow-xl hover:border-rose-200 hover:-translate-y-1.5 transition-all flex flex-col justify-between"
-                >
-                  <div>
-                    {/* Portrait Photo */}
-                    <div className="relative mb-5 overflow-hidden rounded-2xl aspect-square border border-slate-100">
-                      <img
-                        src={member.img}
-                        alt={member.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/80 text-[10px] font-bold text-[#881337] shadow-2xs">
-                        HPCSA Registered
-                      </div>
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-gradient-to-br from-emerald-50/60 via-white to-amber-50/30 border border-slate-200/90 rounded-3xl p-8 sm:p-12 shadow-[0_10px_30px_-5px_rgba(0,0,0,0.05)] grid md:grid-cols-12 gap-8 items-center">
+                
+                {/* Portrait Photo */}
+                <div className="md:col-span-5">
+                  <div className="relative rounded-2xl overflow-hidden aspect-[4/5] border border-slate-200 shadow-md">
+                    <img
+                      src={maletsatsiProfile.img}
+                      alt={maletsatsiProfile.name}
+                      className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-500"
+                      onError={(e) => {
+                        const img = e.currentTarget;
+                        if (!img.src.includes('maletsatsi-portrait.jpg')) {
+                          img.src = "/images/maletsatsi-portrait.jpg";
+                        }
+                      }}
+                    />
+                    <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md border border-emerald-200/80 text-[11px] font-bold text-[#156e52] shadow-2xs">
+                      Certified Practitioner
                     </div>
+                  </div>
+                </div>
 
-                    <h3 className="font-extrabold text-[#0f172a] text-xl font-serif leading-snug">{member.name}</h3>
-                    <p className="text-xs text-[#9f1239] mt-1 font-bold tracking-wide uppercase">{member.role}</p>
-                    <p className="text-[11px] text-[#64748b] mt-0.5 font-medium">{member.creds}</p>
-
-                    <p className="text-xs text-[#475569] mt-3 leading-relaxed border-t border-slate-100 pt-3">
-                      {member.bio}
+                {/* Details & Specialties */}
+                <div className="md:col-span-7 space-y-5">
+                  <div>
+                    <span className="text-xs font-bold text-[#156e52] uppercase tracking-wider bg-emerald-100/70 px-3 py-1 rounded-full border border-emerald-200/60 inline-block mb-2">
+                      {maletsatsiProfile.role}
+                    </span>
+                    <h3 className="text-2xl sm:text-3xl font-bold font-serif text-[#0f2820]">
+                      {maletsatsiProfile.name}
+                    </h3>
+                    <p className="text-xs text-slate-500 font-medium mt-1">
+                      {maletsatsiProfile.creds} · Telehealth Nationwide & International
                     </p>
+                  </div>
 
-                    {/* Specialty tags */}
-                    <div className="flex flex-wrap gap-1.5 mt-4">
-                      {member.specialties.map((spec, i) => (
-                        <span key={i} className="text-[10px] font-medium bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded-md text-slate-600">
+                  <p className="text-sm text-[#475569] leading-relaxed">
+                    {maletsatsiProfile.bio}
+                  </p>
+
+                  <div className="space-y-2">
+                    <p className="text-xs font-bold text-[#0f2820] uppercase tracking-wider">Focus Areas & Offerings:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {maletsatsiProfile.specialties.map((spec) => (
+                        <span key={spec} className="text-xs font-semibold bg-white border border-emerald-200/80 px-3 py-1 rounded-lg text-[#156e52] shadow-2xs">
                           {spec}
                         </span>
                       ))}
                     </div>
                   </div>
 
-                  <div className="pt-5 mt-5 border-t border-slate-100">
+                  <div className="pt-3 flex flex-wrap items-center gap-3">
                     <Link
                       to="/booking"
-                      className="inline-flex items-center justify-between w-full text-xs font-bold text-[#881337] group-hover:text-[#be123c] transition-colors"
+                      className="inline-flex items-center gap-2 btn-dual-gradient text-white text-xs font-bold px-6 py-3 rounded-xl hover:shadow-md hover:shadow-emerald-900/20 transition-all shadow-xs cursor-pointer"
                     >
-                      <span>Book Consultation</span>
-                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                      Book a Session <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                    <Link
+                      to="/contact"
+                      className="inline-flex items-center gap-2 bg-white border border-slate-300 text-slate-700 text-xs font-bold px-5 py-3 rounded-xl hover:bg-slate-50 hover:text-[#156e52] transition-colors cursor-pointer"
+                    >
+                      Send Inquiries
                     </Link>
                   </div>
                 </div>
-              ))}
+
+              </div>
             </div>
           </div>
         </section>
@@ -326,7 +335,7 @@ const About = () => {
         </section>
       </main>
       <Footer />
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@400;500;600;700;800&display=swap');`}</style>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap');`}</style>
     </div>
   );
 };

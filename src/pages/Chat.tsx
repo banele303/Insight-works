@@ -46,7 +46,7 @@ export default function ChatPage() {
     {
       id: "welcome",
       role: "assistant",
-      content: "Welcome to Insight Works Therapy & Coaching Sanctuary. I am your AI Companion powered by Puter.js. How can I support your wellbeing today? Feel free to ask about our disciplines, explore coping tools, or click 'Book Appointment' to schedule a session directly.",
+      content: "Welcome to Insight Works Therapy & Coaching Sanctuary. I am your AI Companion powered by Cloudflare AI. How can I support your wellbeing today? Feel free to ask about our disciplines, explore coping tools, or click 'Book Appointment' to schedule a session directly.",
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     },
   ]);
@@ -174,8 +174,8 @@ export default function ChatPage() {
           parentPhone: clientPhone.trim(),
           relationship: "Self",
           motivation: `Service: ${selectedService.name} (${selectedService.rate}) | Format: ${formatLabel} | Date: ${bookingDate} | Time: ${bookingTime}`,
-          additionalSubjects: "Booked via Puter.js AI Assistant with Composio Google Calendar sync",
-          howDidYouHear: "AI Sanctuary Assistant",
+          additionalSubjects: "Booked via Cloudflare AI Assistant with Composio Google Calendar sync",
+          howDidYouHear: "Therapy AI Portal",
         });
       }
 
@@ -189,7 +189,7 @@ export default function ChatPage() {
         timeSlot: bookingTime,
         duration: selectedService.duration,
         rate: selectedService.rate,
-        notes: "Booked via Puter.js AI Chat Assistant",
+        notes: "Booked via Cloudflare AI Chat Assistant",
       };
 
       const composioResult = await ComposioService.syncBookingWithComposio(payload);
@@ -375,7 +375,7 @@ export default function ChatPage() {
                   </div>
                   <div className="bg-white border border-slate-200 px-4 py-3 rounded-2xl text-xs text-slate-500 flex items-center gap-2 shadow-2xs">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                    Streaming AI response from Puter.js...
+                    Insight Works AI is replying...
                   </div>
                 </div>
               )}
@@ -579,7 +579,7 @@ export default function ChatPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <MapPin className="w-3.5 h-3.5 text-[#ea7627]" />
-                  <span>Johannesburg &amp; Telehealth Nationwide</span>
+                  <span>Telehealth Nationwide &amp; International</span>
                 </div>
               </div>
             </div>

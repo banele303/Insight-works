@@ -14,7 +14,7 @@ import { ArrowRight, HeartPulse, CalendarCheck, ClipboardType, ShieldCheck, Awar
 
 const Home = () => {
   return (
-    <div className="bg-white min-h-screen text-[#0f172a] selection:bg-rose-100 selection:text-rose-900" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="bg-white min-h-screen text-[#0f172a] selection:bg-rose-100 selection:text-rose-900" style={{ fontFamily: "'Poppins', sans-serif" }}>
       <Navbar />
       
       <main className="flex flex-col">

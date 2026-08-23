@@ -1,8 +1,9 @@
 import { useState } from "react";
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
-import { PhoneCall, Clock, MessageSquare, Send, MapPin, Mail, ShieldCheck, CheckCircle2, HeartPulse } from "lucide-react";
+import { PhoneCall, Clock, MessageSquare, Send, MapPin, Mail, ShieldCheck, CheckCircle2, HeartPulse, Share2 } from "lucide-react";
 import { toast } from "sonner";
+import SocialLinks from "@/components/global/SocialIcons";
 
 const Contact = () => {
   const [form, setForm] = useState({
@@ -28,7 +29,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="bg-white min-h-screen text-[#0f172a]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="bg-white min-h-screen text-[#0f172a]" style={{ fontFamily: "'Poppins', sans-serif" }}>
       <Navbar />
       
       <main className="pt-32 pb-24">
@@ -111,8 +112,16 @@ const Contact = () => {
                       <a href="mailto:maletsatsi@insightherapyandcoaching.co.za" className="text-sm font-bold text-[#0f2820] hover:text-[#156e52] transition-colors mt-0.5 block break-all cursor-pointer">
                         maletsatsi@insightherapyandcoaching.co.za
                       </a>
-                      <p className="text-xs text-[#64748b] mt-0.5">Socials: @insightworks_therapy</p>
                     </div>
+                  </div>
+
+                  <div className="pt-1">
+                    <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5">Follow & Connect</p>
+                    <SocialLinks
+                      className="flex flex-wrap items-center gap-2"
+                      itemClassName="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-slate-600 shadow-2xs hover:bg-[#156e52] hover:text-white hover:border-[#156e52] transition-all cursor-pointer"
+                      iconClassName="w-4 h-4"
+                    />
                   </div>
 
                   <div className="flex items-start gap-4">
@@ -121,8 +130,8 @@ const Contact = () => {
                     </div>
                     <div>
                       <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Location & Coverage</p>
-                      <p className="text-sm font-bold text-[#0f2820] mt-0.5">Johannesburg, Gauteng</p>
-                      <p className="text-xs text-[#64748b] mt-0.5">In-Person & Telehealth Nationwide</p>
+                      <p className="text-sm font-bold text-[#0f2820] mt-0.5">9 Moray Drive, Bryanston, Sandton, 2091</p>
+                      <p className="text-xs text-[#64748b] mt-0.5">In-Person Consulting & Telehealth Nationwide & International</p>
                     </div>
                   </div>
 
@@ -326,7 +335,7 @@ const Contact = () => {
       </main>
       
       <Footer />
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@400;500;600;700;800&display=swap');`}</style>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap');`}</style>
     </div>
   );
 };

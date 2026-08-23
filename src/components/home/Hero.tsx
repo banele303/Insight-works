@@ -87,7 +87,7 @@ const Hero = () => {
                 {[
                   { icon: ShieldCheck, text: "Counselling Therapist & Life Coach" },
                   { icon: CheckCircle2, text: "POPIA Compliant & Confidential" },
-                  { icon: HeartHandshake, text: "In-Person & Telehealth Nationwide" },
+                  { icon: HeartHandshake, text: "In-Person & Telehealth Nationwide & International" },
                   { icon: Sparkles, text: "Evidence-Based Emotional Healing" },
                 ].map((item, idx) => (
                   <div key={idx} className="flex items-center gap-2.5 text-slate-700">
@@ -96,7 +96,7 @@ const Hero = () => {
                     </div>
                     <span
                       className="text-sm font-medium text-[#1e293b]"
-                      style={{ fontFamily: "'DM Sans', sans-serif" }}
+                      style={{ fontFamily: "'Poppins', sans-serif" }}
                     >
                       {item.text}
                     </span>

@@ -44,7 +44,7 @@ export const ComposioService = {
     );
     const location = encodeURIComponent(
       payload.format.toLowerCase().includes("in-person")
-        ? "Insight Works Practice Rooms, Johannesburg South, South Africa"
+        ? "Insight Works Practice Rooms, 9 Moray Drive, Bryanston, Sandton, 2091, South Africa"
         : "Secure Telehealth Video Session (Insight Works)"
     );
 
@@ -105,7 +105,7 @@ export const ComposioService = {
       `DTEND:${endIso}`,
       `SUMMARY:Session: ${payload.serviceType} - ${payload.clientName}`,
       `DESCRIPTION:Insight Works Appointment\\nPractitioner: Maletsatsi Sibanda\\nClient: ${payload.clientName}\\nFormat: ${payload.format}\\nRate: ${payload.rate}\\nNotes: ${payload.notes || "None"}`,
-      `LOCATION:${payload.format.toLowerCase().includes("in-person") ? "Insight Works Rooms, Johannesburg" : "Secure Telehealth Video Session"}`,
+      `LOCATION:${payload.format.toLowerCase().includes("in-person") ? "Insight Works Rooms, 9 Moray Drive, Bryanston, Sandton, 2091" : "Secure Telehealth Video Session"}`,
       "ORGANIZER;CN=Maletsatsi Sibanda:mailto:maletsatsi@insightherapyandcoaching.co.za",
       `ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=${payload.clientName}:mailto:${payload.clientEmail}`,
       `ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=Maletsatsi Sibanda:mailto:maletsatsi@insightherapyandcoaching.co.za`,
