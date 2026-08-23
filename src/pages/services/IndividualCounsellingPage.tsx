@@ -125,10 +125,10 @@ export default function IndividualCounsellingPage() {
                   Book Counselling Session <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
-                  to="/intake"
+                  to="/chat"
                   className="border border-slate-200 hover:border-emerald-300 bg-white text-[#0f2820] px-6 py-3.5 rounded-xl font-bold text-sm text-center transition-all hover:bg-emerald-50/50 cursor-pointer"
                 >
-                  Complete Client Intake
+                  Chat with Therapy Assistant
                 </Link>
               </div>
             </div>

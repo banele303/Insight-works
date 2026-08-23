@@ -164,7 +164,6 @@ const Navbar = () => {
                 )}
               </div>
 
-              <NavLink to="/intake" active={location.pathname === "/intake"}>Intake</NavLink>
               <NavLink to="/blog" active={location.pathname === "/blog" || location.pathname.startsWith("/blog/")}>Blog</NavLink>
               <NavLink to="/wellness-insights" active={location.pathname === "/wellness-insights"}>Wellness Insights</NavLink>
               <NavLink to="/faq" active={location.pathname === "/faq"}>FAQ</NavLink>
@@ -205,7 +204,6 @@ const Navbar = () => {
           <div className="lg:hidden bg-white/98 backdrop-blur-2xl border-b border-slate-200 px-5 pt-3 pb-6 space-y-1 shadow-xl">
             <MobileNavLink to="/about" active={location.pathname === "/about"}>About</MobileNavLink>
             <MobileNavLink to="/services" active={location.pathname === "/services"}>All Services &amp; Disciplines</MobileNavLink>
-            <MobileNavLink to="/intake" active={location.pathname === "/intake"}>Intake Form</MobileNavLink>
             <MobileNavLink to="/blog" active={location.pathname === "/blog" || location.pathname.startsWith("/blog/")}>Blog &amp; Insights</MobileNavLink>
             <MobileNavLink to="/wellness-insights" active={location.pathname === "/wellness-insights"}>Wellness Insights</MobileNavLink>
             <MobileNavLink to="/faq" active={location.pathname === "/faq"}>FAQ</MobileNavLink>

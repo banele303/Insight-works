@@ -17,7 +17,6 @@ import TraumaRecoveryPage from "@/pages/services/TraumaRecoveryPage";
 import YouthSupportPage from "@/pages/services/YouthSupportPage";
 import SubstanceSupportPage from "@/pages/services/SubstanceSupportPage";
 import BookingPage from "@/pages/Booking";
-import IntakePage from "@/pages/Intake";
 import PrivacyPage from "@/pages/Privacy";
 import BlogPage from "@/pages/Blog";
 import BlogPostPage from "@/pages/BlogPost";
@@ -97,7 +96,7 @@ export const router = createBrowserRouter([
       { path: "login", element: <Login />, errorElement: <RouteErrorBoundary /> },
       { path: "about", element: <About />, errorElement: <RouteErrorBoundary /> },
       { path: "contact", element: <Contact />, errorElement: <RouteErrorBoundary /> },
-      { path: "apply", element: <IntakePage />, errorElement: <RouteErrorBoundary /> },
+      { path: "apply", element: <BookingPage />, errorElement: <RouteErrorBoundary /> },
       { path: "programs", element: <ServicesPage />, errorElement: <RouteErrorBoundary /> },
       { path: "faq", element: <FAQ />, errorElement: <RouteErrorBoundary /> },
       // Therapy practice routes
@@ -109,7 +108,7 @@ export const router = createBrowserRouter([
       { path: "services/youth-support", element: <YouthSupportPage />, errorElement: <RouteErrorBoundary /> },
       { path: "services/substance-support", element: <SubstanceSupportPage />, errorElement: <RouteErrorBoundary /> },
       { path: "booking", element: <BookingPage />, errorElement: <RouteErrorBoundary /> },
-      { path: "intake", element: <IntakePage />, errorElement: <RouteErrorBoundary /> },
+      { path: "intake", element: <BookingPage />, errorElement: <RouteErrorBoundary /> },
       { path: "chat", element: <ChatPage />, errorElement: <RouteErrorBoundary /> },
       { path: "privacy", element: <PrivacyPage />, errorElement: <RouteErrorBoundary /> },
       { path: "blog", element: <BlogPage />, errorElement: <RouteErrorBoundary /> },

@@ -122,10 +122,10 @@ export default function SubstanceSupportPage() {
                   Book Recovery Session <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
-                  to="/intake"
+                  to="/chat"
                   className="border border-slate-200 hover:border-amber-300 bg-white text-[#0f2820] px-6 py-3.5 rounded-xl font-bold text-sm text-center transition-all hover:bg-amber-50/50 cursor-pointer"
                 >
-                  Confidential Intake
+                  Chat with Therapy Assistant
                 </Link>
               </div>
             </div>

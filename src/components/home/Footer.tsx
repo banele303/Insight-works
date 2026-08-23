@@ -68,15 +68,15 @@ const Footer = () => {
           {/* Clinical Support (3 cols) */}
           <div className="lg:col-span-3 space-y-4">
             <h4 className="text-[#0f2820] font-bold text-xs uppercase tracking-widest font-serif border-b border-slate-200 pb-2">
-              Services & Intake
+              Therapeutic Services
             </h4>
             <ul className="space-y-2.5 text-sm">
               {[
                 { label: "Book a Session", to: "/booking" },
-                { label: "Client Intake Form", to: "/intake" },
                 { label: "Individual Counselling", to: "/services" },
                 { label: "Couples & Relationships", to: "/services" },
                 { label: "Life Coaching", to: "/services" },
+                { label: "Trauma Recovery", to: "/services" },
                 { label: "Privacy & POPIA Policy", to: "/privacy" },
               ].map((item) => (
                 <li key={item.label}>
@@ -138,7 +138,7 @@ const Footer = () => {
           <div className="flex flex-wrap items-center gap-6 font-medium">
             <Link to="/login" className="text-[#156e52] font-bold hover:underline transition-colors cursor-pointer">Client &amp; Staff Portal</Link>
             <Link to="/privacy" className="hover:text-[#156e52] transition-colors cursor-pointer">Privacy Policy</Link>
-            <Link to="/intake" className="hover:text-[#156e52] transition-colors cursor-pointer">Intake Portal</Link>
+            <Link to="/booking" className="hover:text-[#156e52] transition-colors cursor-pointer">Book Consultation</Link>
             <Link to="/contact" className="hover:text-[#156e52] transition-colors cursor-pointer">Contact</Link>
             <span className="text-slate-400">|</span>
             <span>Emergency SADAG: 0800 456 789</span>
