@@ -9,6 +9,7 @@ import { api } from "../../../convex/_generated/api";
 import { toast } from "sonner";
 import { streamPuterChat } from "@/lib/puterChatService";
 import { ComposioService } from "@/lib/composioService";
+import MarkdownMessage from "@/components/global/MarkdownMessage";
 
 export interface ChatMessage {
   id: string;
@@ -293,7 +294,10 @@ export default function FloatingTherapyChatbot() {
                         : "bg-white border border-slate-200/90 text-[#0f2820] rounded-tl-none"
                     }`}
                   >
-                    <p className="whitespace-pre-line text-xs">{m.content || (isTyping ? "Thinking..." : "")}</p>
+                    <MarkdownMessage
+                      content={m.content || (isTyping ? "Thinking..." : "")}
+                      isUser={m.role === "user"}
+                    />
 
                     {/* Book Appointment CTA inside assistant responses */}
                     {m.role === "assistant" && m.id !== "welcome" && (
