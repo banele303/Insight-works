@@ -1,10 +1,10 @@
-import { ArrowUp, Phone, Mail, MapPin, HeartPulse, ArrowRight, ShieldCheck } from "lucide-react";
+import { ArrowUp, Mail, MapPin, HeartPulse, ArrowRight, ShieldCheck } from "lucide-react";
 import { Link } from "react-router";
-import SocialLinks from "@/components/global/SocialIcons";
+import SocialLinks, { WhatsappIcon } from "@/components/global/SocialIcons";
 
 const Footer = () => {
   return (
-    <footer className="pt-20 pb-12 border-t border-slate-200/80 bg-[#fafaf9] text-slate-700" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <footer className="pt-20 pb-12 border-t border-slate-200/80 bg-[#fafaf9] text-slate-700" style={{ fontFamily: "'Poppins', sans-serif" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-16">
           
@@ -99,13 +99,23 @@ const Footer = () => {
                 <span className="text-[#475569]">9 Moray Drive, Bryanston, Sandton, 2091</span>
               </li>
               <li className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-[#156e52] shrink-0" />
-                <a href="tel:+27795501557" className="text-[#475569] hover:text-[#156e52] transition-colors font-medium cursor-pointer">
-                  +27 79 550 1557
+                <div className="w-5 h-5 rounded-md bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[#25D366] shrink-0">
+                  <WhatsappIcon className="w-3.5 h-3.5" />
+                </div>
+                <a
+                  href="https://wa.me/27795501557?text=Hello%20Insight%20Works,%20I%20would%20like%20to%20inquire%20about%20your%20services."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#475569] hover:text-[#156e52] transition-colors font-medium cursor-pointer flex items-center gap-2"
+                >
+                  <span>+27 79 550 1557</span>
+                  <span className="text-[10px] font-bold text-[#25D366] bg-emerald-50 border border-emerald-200/80 px-1.5 py-0.5 rounded-md">WhatsApp</span>
                 </a>
               </li>
               <li className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-[#156e52] shrink-0" />
+                <div className="w-5 h-5 rounded-md bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[#156e52] shrink-0">
+                  <Mail className="w-3.5 h-3.5" />
+                </div>
                 <a href="mailto:maletsatsi@insightherapyandcoaching.co.za" className="text-[#475569] hover:text-[#156e52] transition-colors font-medium text-xs break-all cursor-pointer">
                   maletsatsi@insightherapyandcoaching.co.za
                 </a>
