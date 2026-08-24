@@ -296,6 +296,10 @@ html.dark {
   }
   h1, h2, h3, h4, h5, h6, .font-serif, [class*="font-serif"], [style*="Playfair"] {
     font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    font-style: normal !important;
+  }
+  h1 *, h2 *, h3 *, h4 *, h5 *, h6 * {
+    font-style: normal !important;
   }
   .font-mono, [class*="font-mono"] {
     font-family: monospace !important;

@@ -47,9 +47,8 @@ const Contact = () => {
             >
               Connect with Our{" "}
               <span
-                className="italic"
                 style={{
-                  background: "linear-gradient(135deg, #881337 0%, #be123c 50%, #0284c7 100%)",
+                  background: "linear-gradient(135deg, #156e52 0%, #52b74c 50%, #ea7627 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",

@@ -83,7 +83,6 @@ const Blog = () => {
             >
               Mental Wellness{" "}
               <span
-                className="italic"
                 style={{
                   background: "linear-gradient(135deg, #156e52 0%, #52b74c 50%, #ea7627 100%)",
                   WebkitBackgroundClip: "text",

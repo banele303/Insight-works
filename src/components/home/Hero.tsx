@@ -59,7 +59,7 @@ const Hero = () => {
                 >
                   Where Healing{" "}
                   <span
-                    className="italic inline-block"
+                    className="inline-block"
                     style={{
                       background: "linear-gradient(135deg, #ea7627 0%, #f59e0b 35%, #22c55e 75%, #156e52 100%)",
                       WebkitBackgroundClip: "text",
