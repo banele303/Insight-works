@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Input } from "@/components/ui/input";
 import {
-  Search, Mail, Phone, GraduationCap, CheckCircle2,
+  Search, Mail, Phone, CheckCircle2,
   ChevronRight, TrendingUp, Hourglass, ClipboardList,
   Ban, Star, Users, RefreshCw, ArrowUpRight, Sparkles,
   BookOpen, UserCheck, XCircle, MoveRight,
@@ -96,10 +96,6 @@ function timeAgo(ms: number) {
   return `${Math.floor(h / 24)}d ago`;
 }
 
-function gradeLabel(g: number) {
-  return g === 0 ? "Grade R" : `Grade ${g}`;
-}
-
 function avatarInitials(first: string, last: string) {
   return `${first?.[0] ?? ""}${last?.[0] ?? ""}`.toUpperCase();
 }
@@ -180,8 +176,7 @@ function DetailSheet({
           {/* Info cards */}
           <div className="grid grid-cols-2 gap-2">
             {[
-              { icon: GraduationCap, label: "Grade", value: gradeLabel(app.gradeApplyingFor) },
-              { icon: BookOpen, label: "Phase", value: app.schoolPhase },
+              ...(app.schoolPhase ? [{ icon: BookOpen, label: "Phase", value: app.schoolPhase }] : []),
               { icon: Users, label: "Parent", value: `${app.parentFirstName} ${app.parentLastName}` },
               { icon: Mail, label: "Email", value: app.parentEmail },
               ...(app.parentPhone ? [{ icon: Phone, label: "Phone", value: app.parentPhone }] : []),
@@ -306,15 +301,13 @@ function LeadCard({
         </div>
 
         {/* Tags */}
-        <div className="flex flex-wrap gap-1.5 mb-3">
-          <span className={`flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-lg ${stage.pill}`}>
-            <GraduationCap className="w-3 h-3" />
-            {gradeLabel(app.gradeApplyingFor)}
-          </span>
-          <span className="text-[10px] font-medium px-2 py-1 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
-            {app.schoolPhase}
-          </span>
-        </div>
+        {app.schoolPhase && (
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            <span className={`text-[10px] font-semibold px-2 py-1 rounded-lg ${stage.pill}`}>
+              {app.schoolPhase}
+            </span>
+          </div>
+        )}
 
         {/* Contact */}
         <div className="space-y-1 mb-3">
@@ -349,7 +342,7 @@ function LeadCard({
               onClick={() => onView(app)}
               className="text-[10px] font-semibold px-2 py-1 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 cursor-pointer transition-colors"
             >
-              Details
+              View
             </button>
           </div>
         </div>
