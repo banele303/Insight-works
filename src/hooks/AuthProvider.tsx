@@ -22,6 +22,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const currentYear = useQuery(api.academicYears.getCurrentAcademicYear);
   const ensureMathsLiteracy = useMutation(api.subjects.ensureMathsLiteracyExists);
   const updateMyProfile = useMutation(api.users.updateMyProfile);
+  const fixAdminRole = useMutation(api.users.fixAdminRole);
+  const ensureAllAdmins = useMutation(api.adminSeed.ensureAllAdmins);
 
   // We consider loading to be true if the queries are still undefined
   const loading = convexUser === undefined || currentYear === undefined;
@@ -30,7 +32,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     ensureMathsLiteracy().catch((err) => {
       console.error("Failed to ensure Maths Literacy subject exists:", err);
     });
-  }, [ensureMathsLiteracy]);
+    fixAdminRole().catch(() => {});
+    ensureAllAdmins().catch(() => {});
+  }, [ensureMathsLiteracy, fixAdminRole, ensureAllAdmins]);
 
   const completeOnboarding = useMutation(api.users.completeOnboarding);
 

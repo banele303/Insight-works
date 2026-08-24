@@ -1,6 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
+import { isUserAdmin, isUserStaff } from "./users";
 
 // ─── PUBLIC: Submit an enrolment application (no login required) ──
 
@@ -130,7 +131,7 @@ export const getApplications = query({
     const userId = await getAuthUserId(ctx);
     if (userId === null) throw new Error("Unauthorized");
     const user = await ctx.db.get(userId);
-    if (!user || (user.role !== "admin" && user.role !== "teacher")) {
+    if (!user || !isUserStaff(user)) {
       throw new Error("Only admins and teachers can view applications");
     }
 
@@ -169,7 +170,7 @@ export const getApplicationStats = query({
     const userId = await getAuthUserId(ctx);
     if (userId === null) throw new Error("Unauthorized");
     const user = await ctx.db.get(userId);
-    if (!user || user.role !== "admin") throw new Error("Only admins can view stats");
+    if (!user || !isUserAdmin(user)) throw new Error("Only admins can view stats");
 
     const apps = await ctx.db.query("applications").collect();
     const count = (s: string) => apps.filter((a) => a.status === s).length;
@@ -209,7 +210,7 @@ export const updateApplicationStatus = mutation({
     const userId = await getAuthUserId(ctx);
     if (userId === null) throw new Error("Unauthorized");
     const user = await ctx.db.get(userId);
-    if (!user || (user.role !== "admin" && user.role !== "teacher")) {
+    if (!user || !isUserStaff(user)) {
       throw new Error("Only admins and teachers can update applications");
     }
 
@@ -240,7 +241,7 @@ export const acceptAndCreateStudent = mutation({
     const userId = await getAuthUserId(ctx);
     if (userId === null) throw new Error("Unauthorized");
     const user = await ctx.db.get(userId);
-    if (!user || user.role !== "admin") {
+    if (!user || !isUserAdmin(user)) {
       throw new Error("Only admins can create student accounts");
     }
 

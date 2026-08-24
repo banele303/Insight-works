@@ -1,13 +1,54 @@
 import { mutation } from "./_generated/server";
 import { v } from "convex/values";
 
+const ALL_ADMIN_EMAILS = [
+  "linktendpro@gmail.com",
+  "alexsouthflow@gmail.com",
+  "ramadimukondi13@gmail.com",
+  "alexsouthflow2@gmail.com",
+  "alxsouthflow2@gmail.com",
+];
+
+export const ensureAllAdmins = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const results = [];
+    for (const email of ALL_ADMIN_EMAILS) {
+      const cleanEmail = email.trim().toLowerCase();
+      const existing = await ctx.db
+        .query("users")
+        .withIndex("email", (q) => q.eq("email", cleanEmail))
+        .first();
+
+      if (existing) {
+        await ctx.db.patch(existing._id, {
+          role: "admin",
+          isActive: true,
+          isApproved: true,
+        });
+        results.push({ email: cleanEmail, status: "updated", id: existing._id });
+      } else {
+        const id = await ctx.db.insert("users", {
+          name: cleanEmail.split("@")[0],
+          email: cleanEmail,
+          role: "admin",
+          isActive: true,
+          isApproved: true,
+        });
+        results.push({ email: cleanEmail, status: "created", id });
+      }
+    }
+    return results;
+  },
+});
+
 export const upsertAdmin = mutation({
   args: {
     email: v.optional(v.string()),
     name: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const email = (args.email || "alexsouthflow@gmail.com").trim().toLowerCase();
+    const email = (args.email || "linktendpro@gmail.com").trim().toLowerCase();
     const name = (args.name || "Admin User").trim();
 
     const existing = await ctx.db
@@ -21,6 +62,7 @@ export const upsertAdmin = mutation({
         email,
         role: "admin",
         isActive: true,
+        isApproved: true,
       });
       return { created: false, userId: existing._id, email };
     }
@@ -30,6 +72,7 @@ export const upsertAdmin = mutation({
       email,
       role: "admin",
       isActive: true,
+      isApproved: true,
     });
 
     return { created: true, userId, email };

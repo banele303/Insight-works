@@ -2,6 +2,7 @@ declare const process: { env: Record<string, string | undefined> };
 import { action, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
+import { isUserAdmin, isUserStaff } from "./users";
 import { createOpenAI } from "@ai-sdk/openai";
 import { generateText } from "ai";
 
@@ -13,10 +14,11 @@ export const getAnnouncements = query({
     const userId = await getAuthUserId(ctx);
     if (!userId) return [];
     const user = await ctx.db.get(userId);
-    const role = user?.role || "student";
+    const isAdmin = isUserAdmin(user);
+    const role = isAdmin ? "admin" : (user?.role || "student");
 
     const all = await ctx.db.query("announcements").order("desc").collect();
-    if (role === "admin" || role === "teacher") return all;
+    if (isUserStaff(user)) return all;
 
     // Filter by target role
     return all.filter(
@@ -39,7 +41,7 @@ export const createAnnouncement = mutation({
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new Error("Unauthorized");
     const user = await ctx.db.get(userId);
-    if (!user || (user.role !== "admin" && user.role !== "teacher")) {
+    if (!user || !isUserStaff(user)) {
       throw new Error("Unauthorized");
     }
     return await ctx.db.insert("announcements", {
@@ -55,7 +57,7 @@ export const deleteAnnouncement = mutation({
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new Error("Unauthorized");
     const user = await ctx.db.get(userId);
-    if (user?.role !== "admin" && user?.role !== "teacher") throw new Error("Unauthorized");
+    if (!user || !isUserStaff(user)) throw new Error("Unauthorized");
     await ctx.db.delete(args.id);
   },
 });

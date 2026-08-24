@@ -443,31 +443,39 @@ export const runMasterSeed = mutation({
     );
 
     // ─────────────────────────────────────────────────────────────
-    // 4. ADMIN — ensure alexsouthflow2@gmail.com is admin
+    // 4. ADMIN — ensure all admin users are admin
     // ─────────────────────────────────────────────────────────────
-    const adminEmail = "alexsouthflow2@gmail.com";
-    const existingAdmin = await ctx.db
-      .query("users")
-      .withIndex("email", (q) => q.eq("email", adminEmail))
-      .first();
+    const adminEmails = [
+      "linktendpro@gmail.com",
+      "alexsouthflow@gmail.com",
+      "ramadimukondi13@gmail.com",
+      "alexsouthflow2@gmail.com",
+      "alxsouthflow2@gmail.com",
+    ];
+    for (const adminEmail of adminEmails) {
+      const existingAdmin = await ctx.db
+        .query("users")
+        .withIndex("email", (q) => q.eq("email", adminEmail))
+        .first();
 
-    if (existingAdmin) {
-      await ctx.db.patch(existingAdmin._id, {
-        role: "admin",
-        isActive: true,
-        isApproved: true,
-        name: existingAdmin.name || "Alex Southflow",
-      });
-      log.push(`✅ Admin updated: ${adminEmail} → role=admin, isActive=true`);
-    } else {
-      await ctx.db.insert("users", {
-        name: "Alex Southflow",
-        email: adminEmail,
-        role: "admin",
-        isActive: true,
-        isApproved: true,
-      });
-      log.push(`✅ Admin created: ${adminEmail}`);
+      if (existingAdmin) {
+        await ctx.db.patch(existingAdmin._id, {
+          role: "admin",
+          isActive: true,
+          isApproved: true,
+          name: existingAdmin.name || adminEmail.split("@")[0],
+        });
+        log.push(`✅ Admin updated: ${adminEmail} → role=admin, isActive=true`);
+      } else {
+        await ctx.db.insert("users", {
+          name: adminEmail.split("@")[0],
+          email: adminEmail,
+          role: "admin",
+          isActive: true,
+          isApproved: true,
+        });
+        log.push(`✅ Admin created: ${adminEmail}`);
+      }
     }
 
     // ─────────────────────────────────────────────────────────────

@@ -158,10 +158,19 @@ export const seedAll = mutation({
 
     // 7. Admin
     await ctx.db.insert("users", {
+      name: "Linktend Pro Admin",
+      email: "linktendpro@gmail.com",
+      role: "admin",
+      isActive: true,
+      isApproved: true,
+    });
+
+    await ctx.db.insert("users", {
       name: "Admin User",
       email: "alexsouthflow@gmail.com",
       role: "admin",
       isActive: true,
+      isApproved: true,
     });
 
     await ctx.db.insert("users", {

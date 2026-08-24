@@ -1,6 +1,7 @@
 import { mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
+import { isUserAdmin } from "./users";
 
 export const createUserAdmin = mutation({
   args: {
@@ -21,7 +22,7 @@ export const createUserAdmin = mutation({
       throw new Error("Unauthorized");
     }
     const adminUser = await ctx.db.get(userId);
-    if (!adminUser || adminUser.role !== "admin") {
+    if (!adminUser || !isUserAdmin(adminUser)) {
       throw new Error("Unauthorized");
     }
 
@@ -63,7 +64,7 @@ export const cleanupOrphanedAuth = mutation({
     if (!userId) throw new Error("Unauthorized");
     
     const adminUser = await ctx.db.get(userId);
-    if (!adminUser || adminUser.role !== "admin") throw new Error("Unauthorized");
+    if (!adminUser || !isUserAdmin(adminUser)) throw new Error("Unauthorized");
 
     const authAccounts = await ctx.db.query("authAccounts").collect();
     let deleted = 0;

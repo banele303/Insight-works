@@ -1,6 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
+import { isUserAdmin, isUserStaff } from "./users";
 
 export const createClass = mutation({
   args: {
@@ -17,7 +18,7 @@ export const createClass = mutation({
     }
 
     const user = await ctx.db.get(userId);
-    if (!user || user.role !== "admin") {
+    if (!user || !isUserAdmin(user)) {
       throw new Error("Unauthorized");
     }
 
@@ -84,7 +85,7 @@ export const updateClass = mutation({
     }
 
     const user = await ctx.db.get(userId);
-    if (!user || (user.role !== "admin" && user.role !== "teacher")) {
+    if (!user || !isUserStaff(user)) {
       throw new Error("Unauthorized");
     }
 
@@ -144,7 +145,7 @@ export const deleteClass = mutation({
     }
 
     const user = await ctx.db.get(userId);
-    if (!user || user.role !== "admin") {
+    if (!user || !isUserAdmin(user)) {
       throw new Error("Unauthorized");
     }
 

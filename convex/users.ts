@@ -2,13 +2,29 @@ import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
-const ADMIN_EMAILS = [
+export const ADMIN_EMAILS = [
   "alexsouthflow@gmail.com",
   "ramadimukondi13@gmail.com",
   "alexsouthflow2@gmail.com",
   "alxsouthflow2@gmail.com",
   "linktendpro@gmail.com",
 ];
+
+export function isUserAdmin(
+  user: { email?: string | null; role?: string | null } | null | undefined
+): boolean {
+  if (!user) return false;
+  if (user.role === "admin") return true;
+  if (user.email && ADMIN_EMAILS.includes(user.email.trim().toLowerCase())) return true;
+  return false;
+}
+
+export function isUserStaff(
+  user: { email?: string | null; role?: string | null } | null | undefined
+): boolean {
+  if (!user) return false;
+  return isUserAdmin(user) || user.role === "teacher";
+}
 
 export const getMe = query({
   args: {},
@@ -20,7 +36,7 @@ export const getMe = query({
     const user = await ctx.db.get(userId);
     if (!user) return null;
 
-    const isAdminEmail = Boolean(user.email && ADMIN_EMAILS.includes(user.email.toLowerCase()));
+    const isAdminEmail = isUserAdmin(user);
     const effectiveRole = isAdminEmail ? "admin" : (user.role || "student");
     const defaultApproved = effectiveRole === "admin" || effectiveRole === "parent";
 
@@ -46,12 +62,7 @@ export const getUsers = query({
     }
 
     const currentUser = await ctx.db.get(userId);
-    const isCurrentUserAdmin = Boolean(
-      currentUser?.email && ADMIN_EMAILS.includes(currentUser.email.toLowerCase())
-    );
-    const currentUserRole = isCurrentUserAdmin ? "admin" : currentUser?.role;
-
-    if (!currentUser || (currentUserRole !== "admin" && currentUserRole !== "teacher")) {
+    if (!currentUser || !isUserStaff(currentUser)) {
       throw new Error("Unauthorized");
     }
 
@@ -166,12 +177,7 @@ export const updateUser = mutation({
     }
 
     const currentUser = await ctx.db.get(userId);
-    const isCurrentUserAdmin = Boolean(
-      currentUser?.email && ADMIN_EMAILS.includes(currentUser.email.toLowerCase())
-    );
-    const currentUserRole = isCurrentUserAdmin ? "admin" : currentUser?.role;
-
-    if (!currentUser || currentUserRole !== "admin") {
+    if (!currentUser || !isUserAdmin(currentUser)) {
       throw new Error("Unauthorized");
     }
 
@@ -257,7 +263,7 @@ export const deleteUser = mutation({
     }
 
     const currentUser = await ctx.db.get(userId);
-    if (!currentUser || currentUser.role !== "admin") {
+    if (!currentUser || !isUserAdmin(currentUser)) {
       throw new Error("Unauthorized");
     }
 
@@ -299,8 +305,7 @@ export const getAnalyticsStats = query({
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new Error("Unauthorized");
     const user: any = await ctx.db.get(userId);
-    const isUserAdmin = Boolean(user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase()));
-    if (!isUserAdmin && user?.role !== "admin") throw new Error("Unauthorized");
+    if (!user || !isUserAdmin(user)) throw new Error("Unauthorized");
 
     const [users, classes, submissions, fees, attendance] = await Promise.all([
       ctx.db.query("users").collect(),
@@ -352,7 +357,7 @@ export const updateMyProfile = mutation({
 
     const patchData: any = {};
     if (args.name !== undefined) patchData.name = args.name;
-    if (args.role !== undefined && user.role !== "admin") {
+    if (args.role !== undefined && !isUserAdmin(user)) {
       patchData.role = args.role;
       patchData.isApproved = false; // Require approval on role change
     }
@@ -364,21 +369,43 @@ export const updateMyProfile = mutation({
 
 // Fix / restore admin role if previously overwritten or in ADMIN_EMAILS
 export const fixAdminRole = mutation({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    email: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
-    if (!userId) throw new Error("Unauthorized");
-    const user: any = await ctx.db.get(userId);
-    if (!user) throw new Error("User not found");
+    let user: any = userId ? await ctx.db.get(userId) : null;
 
-    if (user.email && ADMIN_EMAILS.includes(user.email.toLowerCase())) {
-      await ctx.db.patch(userId, {
+    if (!user && args.email) {
+      user = await ctx.db
+        .query("users")
+        .withIndex("email", (q) => q.eq("email", args.email!.trim().toLowerCase()))
+        .first();
+    }
+
+    if (user && isUserAdmin(user)) {
+      await ctx.db.patch(user._id, {
         role: "admin",
         isApproved: true,
         isActive: true,
       });
-      return { success: true, fixed: true, role: "admin" };
     }
-    return { success: true, fixed: false, role: user.role };
+
+    // Always auto-ensure all ADMIN_EMAILS in the database have role="admin"
+    for (const email of ADMIN_EMAILS) {
+      const match = await ctx.db
+        .query("users")
+        .withIndex("email", (q) => q.eq("email", email))
+        .first();
+      if (match && (match.role !== "admin" || !match.isApproved || !match.isActive)) {
+        await ctx.db.patch(match._id, {
+          role: "admin",
+          isApproved: true,
+          isActive: true,
+        });
+      }
+    }
+
+    return { success: true, role: "admin" };
   },
 });
