@@ -1,5 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { getAuthUserId } from "@convex-dev/auth/server";
 
 /**
  * Appointments & Session Bookings API for Insight Works Therapy & Coaching
@@ -56,11 +57,11 @@ export const createBooking = mutation({
           .withIndex("email")
           .filter((q) => q.eq(q.field("role"), "admin"))
           .first();
-        creatorId = adminUser?._id;
+        creatorId = adminUser ? adminUser._id : null;
       }
       if (!creatorId) {
         const anyUser = await ctx.db.query("users").first();
-        creatorId = anyUser?._id;
+        creatorId = anyUser ? anyUser._id : null;
       }
 
       if (creatorId) {

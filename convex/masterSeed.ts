@@ -652,7 +652,7 @@ export const runMasterSeed = mutation({
     return {
       success: true,
       log,
-      summary: `Done! Subjects: ${subjectsCreated + subjectsUpdated} | Classes: ${classesCreated + classesUpdated} (Grade R–12) | Admin: ${adminEmail} | 5 Demo Teachers & 5 Demo Students created`,
+      summary: `Done! Subjects: ${subjectsCreated + subjectsUpdated} | Classes: ${classesCreated + classesUpdated} (Grade R–12) | Admins: ${adminEmails.join(", ")} | 5 Demo Teachers & 5 Demo Students created`,
     };
   },
 });
