@@ -269,7 +269,7 @@ const Testimonials = () => {
             </div>
             <h2
               className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0f2820] tracking-tight"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              style={{ fontFamily: "'Poppins', sans-serif" }}
             >
               Real Stories of{" "}
               <span

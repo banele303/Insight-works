@@ -91,7 +91,7 @@ const Programs = () => {
           <h2
             className="leading-[1.08] tracking-tight text-[#0f2820] mb-5"
             style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
+              fontFamily: "'Poppins', sans-serif",
               fontSize: "clamp(2.25rem, 4vw, 3.5rem)",
               fontWeight: 900,
             }}
@@ -145,7 +145,7 @@ const Programs = () => {
                   {/* Title */}
                   <h3
                     className="text-[#0f2820] text-2xl font-bold mb-3 group-hover:text-[#156e52] transition-colors"
-                    style={{ fontFamily: "'Playfair Display', serif" }}
+                    style={{ fontFamily: "'Poppins', serif" }}
                   >
                     {service.grades}
                   </h3>

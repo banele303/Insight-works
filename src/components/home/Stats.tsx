@@ -51,7 +51,7 @@ const Stats = () => {
           <h2
             className="leading-[1.08] tracking-tight text-[#0f2820] mb-5"
             style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
+              fontFamily: "'Poppins', sans-serif",
               fontSize: "clamp(2.25rem, 4vw, 3.5rem)",
               fontWeight: 900,
             }}
@@ -101,7 +101,7 @@ const Stats = () => {
                   <p
                     className="font-black text-4xl sm:text-5xl tracking-tight mb-2"
                     style={{
-                      fontFamily: "'Playfair Display', serif",
+                      fontFamily: "'Poppins', serif",
                       color: isFeatured ? "#ffffff" : "#0f2820",
                     }}
                   >
@@ -144,7 +144,7 @@ const Stats = () => {
               </span>
               <h3
                 className="font-bold text-2xl sm:text-3xl text-white tracking-tight leading-tight"
-                style={{ fontFamily: "'Playfair Display', serif" }}
+                style={{ fontFamily: "'Poppins', serif" }}
               >
                 Flexible Telehealth Care
               </h3>
@@ -171,7 +171,7 @@ const Stats = () => {
                 </span>
                 <h4
                   className="text-[#0f2820] font-bold text-lg"
-                  style={{ fontFamily: "'Playfair Display', serif" }}
+                  style={{ fontFamily: "'Poppins', serif" }}
                 >
                   Maletsatsi Sibanda
                 </h4>
@@ -186,7 +186,7 @@ const Stats = () => {
               <p
                 className="text-[#156e52] font-black shrink-0"
                 style={{
-                  fontFamily: "'Playfair Display', serif",
+                  fontFamily: "'Poppins', serif",
                   fontSize: "3.25rem",
                   lineHeight: 1,
                 }}
@@ -196,7 +196,7 @@ const Stats = () => {
               <div>
                 <h4
                   className="text-[#0f2820] font-bold text-lg mb-1"
-                  style={{ fontFamily: "'Playfair Display', serif" }}
+                  style={{ fontFamily: "'Poppins', serif" }}
                 >
                   Core Healing & Coaching Offerings
                 </h4>

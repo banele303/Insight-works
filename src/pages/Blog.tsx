@@ -56,7 +56,7 @@ export default function BlogPage() {
             
             <h1
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15]"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              style={{ fontFamily: "'Poppins', sans-serif" }}
             >
               Therapeutic Insights &amp; Coping Wisdom
             </h1>
@@ -138,7 +138,7 @@ export default function BlogPage() {
 
                         <h2
                           className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white group-hover:text-[#156e52] dark:group-hover:text-emerald-400 transition-colors leading-tight"
-                          style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                          style={{ fontFamily: "'Poppins', sans-serif" }}
                         >
                           {featuredPost.title}
                         </h2>
@@ -204,7 +204,7 @@ export default function BlogPage() {
 
                           <h3
                             className="font-bold text-lg text-slate-900 dark:text-white group-hover:text-[#156e52] dark:group-hover:text-emerald-400 transition-colors line-clamp-2 leading-snug"
-                            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                            style={{ fontFamily: "'Poppins', sans-serif" }}
                           >
                             {post.title}
                           </h3>
@@ -239,7 +239,7 @@ export default function BlogPage() {
           <div className="rounded-3xl bg-gradient-to-br from-[#0f2820] to-[#156e52] p-8 sm:p-12 text-white text-center space-y-6 shadow-xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none" />
             
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold" style={{ fontFamily: "'Poppins', sans-serif" }}>
               Ready to Begin Your Healing Journey?
             </h2>
             <p className="text-sm sm:text-base text-emerald-100 max-w-xl mx-auto leading-relaxed">

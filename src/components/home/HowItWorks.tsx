@@ -53,7 +53,7 @@ const HowItWorks = () => {
             <h2
               className="leading-[1.08] tracking-tight text-[#0f2820]"
               style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
+                fontFamily: "'Poppins', sans-serif",
                 fontSize: "clamp(2.25rem, 4vw, 3.5rem)",
                 fontWeight: 900,
               }}
@@ -99,7 +99,7 @@ const HowItWorks = () => {
               {/* Overlay card */}
               <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between text-white">
                 <div>
-                  <p className="text-white font-bold text-base" style={{ fontFamily: "'Playfair Display', serif" }}>
+                  <p className="text-white font-bold text-base" style={{ fontFamily: "'Poppins', serif" }}>
                     Maletsatsi Sibanda
                   </p>
                   <p className="text-emerald-200 text-xs mt-0.5">Counselling Therapist & Life Coach</p>
@@ -140,7 +140,7 @@ const HowItWorks = () => {
                 <div>
                   <p
                     className="text-[#0f2820] text-3xl font-black"
-                    style={{ fontFamily: "'Playfair Display', serif" }}
+                    style={{ fontFamily: "'Poppins', serif" }}
                   >
                     7+
                   </p>
@@ -178,7 +178,7 @@ const HowItWorks = () => {
                         <Icon className="w-4 h-4 text-[#156e52]" />
                         <h3
                           className="text-[#0f2820] font-bold text-lg"
-                          style={{ fontFamily: "'Playfair Display', serif" }}
+                          style={{ fontFamily: "'Poppins', serif" }}
                         >
                           {step.title}
                         </h3>

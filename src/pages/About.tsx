@@ -65,7 +65,7 @@ const About = () => {
 
                 <h1
                   className="text-4xl sm:text-5xl lg:text-6xl font-black font-serif leading-[1.1] text-[#0f2820]"
-                  style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                  style={{ fontFamily: "'Poppins', sans-serif" }}
                 >
                   Compassionate Care, Guided by{" "}
                   <span
@@ -140,7 +140,7 @@ const About = () => {
                 </div>
                 <h2
                   className="text-3xl sm:text-4xl font-extrabold font-serif text-[#0f172a]"
-                  style={{ fontFamily: "'Playfair Display', serif" }}
+                  style={{ fontFamily: "'Poppins', serif" }}
                 >
                   Mental Health is the Foundation of a Meaningful Life
                 </h2>
@@ -197,7 +197,7 @@ const About = () => {
               </div>
               <h2
                 className="text-3xl sm:text-4xl md:text-5xl font-extrabold font-serif text-[#0f2820]"
-                style={{ fontFamily: "'Playfair Display', serif" }}
+                style={{ fontFamily: "'Poppins', serif" }}
               >
                 Meet Maletsatsi Sibanda
               </h2>

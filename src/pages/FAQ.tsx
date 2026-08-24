@@ -112,7 +112,7 @@ const FAQ = () => {
             </div>
             <h1
               className="text-4xl sm:text-5xl md:text-6xl font-black text-[#0f2820]"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              style={{ fontFamily: "'Poppins', sans-serif" }}
             >
               Frequently Asked{" "}
               <span
@@ -185,7 +185,7 @@ const FAQ = () => {
                         </span>
                         <span
                           className="font-bold text-[#0f2820] text-base sm:text-lg block"
-                          style={{ fontFamily: "'Playfair Display', serif" }}
+                          style={{ fontFamily: "'Poppins', serif" }}
                         >
                           {faq.q}
                         </span>
@@ -217,7 +217,7 @@ const FAQ = () => {
           <div className="bg-gradient-to-br from-[#f0fdf4] via-white to-[#fffbeb] rounded-3xl p-8 sm:p-12 border border-emerald-100 shadow-sm text-center space-y-4">
             <h3
               className="text-2xl sm:text-3xl font-bold text-[#0f2820]"
-              style={{ fontFamily: "'Playfair Display', serif" }}
+              style={{ fontFamily: "'Poppins', serif" }}
             >
               Still Have Questions?
             </h3>

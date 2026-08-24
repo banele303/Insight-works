@@ -147,7 +147,7 @@ function StatCard({ icon: Icon, label, value, trend, color }: { icon: React.Elem
         </span>
       </div>
       <div>
-        <p className="text-3xl font-black text-[#0f2820]" style={{ fontFamily: "'Playfair Display', serif" }}>{value}</p>
+        <p className="text-3xl font-black text-[#0f2820]" style={{ fontFamily: "'Poppins', serif" }}>{value}</p>
         <p className="text-xs font-bold text-[#64748b] uppercase tracking-wider mt-1">{label}</p>
       </div>
     </div>
@@ -159,7 +159,7 @@ function ChartCard({ title, subtitle, icon: Icon, children }: { title: string; s
     <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-xs flex flex-col justify-between">
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h3 className="text-[#0f2820] font-bold text-lg font-serif" style={{ fontFamily: "'Playfair Display', serif" }}>{title}</h3>
+          <h3 className="text-[#0f2820] font-bold text-lg font-serif" style={{ fontFamily: "'Poppins', serif" }}>{title}</h3>
           {subtitle && <p className="text-[#64748b] text-xs mt-0.5">{subtitle}</p>}
         </div>
         {Icon && <Icon className="w-5 h-5 text-slate-400" />}
@@ -238,7 +238,7 @@ const WellnessDashboard = () => {
                 </div>
                 <h1
                   className="text-3xl sm:text-4xl md:text-5xl font-black font-serif text-[#0f2820]"
-                  style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                  style={{ fontFamily: "'Poppins', sans-serif" }}
                 >
                   Insight Works{" "}
                   <span

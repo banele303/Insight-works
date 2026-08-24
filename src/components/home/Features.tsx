@@ -65,7 +65,7 @@ const Features = () => {
             <h2
               className="leading-[1.08] tracking-tight text-[#0f2820]"
               style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
+                fontFamily: "'Poppins', sans-serif",
                 fontSize: "clamp(2.25rem, 4vw, 3.5rem)",
                 fontWeight: 900,
               }}
@@ -118,7 +118,7 @@ const Features = () => {
                     <div className="absolute bottom-4 right-4 text-right text-white">
                       <p
                         className="font-black text-2xl sm:text-3xl drop-shadow-sm"
-                        style={{ fontFamily: "'Playfair Display', serif" }}
+                        style={{ fontFamily: "'Poppins', serif" }}
                       >
                         {feature.stat}
                       </p>
@@ -132,7 +132,7 @@ const Features = () => {
                   <div>
                     <h3
                       className="text-[#0f2820] font-bold text-xl mb-2.5 group-hover:text-[#156e52] transition-colors"
-                      style={{ fontFamily: "'Playfair Display', serif" }}
+                      style={{ fontFamily: "'Poppins', serif" }}
                     >
                       {feature.title}
                     </h3>
@@ -166,7 +166,7 @@ const Features = () => {
           <div className="relative z-10 max-w-xl text-center lg:text-left">
             <h3
               className="text-[#0f2820] font-extrabold text-2xl sm:text-3xl"
-              style={{ fontFamily: "'Playfair Display', serif" }}
+              style={{ fontFamily: "'Poppins', serif" }}
             >
               Ready to begin your healing journey?
             </h3>

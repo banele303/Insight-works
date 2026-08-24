@@ -20,7 +20,7 @@ const Privacy = () => {
             </div>
             <h1
               className="text-4xl sm:text-5xl font-black text-[#0f2820]"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              style={{ fontFamily: "'Poppins', sans-serif" }}
             >
               Privacy & Confidentiality Policy
             </h1>

@@ -41,7 +41,7 @@ const FAQPreview = () => {
           </div>
           <h2
             className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0f2820]"
-            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+            style={{ fontFamily: "'Poppins', sans-serif" }}
           >
             Clear Answers to Your{" "}
             <span
@@ -78,7 +78,7 @@ const FAQPreview = () => {
               >
                 <span
                   className="font-bold text-[#0f2820] text-base sm:text-lg pr-4"
-                  style={{ fontFamily: "'Playfair Display', serif" }}
+                  style={{ fontFamily: "'Poppins', serif" }}
                 >
                   {faq.q}
                 </span>

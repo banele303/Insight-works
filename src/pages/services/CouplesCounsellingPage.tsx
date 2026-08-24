@@ -84,7 +84,7 @@ export default function CouplesCounsellingPage() {
 
               <h1
                 className="text-4xl sm:text-5xl md:text-6xl font-black text-[#0f2820] leading-tight"
-                style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                style={{ fontFamily: "'Poppins', sans-serif" }}
               >
                 Couples &amp; Relationship <br />
                 <span
@@ -155,7 +155,7 @@ export default function CouplesCounsellingPage() {
           <div className="container mx-auto px-4 max-w-6xl space-y-12">
             <div className="text-center max-w-2xl mx-auto space-y-3">
               <span className="text-xs font-bold uppercase tracking-wider text-[#ea7627]">Key Relationship Modalities</span>
-              <h2 className="text-3xl sm:text-4xl font-bold text-[#0f2820] font-serif" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+              <h2 className="text-3xl sm:text-4xl font-bold text-[#0f2820] font-serif" style={{ fontFamily: "'Poppins', sans-serif" }}>
                 How We Help Couples Flourish
               </h2>
               <p className="text-slate-600 text-sm sm:text-base">
@@ -169,7 +169,7 @@ export default function CouplesCounsellingPage() {
                   <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 text-[#ea7627] flex items-center justify-center font-bold text-sm">
                     0{idx + 1}
                   </div>
-                  <h3 className="font-bold text-lg text-[#0f2820] font-serif" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                  <h3 className="font-bold text-lg text-[#0f2820] font-serif" style={{ fontFamily: "'Poppins', sans-serif" }}>
                     {b.title}
                   </h3>
                   <p className="text-slate-600 text-sm leading-relaxed">
@@ -185,7 +185,7 @@ export default function CouplesCounsellingPage() {
         <section className="container mx-auto px-4 max-w-6xl mb-20">
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-12">
             <span className="text-xs font-bold uppercase tracking-wider text-[#ea7627]">Relational Roadmap</span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#0f2820] font-serif" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#0f2820] font-serif" style={{ fontFamily: "'Poppins', sans-serif" }}>
               Steps to Relationship Renewal
             </h2>
             <p className="text-slate-600 text-sm">
@@ -208,7 +208,7 @@ export default function CouplesCounsellingPage() {
         <section className="container mx-auto px-4 max-w-4xl mb-20">
           <div className="text-center space-y-3 mb-10">
             <span className="text-xs font-bold uppercase tracking-wider text-[#ea7627]">Common Questions</span>
-            <h2 className="text-3xl font-bold text-[#0f2820] font-serif" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <h2 className="text-3xl font-bold text-[#0f2820] font-serif" style={{ fontFamily: "'Poppins', serif" }}>
               Frequently Asked Questions
             </h2>
           </div>
@@ -231,7 +231,7 @@ export default function CouplesCounsellingPage() {
         {/* ── CTA ── */}
         <section className="container mx-auto px-4 max-w-5xl">
           <div className="bg-gradient-to-br from-[#1a140e] via-[#ea7627] to-[#d9534f] rounded-3xl p-8 sm:p-12 text-white text-center space-y-5 shadow-xl">
-            <h3 className="text-3xl sm:text-4xl font-bold font-serif" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <h3 className="text-3xl sm:text-4xl font-bold font-serif" style={{ fontFamily: "'Poppins', serif" }}>
               Start Repairing &amp; Deepening Your Connection
             </h3>
             <p className="text-amber-100 text-sm sm:text-base max-w-lg mx-auto leading-relaxed">

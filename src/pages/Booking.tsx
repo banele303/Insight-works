@@ -258,7 +258,7 @@ const Booking = () => {
             </div>
             <h1
               className="text-4xl sm:text-5xl md:text-6xl font-black text-[#0f2820]"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              style={{ fontFamily: "'Poppins', sans-serif" }}
             >
               Schedule Your{" "}
               <span

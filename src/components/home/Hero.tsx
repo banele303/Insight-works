@@ -52,7 +52,7 @@ const Hero = () => {
                 <h1
                   className="leading-[1.04] tracking-[-0.025em] text-[#0f2820]"
                   style={{
-                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontFamily: "'Poppins', sans-serif",
                     fontSize: "clamp(2.75rem, 5.2vw, 4.75rem)",
                     fontWeight: 900,
                   }}
@@ -185,7 +185,7 @@ const Hero = () => {
                   <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
                     <p
                       className="font-bold text-sm text-white"
-                      style={{ fontFamily: "'Playfair Display', serif" }}
+                      style={{ fontFamily: "'Poppins', serif" }}
                     >
                       Maletsatsi Sibanda
                     </p>
@@ -218,7 +218,7 @@ const Hero = () => {
                     <div className="flex items-baseline justify-between">
                       <p
                         className="text-3xl font-black text-[#0f2820]"
-                        style={{ fontFamily: "'Playfair Display', serif" }}
+                        style={{ fontFamily: "'Poppins', serif" }}
                       >
                         7+
                       </p>
@@ -270,7 +270,7 @@ const Hero = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-900/40 to-transparent" />
                   <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white">
-                    <p className="font-bold text-sm" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    <p className="font-bold text-sm" style={{ fontFamily: "'Poppins', serif" }}>
                       In-Person & Telehealth Support
                     </p>
                     <p className="text-emerald-200 text-xs mt-0.5 font-mono">+27 79 550 1557 · South Africa</p>

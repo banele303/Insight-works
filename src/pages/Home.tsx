@@ -79,7 +79,7 @@ const Home = () => {
               {/* Title */}
               <h2
                 className="text-3xl sm:text-4xl md:text-6xl font-black text-[#0f2820] mb-6 leading-tight"
-                style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                style={{ fontFamily: "'Poppins', sans-serif" }}
               >
                 Begin Your Journey with{" "}
                 <span

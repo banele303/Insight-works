@@ -83,7 +83,7 @@ export default function TraumaRecoveryPage() {
 
               <h1
                 className="text-4xl sm:text-5xl md:text-6xl font-black text-[#0f2820] leading-tight"
-                style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                style={{ fontFamily: "'Poppins', sans-serif" }}
               >
                 Trauma Recovery &amp; <br />
                 <span
@@ -152,7 +152,7 @@ export default function TraumaRecoveryPage() {
           <div className="container mx-auto px-4 max-w-6xl space-y-12">
             <div className="text-center max-w-2xl mx-auto space-y-3">
               <span className="text-xs font-bold uppercase tracking-wider text-[#ea7627]">Core Modalities</span>
-              <h2 className="text-3xl sm:text-4xl font-bold text-[#0f2820] font-serif" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+              <h2 className="text-3xl sm:text-4xl font-bold text-[#0f2820] font-serif" style={{ fontFamily: "'Poppins', sans-serif" }}>
                 How We Foster Trauma Resolution
               </h2>
             </div>
@@ -163,7 +163,7 @@ export default function TraumaRecoveryPage() {
                   <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 text-[#ea7627] flex items-center justify-center font-bold text-sm">
                     0{idx + 1}
                   </div>
-                  <h3 className="font-bold text-lg text-[#0f2820] font-serif" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                  <h3 className="font-bold text-lg text-[#0f2820] font-serif" style={{ fontFamily: "'Poppins', sans-serif" }}>
                     {b.title}
                   </h3>
                   <p className="text-slate-600 text-sm leading-relaxed">
@@ -179,7 +179,7 @@ export default function TraumaRecoveryPage() {
         <section className="container mx-auto px-4 max-w-6xl mb-20">
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-12">
             <span className="text-xs font-bold uppercase tracking-wider text-[#ea7627]">Healing Process</span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#0f2820] font-serif" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#0f2820] font-serif" style={{ fontFamily: "'Poppins', sans-serif" }}>
               4 Phases of Trauma Integration
             </h2>
           </div>
@@ -199,7 +199,7 @@ export default function TraumaRecoveryPage() {
         <section className="container mx-auto px-4 max-w-4xl mb-20">
           <div className="text-center space-y-3 mb-10">
             <span className="text-xs font-bold uppercase tracking-wider text-[#ea7627]">Common Questions</span>
-            <h2 className="text-3xl font-bold text-[#0f2820] font-serif" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <h2 className="text-3xl font-bold text-[#0f2820] font-serif" style={{ fontFamily: "'Poppins', serif" }}>
               Trauma Therapy FAQs
             </h2>
           </div>
@@ -222,7 +222,7 @@ export default function TraumaRecoveryPage() {
         {/* ── CTA ── */}
         <section className="container mx-auto px-4 max-w-5xl">
           <div className="bg-gradient-to-br from-[#120f0a] via-[#ea7627] to-[#156e52] rounded-3xl p-8 sm:p-12 text-white text-center space-y-5 shadow-xl">
-            <h3 className="text-3xl sm:text-4xl font-bold font-serif" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <h3 className="text-3xl sm:text-4xl font-bold font-serif" style={{ fontFamily: "'Poppins', serif" }}>
               You Don't Have to Carry the Weight Alone
             </h3>
             <p className="text-amber-100 text-sm sm:text-base max-w-lg mx-auto leading-relaxed">

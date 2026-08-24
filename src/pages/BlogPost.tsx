@@ -82,7 +82,7 @@ Healing from chronic anxiety is not about eliminating all stress; it is about bu
 
             <h1
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-[#0f2820] leading-[1.15]"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              style={{ fontFamily: "'Poppins', sans-serif" }}
             >
               {title}
             </h1>
@@ -179,7 +179,7 @@ Healing from chronic anxiety is not about eliminating all stress; it is about bu
                                 <h3
                                   key={lineIdx}
                                   className="text-2xl font-bold text-[#0f2820] dark:text-white pt-3 font-serif"
-                                  style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                                  style={{ fontFamily: "'Poppins', sans-serif" }}
                                 >
                                   {trimmedLine.replace("### ", "")}
                                 </h3>
@@ -190,7 +190,7 @@ Healing from chronic anxiety is not about eliminating all stress; it is about bu
                                 <h4
                                   key={lineIdx}
                                   className="text-lg font-bold text-[#0f2820] dark:text-emerald-400 pt-2 font-serif"
-                                  style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                                  style={{ fontFamily: "'Poppins', sans-serif" }}
                                 >
                                   {trimmedLine.replace("#### ", "")}
                                 </h4>
@@ -236,7 +236,7 @@ Healing from chronic anxiety is not about eliminating all stress; it is about bu
                         <h3
                           key={idx}
                           className="text-2xl font-bold text-[#0f2820] dark:text-white pt-4 font-serif"
-                          style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                          style={{ fontFamily: "'Poppins', sans-serif" }}
                         >
                           {trimmed.replace("### ", "")}
                         </h3>
@@ -247,7 +247,7 @@ Healing from chronic anxiety is not about eliminating all stress; it is about bu
                         <h4
                           key={idx}
                           className="text-lg font-bold text-[#0f2820] dark:text-emerald-400 pt-2 font-serif"
-                          style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                          style={{ fontFamily: "'Poppins', sans-serif" }}
                         >
                           {trimmed.replace("#### ", "")}
                         </h4>
@@ -289,7 +289,7 @@ Healing from chronic anxiety is not about eliminating all stress; it is about bu
 
               {/* Bottom In-Article CTA */}
               <div className="mt-12 bg-gradient-to-br from-emerald-950 to-[#156e52] text-white rounded-3xl p-8 sm:p-10 shadow-lg text-center space-y-4">
-                <h3 className="text-2xl sm:text-3xl font-serif font-bold" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                <h3 className="text-2xl sm:text-3xl font-serif font-bold" style={{ fontFamily: "'Poppins', sans-serif" }}>
                   Take the First Step Toward Inner Peace
                 </h3>
                 <p className="text-emerald-100 text-sm sm:text-base max-w-lg mx-auto">

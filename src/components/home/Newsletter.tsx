@@ -57,7 +57,7 @@ const Newsletter = () => {
             </div>
             <h2
               className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0f2820] leading-tight"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              style={{ fontFamily: "'Poppins', sans-serif" }}
             >
               Mental Wellness Resources,{" "}
               <span
@@ -116,7 +116,7 @@ const Newsletter = () => {
                 <div className="w-14 h-14 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
-                <p className="text-[#0f172a] font-bold text-lg" style={{ fontFamily: "'Playfair Display', serif" }}>
+                <p className="text-[#0f172a] font-bold text-lg" style={{ fontFamily: "'Poppins', serif" }}>
                   You're subscribed! 🎉
                 </p>
                 <p className="text-[#475569] text-sm">

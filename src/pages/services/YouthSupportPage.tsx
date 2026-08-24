@@ -83,7 +83,7 @@ export default function YouthSupportPage() {
 
               <h1
                 className="text-4xl sm:text-5xl md:text-6xl font-black text-[#0f2820] leading-tight"
-                style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                style={{ fontFamily: "'Poppins', sans-serif" }}
               >
                 Youth &amp; Young Adult <br />
                 <span
@@ -152,7 +152,7 @@ export default function YouthSupportPage() {
           <div className="container mx-auto px-4 max-w-6xl space-y-12">
             <div className="text-center max-w-2xl mx-auto space-y-3">
               <span className="text-xs font-bold uppercase tracking-wider text-[#156e52]">Youth Focus Areas</span>
-              <h2 className="text-3xl sm:text-4xl font-bold text-[#0f2820] font-serif" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+              <h2 className="text-3xl sm:text-4xl font-bold text-[#0f2820] font-serif" style={{ fontFamily: "'Poppins', sans-serif" }}>
                 Common Challenges Addressed
               </h2>
             </div>
@@ -163,7 +163,7 @@ export default function YouthSupportPage() {
                   <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 text-[#156e52] flex items-center justify-center font-bold text-sm">
                     0{idx + 1}
                   </div>
-                  <h3 className="font-bold text-lg text-[#0f2820] font-serif" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                  <h3 className="font-bold text-lg text-[#0f2820] font-serif" style={{ fontFamily: "'Poppins', sans-serif" }}>
                     {b.title}
                   </h3>
                   <p className="text-slate-600 text-sm leading-relaxed">
@@ -179,7 +179,7 @@ export default function YouthSupportPage() {
         <section className="container mx-auto px-4 max-w-6xl mb-20">
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-12">
             <span className="text-xs font-bold uppercase tracking-wider text-[#156e52]">Mentorship Path</span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#0f2820] font-serif" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#0f2820] font-serif" style={{ fontFamily: "'Poppins', sans-serif" }}>
               How We Guide Young People
             </h2>
           </div>
@@ -199,7 +199,7 @@ export default function YouthSupportPage() {
         <section className="container mx-auto px-4 max-w-4xl mb-20">
           <div className="text-center space-y-3 mb-10">
             <span className="text-xs font-bold uppercase tracking-wider text-[#156e52]">Answers for Families</span>
-            <h2 className="text-3xl font-bold text-[#0f2820] font-serif" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <h2 className="text-3xl font-bold text-[#0f2820] font-serif" style={{ fontFamily: "'Poppins', serif" }}>
               Youth Therapy FAQs
             </h2>
           </div>
@@ -222,7 +222,7 @@ export default function YouthSupportPage() {
         {/* ── CTA ── */}
         <section className="container mx-auto px-4 max-w-5xl">
           <div className="bg-gradient-to-br from-[#0f2820] via-[#156e52] to-[#52b74c] rounded-3xl p-8 sm:p-12 text-white text-center space-y-5 shadow-xl">
-            <h3 className="text-3xl sm:text-4xl font-bold font-serif" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <h3 className="text-3xl sm:text-4xl font-bold font-serif" style={{ fontFamily: "'Poppins', serif" }}>
               Support Your Young Adult's Future
             </h3>
             <p className="text-emerald-100 text-sm sm:text-base max-w-lg mx-auto leading-relaxed">

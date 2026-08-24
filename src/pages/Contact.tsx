@@ -43,7 +43,7 @@ const Contact = () => {
             </div>
             <h1
               className="text-4xl sm:text-5xl md:text-6xl font-black text-[#0f172a]"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              style={{ fontFamily: "'Poppins', sans-serif" }}
             >
               Connect with Our{" "}
               <span

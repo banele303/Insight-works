@@ -108,7 +108,7 @@ const Services = () => {
             </div>
             <h1
               className="text-4xl sm:text-5xl md:text-6xl font-black text-[#0f2820] leading-tight"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              style={{ fontFamily: "'Poppins', sans-serif" }}
             >
               How We{" "}
               <span
@@ -158,7 +158,7 @@ const Services = () => {
 
                     <h3
                       className="text-2xl font-bold text-[#0f2820] mb-2 font-serif"
-                      style={{ fontFamily: "'Playfair Display', serif" }}
+                      style={{ fontFamily: "'Poppins', serif" }}
                     >
                       {service.title}
                     </h3>
@@ -223,7 +223,7 @@ const Services = () => {
               </div>
               <h2
                 className="text-3xl sm:text-4xl font-extrabold font-serif text-[#0f172a]"
-                style={{ fontFamily: "'Playfair Display', serif" }}
+                style={{ fontFamily: "'Poppins', serif" }}
               >
                 Coaching vs. Therapy: What is the Difference?
               </h2>

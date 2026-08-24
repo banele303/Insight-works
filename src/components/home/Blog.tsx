@@ -76,7 +76,7 @@ const Blog = () => {
             <h2
               className="leading-[1.08] tracking-tight text-[#0f2820] dark:text-white"
               style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
+                fontFamily: "'Poppins', sans-serif",
                 fontSize: "clamp(2.25rem, 4vw, 3.5rem)",
                 fontWeight: 900,
               }}
@@ -133,7 +133,7 @@ const Blog = () => {
                 </div>
                 <h3
                   className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white group-hover:text-[#156e52] dark:group-hover:text-emerald-400 transition-colors leading-tight"
-                  style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                  style={{ fontFamily: "'Poppins', sans-serif" }}
                 >
                   {featured.title}
                 </h3>
